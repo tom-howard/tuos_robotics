@@ -1,0 +1,34 @@
+################### Robot Switching ###################
+# the robot_switch routine is used to switch between the 
+# two robot profiles, MiRo and Turtlebot3
+# the '~/.current_robot' text file is checked for one of 
+# the following strings: 'miro', 'turtlebot3'
+# This is saved to the $CURRENT_ROBOT environment variable 
+# If the file is not present or the string is not valid, 
+# the file is set to Turtlebot3
+
+# Check for the 'current robot':
+# Check '~/.current_robot' contents for 'MiRo' or 'Turtlebot3':
+touch ~/.current_robot
+if grep -qi "miro" ~/.current_robot; then
+  export CURRENT_ROBOT=miro
+elif grep -qi "turtlebot" ~/.current_robot; then
+  export CURRENT_ROBOT=turtlebot3	
+else
+  # In all other cases set robot mode to 'Turtlebot3':
+  rm -f ~/.current_robot
+  echo "turtlebot" > ~/.current_robot
+  export CURRENT_ROBOT=turtlebot3
+fi
+
+# Source the appropriate bashrc settings
+if [ "$CURRENT_ROBOT" == "miro" ]; then
+  # Source MiRo robot profile from 
+  # ~/.tuos/bashrc_miro:
+  . ~/.tuos/bashrc_miro
+elif [ "$CURRENT_ROBOT" == "turtlebot3" ]; then
+  # Source Turtlebot3 robot profile from
+  # ~/.tuos/bashrc_turtlebot3:
+  . ~/.tuos/bashrc_turtlebot3
+fi
+########################################################
