@@ -1,0 +1,2 @@
+export ROS_MASTER_URI=http://$(cat ~/.tb3_tools/dia_laptop):11311
+export ROS_HOSTNAME=dia-waffle2
