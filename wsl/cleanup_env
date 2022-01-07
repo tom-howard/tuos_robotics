@@ -1,4 +1,5 @@
 #!/bin/bash
+# for locating in '/usr/local/bin/'
 
 # A script to clean up the environment before creating an os image for distribution.
 
