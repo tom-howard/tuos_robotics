@@ -1,0 +1,11 @@
+#!/bin/bash
+
+# A script to clean up the environment before creating an os image for distribution.
+
+echo "REMEMBER: Update the wsl-ros version number!"
+
+rm -f ~/.wsl-ros/no_welcome ~/.current_robot
+rm -rf ~/.gazebo/ ~/.ignition/ ~/.rviz/ ~/.ros/
+rm -f ~/.python_history
+
+printf "Now run the following command and leave!:\n\n    history -c && history -w && logout\n"
