@@ -27,7 +27,6 @@ tar --exclude='home/student/.local'    \
     --exclude='home/student/.rviz'     \
     --exclude='home/student/.ignition' \
     --exclude='home/student/.sdformat' \
-    --exclude='home/student/.vscode-server' \
     --checkpoint=.200 -cjf $rbpth -C / home/student/
 
 echo "."
