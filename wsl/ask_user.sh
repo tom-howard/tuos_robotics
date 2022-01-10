@@ -10,22 +10,22 @@ ask() {
 
     while true; do
 
-	    # Ask the question (not using "read -p" as it uses stderr not stdout)
-	    echo -n "$1 [$prompt] "
+        # Ask the question (not using "read -p" as it uses stderr not stdout)
+        echo -n "$1 [$prompt] "
 
-	    # Read the answer (use /dev/tty in case stdin is redirected from somewhere else)
-	    read -r reply </dev/tty
+        # Read the answer (use /dev/tty in case stdin is redirected from somewhere else)
+        read -r reply </dev/tty
 
-	    # Default?
-	    if [[ -z $reply ]]; then
-	        reply=$default
-	    fi
+        # Default?
+        if [[ -z $reply ]]; then
+            reply=$default
+        fi
 
-	    # Check if the reply is valid
-	    case "$reply" in
-	        Y*|y*) return 0 ;;
-	        N*|n*) return 1 ;;
-	    esac
+        # Check if the reply is valid
+        case "$reply" in
+            Y*|y*) return 0 ;;
+            N*|n*) return 1 ;;
+        esac
 
     done
 
