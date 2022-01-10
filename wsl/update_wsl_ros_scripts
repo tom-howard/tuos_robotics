@@ -17,12 +17,13 @@ else
     cd ~/tuos_robotics/wsl/
     cp bashrc_miro bashrc_turtlebot3 get_tuos_user.sh set_display.sh ~/.wsl-ros/
     
-    cd ~
-    
-    rm -f ~/.bash_aliases
-    cp ~/tuos_robotics/wsl/.bash_aliases ~/
+    rm -f ~/.bash_aliases ~/.bashrc
+    cd ~/tuos_robotics/wsl/
+    cp .bash_aliases .bashrc ~/
     
     rm -rf ~/tuos_robotics
+    
+    cd ~
     
     echo "Done."
     
