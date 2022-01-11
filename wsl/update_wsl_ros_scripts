@@ -12,7 +12,7 @@ else
     cd ~/tuos_robotics/wsl/
     sudo cp ask_user.sh cleanup_env robot_switch rosbackup.sh rosrestore.sh update_wsl_ros_scripts wsl_ros /usr/local/bin/
     cd /usr/local/bin
-    sudo chmod +x ask_user.sh cleanup_env robot_switch rosbackup.sh rosrestore.sh update_wsl_ros_scripts wsl_ros
+    sudo chmod +x ask_user.sh robot_switch rosbackup.sh rosrestore.sh wsl_ros
     cd ~/.wsl-ros/
     rm -f bashrc_miro bashrc_turtlebot3 get_tuos_user.sh set_display.sh
     cd ~/tuos_robotics/wsl/
