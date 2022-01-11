@@ -11,6 +11,7 @@ echo "Setting the new wsl-ros version to '$reply'."
 echo "$reply" > ~/.wsl-ros/wsl_ros_ver
 
 if ask "Do you want to update all the custom wsl-ros scripts?"; then
+    sudo chmod +x /usr/local/bin/update_wsl_ros_scripts
     update_wsl_ros_scripts
 else
     echo "No custom scripts were updated."
@@ -20,5 +21,7 @@ rm -f ~/.wsl-ros/no_welcome ~/.current_robot
 rm -rf ~/.gazebo/ ~/.ignition/ ~/.rviz/ ~/.ros/
 rm -f ~/.python_history
 rm -rf ~/tuos_robotics
+
+sudo chmod -x /usr/local/bin/update_wsl_ros_scripts /usr/local/bin/cleanup_env
 
 printf "Now run the following command to complete the process:\n\n    history -c && history -w && logout\n\n"
