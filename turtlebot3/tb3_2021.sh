@@ -36,6 +36,7 @@ if ask "[INPUT]: Preparing to configure for robot: dia-waffle$WAFFLE_NO. OK to c
             if ask "[INPUT]: Is the device visible in the list above?"; then
                 echo "[INFO]: Attempting to update the camera firmware..."
                 rs-fw-update -f ~/device_firmware/realsense_d435/Signed_Image_UVC_5_12_14_50.bin
+                sleep 5
                 rs-fw-update -l
                 echo "[INFO]: The device firmware should now be listed (above) as 05.12.14.50..."
                 sleep 5
