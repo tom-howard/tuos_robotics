@@ -1,10 +1,10 @@
 #! /bin/bash
-# /home/robot/bin/tb3_setup
 
 echo "[INFO]: Obtaining the 'tb3_2021.sh' setup script from GitHub..."
 
-cd ~/bin/
-wget https://raw.githubusercontent.com/tom-howard/tuos_robotics/main/turtlebot3/tb3_2021.sh?token=GHSAT0AAAAAABQKY74GXG>mv ~/bin/tb3_2021.sh?token=GHSAT0AAAAAABQKY74GXGU4QKTR55UKNBWSYPP2SOQ ~/bin/tb3_2021.sh
+cd ~/.tb3_tools/
+wget https://raw.githubusercontent.com/tom-howard/tuos_robotics/main/turtlebot3/tb3_2021.sh?token=GHSAT0AAAAAABQKY74GXGU4QKTR55UKNBWSYPP2SOQ
+mv tb3_2021.sh?token=GHSAT0AAAAAABQKY74GXGU4QKTR55UKNBWSYPP2SOQ tb3_2021.sh
 
 echo "[INFO]: Executing setup script..."
 
