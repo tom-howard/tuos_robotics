@@ -1,0 +1,10 @@
+#! /bin/bash
+
+echo "[INFO]: Obtaining the 'laptop_config_2022.sh' setup script from GitHub..."
+
+cd ~
+wget https://raw.githubusercontent.com/tom-howard/tuos_robotics/main/laptops/laptop_config_2022.sh
+
+echo "[INFO]: Executing setup script..."
+
+chmod +x laptop_config_2022.sh && ./laptop_config_2022.sh $1
