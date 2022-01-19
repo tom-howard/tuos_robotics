@@ -4,5 +4,5 @@
 source /opt/ros/noetic/setup.bash
 source ~/catkin_ws/devel/setup.bash
 export TURTLEBOT3_MODEL=waffle
-export ROS_MASTER_URI=http://dia-laptop$(cat ~/.tuos/laptop_number):11311
-export ROS_HOSTNAME=dia-laptop$(cat ~/.tuos/laptop_number)
+export ROS_MASTER_URI=http://dia-laptop$(cat /home/Shared/laptop_number):11311
+export ROS_HOSTNAME=dia-laptop$(cat /home/Shared/laptop_number)
