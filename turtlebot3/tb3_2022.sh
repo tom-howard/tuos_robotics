@@ -43,7 +43,7 @@ if ask "[INPUT]: Preparing to configure for robot: dia-waffle$WAFFLE_NO. OK to c
                 echo "[INFO]: Robot configuration is now complete. The system now needs to be restarted."
                 if ask "[INPUT]: Do you want to do this now?"; then
                     echo "[COMPLETE]: Initiating reboot..."
-                    reboot
+                    sudo reboot
                 else
                     echo "[COMPLETE]: Don't forget to reboot ASAP."
                 fi
