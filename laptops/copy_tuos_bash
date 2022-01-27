@@ -1,0 +1,12 @@
+#! /bin/bash
+# ~/bin/copy_tuos_bash
+
+sudo rm -r /home/student/.tuos/
+sudo cp -r ~/.tuos/ /home/student/
+sudo chown -hR student:student /home/student/.tuos
+cd /home/student/.tuos/
+sudo rm current_robot miro_number robot_mode waffle_number
+
+ls -lF
+
+cd ~
