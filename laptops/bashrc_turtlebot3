@@ -6,7 +6,7 @@ source ~/catkin_ws/devel/setup.bash
 export TURTLEBOT3_MODEL=waffle
 
 if [[ ! -f "~/.tuos/waffle_number" ]]; then
-    cp /home/Shared/laptop_number > ~/.tuos/waffle_number
+    cp /home/Shared/laptop_number ~/.tuos/waffle_number
 fi 
 
 export ROS_MASTER_URI=http://dia-waffle$(cat ~/.tuos/waffle_number):11311
