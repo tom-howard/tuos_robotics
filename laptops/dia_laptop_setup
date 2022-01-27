@@ -1,4 +1,5 @@
 #! /bin/bash
+# ~/bin/dia_laptop_setup
 
 echo "[INFO]: Obtaining the 'laptop_config_2022.sh' setup script from GitHub..."
 
