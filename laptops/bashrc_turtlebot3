@@ -5,10 +5,19 @@ source /opt/ros/noetic/setup.bash
 source ~/catkin_ws/devel/setup.bash
 export TURTLEBOT3_MODEL=waffle
 
-if [[ ! -f "~/.tuos/waffle_number" ]]; then
+if [ ! -f ~/.tuos/waffle_number ]; then
     cp /home/Shared/laptop_number ~/.tuos/waffle_number
 fi 
 
-export ROS_MASTER_URI=http://dia-waffle$(cat ~/.tuos/waffle_number):11311
-export ROS_HOSTNAME=$(hostname)
+if [ ! -f ~/.tuos/robot_mode ]; then
+    echo "robot" > ~/.tuos/robot_mode
+elif grep -qi "robot" ~/.tuos/robot_mode; then
+    RMU=http://dia-waffle$(cat ~/.tuos/waffle_number):11311
+elif grep -qi "sim" ~/.tuos/robot_mode; then
+    RMU=http://localhost:11311
+else
+    RMU=http://dia-waffle$(cat ~/.tuos/waffle_number):11311
+fi
 
+export ROS_MASTER_URI=$RMU
+export ROS_HOSTNAME=$(hostname)
