@@ -5,7 +5,7 @@ export MIRO_ROBOT_NAME=miro
 export MIRO_LOCAL_IP=$(hostname)
 
 if [[ ! -f "~/.tuos/miro_number" ]]; then
-    cp /home/Shared/laptop_number > ~/.tuos/miro_number
+    cp /home/Shared/laptop_number ~/.tuos/miro_number
 fi
 
 export MIRO_ROBOT_IP=dia-miro$(cat ~/.tuos/miro_number)
