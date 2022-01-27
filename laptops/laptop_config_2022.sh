@@ -22,12 +22,11 @@ if ask "[INPUT]: Preparing to configure for laptop: dia-waffle$LAPTOP_NO. OK to 
     sudo hostnamectl set-hostname dia-laptop$LAPTOP_NO
     sudo sed -i 's/'$OLD_HOST'/dia-laptop'$LAPTOP_NO'/g' /etc/hosts
     echo "$LAPTOP_NO" > /home/Shared/laptop_number
-    echo "$LAPTOP_NO" > /home/Shared/miro_number
     sleep 2
     echo "[INFO]: Robot configuration is now complete. The system now needs to be restarted."
     if ask "[INPUT]: Do you want to do this now?"; then
         echo "[COMPLETE]: Initiating reboot..."
-        reboot
+        sudo reboot
     else
         echo "[COMPLETE]: Don't forget to reboot ASAP."
     fi
