@@ -2,8 +2,13 @@
 
 # ROS settings for MiRo Developer Kit (localhost)
 export MIRO_ROBOT_NAME=miro
-export MIRO_LOCAL_IP=dia-laptop$(cat /home/Shared/laptop_number)
-export MIRO_ROBOT_IP=dia-miro$(cat /home/Shared/miro_number)
+export MIRO_LOCAL_IP=$(hostname)
+
+if [[ ! -f "~/.tuos/miro_number" ]]; then
+    cp /home/Shared/laptop_number > ~/.tuos/miro_number
+fi
+
+export MIRO_ROBOT_IP=dia-miro$(cat ~/.tuos/miro_number)
 export ROS_IP=192.168.139.$(cat /home/Shared/laptop_number)
 
 source ~/mdk/setup.bash
