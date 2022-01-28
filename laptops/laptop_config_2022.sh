@@ -17,7 +17,7 @@ ask() {
     fi
 }
 
-if ask "[INPUT]: Preparing to configure for laptop: dia-waffle$LAPTOP_NO. OK to continue?"; then
+if ask "[INPUT]: Preparing to configure for laptop: dia-laptop$LAPTOP_NO. OK to continue?"; then
     echo "[INFO]: Updating hostname..."
     sudo hostnamectl set-hostname dia-laptop$LAPTOP_NO
     sudo sed -i 's/'$OLD_HOST'/dia-laptop'$LAPTOP_NO'/g' /etc/hosts
