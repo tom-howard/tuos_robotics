@@ -10,5 +10,5 @@ Keep an eye on terminal output, as there will be a few prompts that will require
 ```bash
 cd ~/Downloads
 wget https://raw.githubusercontent.com/tom-howard/tuos_robotics/main/students/full_install.sh
-./full_install.sh
+chmod +x full_install.sh && ./full_install.sh
 ```
