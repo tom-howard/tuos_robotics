@@ -17,13 +17,13 @@ Copy these files:
 ##### Target folder: `/home/Shared` (will be created)
 Run the following, replacing `{X}`, `{Y}`, `{Z}` with the appropriate numbers:
 ```bash
-sudo mkdir /home/Shared/
+sudo mkdir -p /home/Shared/
 sudo addgroup sharegroup
 sudo chown :sharegroup /home/Shared
 sudo adduser dia_admin sharegroup
 sudo adduser student sharegroup
 
-cd ~/home/Shared
+cd /home/Shared
 sudo touch laptop_number miro_number waffle_number
 sudo chown dia_admin *
 sudo chgrp sharegroup *
