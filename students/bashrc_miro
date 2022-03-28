@@ -1,0 +1,21 @@
+# Bash profile with ROS settings for the MiRo robot
+
+# ROS settings for MiRo Developer Kit (localhost)
+export MIRO_ROBOT_NAME=miro
+
+if [ ! -f ~/.tuos/robot_mode ]; then
+    echo "sim" > ~/.tuos/robot_mode
+elif grep -qi "robot" ~/.tuos/robot_mode; then
+    # enter the IP of you MiRo here
+    MRI=192.168.139.101
+elif grep -qi "sim" ~/.tuos/robot_mode; then
+    MRI=localhost
+else
+    MRI=localhost
+fi
+
+export MIRO_ROBOT_IP=$MRI
+
+source ~/mdk/setup.bash
+source ~/mdk/catkin_ws/devel/setup.bash
+

@@ -1,0 +1,21 @@
+# Bash profile with ROS settings for the Turtlebot3 robot
+
+# ROS settings for TurtleBot3 (localhost)
+source /opt/ros/noetic/setup.bash
+source ~/catkin_ws/devel/setup.bash
+export TURTLEBOT3_MODEL=waffle
+
+
+if [ ! -f ~/.tuos/robot_mode ]; then
+    echo "robot" > ~/.tuos/robot_mode
+elif grep -qi "robot" ~/.tuos/robot_mode; then
+    # enter the IP of you TB3 robot here
+    RMU=192.168.139.101    
+elif grep -qi "sim" ~/.tuos/robot_mode; then
+    RMU=http://localhost:11311
+else
+    RMU=http://localhost:11311
+fi
+
+export ROS_MASTER_URI=$RMU
+export ROS_HOSTNAME=$(hostname)
