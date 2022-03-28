@@ -66,6 +66,13 @@ else
   exit 0
 fi
 
+echo "[Source .bashrc]"
+source $HOME/.bashrc
+
+echo "[Update & Upgrade]"
+sudo apt update -y
+sudo apt upgrade -y
+
 echo "[Install all the ROS and TB3 packages]"
 sudo apt install -y ros-noetic-desktop-full ros-noetic-rqt-* ros-noetic-gazebo-* ros-noetic-joy ros-noetic-teleop-twist-joy ros-noetic-teleop-twist-keyboard ros-noetic-laser-proc ros-noetic-rgbd-launch ros-noetic-rosserial-arduino ros-noetic-amcl ros-noetic-map-server ros-noetic-move-base ros-noetic-rqt* ros-noetic-gmapping ros-noetic-navigation python3-rosdep python3-rosinstall python3-rosinstall-generator python3-wstool build-essential ros-noetic-dynamixel-sdk ros-noetic-turtlebot3 ros-noetic-turtlebot3-simulations python3-pip python3-catkin-tools ffmpeg
 
