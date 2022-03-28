@@ -1,0 +1,8 @@
+# WSL settings
+alias wxp="echo 'Opening the current directory in Windows Explorer...' && explorer.exe ."
+alias off="echo 'Shutting down WSL...' && wsl.exe --shutdown"
+alias src="echo 'Sourcing bashrc...' && source ~/.bashrc"
+
+export DISPLAY=$(awk '/nameserver / {print $2; exit}' /etc/resolv.conf 2>/dev/null):0
+export LIBGL_ALWAYS_INDIRECT=1
+export GAZEBO_IP=127.0.0.1
