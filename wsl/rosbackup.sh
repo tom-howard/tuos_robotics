@@ -22,7 +22,6 @@ tar --exclude='home/student/.local'    \
     --exclude='home/student/.wsl-ros'  \
     --exclude='home/student/.dbus'     \
     --exclude='home/student/.gazebo'   \
-    --exclude='home/student/.miro2'    \
     --exclude='home/student/.ros'      \
     --exclude='home/student/.rviz'     \
     --exclude='home/student/.ignition' \
