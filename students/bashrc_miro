@@ -8,14 +8,15 @@ if [ ! -f ~/.tuos/robot_mode ]; then
 elif grep -qi "robot" ~/.tuos/robot_mode; then
     # enter the IP of you MiRo here
     MRI=192.168.139.101
+    export MIRO_ROBOT_IP=$MRI
+    sed -i "/export MIRO_NETWORK_MODE/c export MIRO_NETWORK_MODE=dynamic"  ~/.miro2/config/user_setup.bash
 elif grep -qi "sim" ~/.tuos/robot_mode; then
     MRI=localhost
+    sed -i "/export MIRO_NETWORK_MODE/c export MIRO_NETWORK_MODE=loopback"  ~/.miro2/config/user_setup.bash
 else
     MRI=localhost
+    sed -i "/export MIRO_NETWORK_MODE/c export MIRO_NETWORK_MODE=loopback"  ~/.miro2/config/user_setup.bash
 fi
-
-export MIRO_ROBOT_IP=$MRI
 
 source ~/mdk/setup.bash
 source ~/mdk/catkin_ws/devel/setup.bash
-
