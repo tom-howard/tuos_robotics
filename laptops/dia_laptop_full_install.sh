@@ -213,7 +213,7 @@ fi
 if ask "[Do you want to set up a 'student' profile?]"; then
   username="student"
   pass="panQJvEl/BD/g"
-  sudo useradd -m -p "$pass" "$username"
+  sudo useradd -s /bin/bash -m -p "$pass" "$username"
   if [ $? -eq 0 ]; then
     echo -e "\n${YELLOW}[User 'student' has been added to system]${NC}"
     sudo adduser student sharegroup
@@ -229,5 +229,5 @@ sudo apt upgrade -y
 sudo apt autoremove -y
 sudo apt autoclean -y
 
-echo -e "\n${YELLOW}[COMPLETE]: Don't forget to reboot ASAP.${NC}"
+echo -e "\n${GREEN}[COMPLETE]: Don't forget to reboot ASAP.${NC}"
 exit 0

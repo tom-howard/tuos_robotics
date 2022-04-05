@@ -201,5 +201,5 @@ sudo apt upgrade -y
 sudo apt autoremove -y
 sudo apt autoclean -y
 
-echo -e "\n${YELLOW}[COMPLETE]: Don't forget to reboot ASAP.${NC}"
+echo -e "\n${GREEN}[COMPLETE]: Don't forget to reboot ASAP.${NC}"
 exit 0
