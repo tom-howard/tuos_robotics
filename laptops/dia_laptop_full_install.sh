@@ -210,7 +210,17 @@ if ask "[Do you want to download COM2009 and COM3528 teaching materials?]"; then
 fi
 
 ########################## Part V. 'Student' profile ###########################
-#TODO
+if ask "[Do you want to set up a 'student' profile?]"; then
+  username="student"
+  pass="panQJvEl/BD/g"
+  sudo useradd -m -p "$pass" "$username"
+  if [ $? -eq 0 ]; then
+    echo -e "\n${YELLOW}[User 'student' has been added to system]${NC}"
+    sudo adduser student sharegroup
+  else
+    echo -e "\n${RED}[Failed to add user 'student']${NC}"
+  fi
+fi
 
 ############################## Part VI. Clean up ###############################
 echo -e "\n${YELLOW}[Clean-up]${NC}"
