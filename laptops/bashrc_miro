@@ -16,6 +16,7 @@ elif grep -qi "robot" ~/.tuos/robot_mode; then
 elif grep -qi "sim" ~/.tuos/robot_mode; then
     MRI=localhost
     sed -i "/export MIRO_NETWORK_MODE/c export MIRO_NETWORK_MODE=loopback"  ~/.miro2/config/user_setup.bash
+    export MIRO_LOCAL_IP=localhost
 else
     MRI=dia-miro$(cat ~/.tuos/miro_number)
     sed -i "/export MIRO_NETWORK_MODE/c export MIRO_NETWORK_MODE=dynamic"  ~/.miro2/config/user_setup.bash
@@ -25,4 +26,3 @@ export MIRO_ROBOT_IP=$MRI
 
 source ~/mdk/setup.bash
 source ~/mdk/catkin_ws/devel/setup.bash
-
