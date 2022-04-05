@@ -217,6 +217,12 @@ if ask "[Do you want to set up a 'student' profile?]"; then
   if [ $? -eq 0 ]; then
     echo -e "\n${YELLOW}[User 'student' has been added to system]${NC}"
     sudo adduser student sharegroup
+
+    # Most of the commands above are now simply copied over
+    # TODO: There must be a more clever way of doing this
+    echo -e "\n${YELLOW}[Setting up the same environment for 'student' account]${NC}"
+    wget -O /tmp/setup_student.sh https://raw.githubusercontent.com/tom-howard/tuos_robotics/main/laptops/setup_student.sh
+    sudo -i -u student "/tmp/setup_student.sh"
   else
     echo -e "\n${RED}[Failed to add user 'student']${NC}"
   fi
