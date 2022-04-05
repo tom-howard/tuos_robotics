@@ -29,6 +29,7 @@ echo -e "${YELLOW}[Note] Catkin workspace   >>> $HOME/catkin_ws${NC}\n"
 
 
 if ! ask "[OK to continue with installation?]"; then
+  echo -e "${YELLOW}Exiting.${NC}"
   exit 130
 fi
 
