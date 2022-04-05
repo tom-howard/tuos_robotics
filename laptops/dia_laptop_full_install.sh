@@ -222,7 +222,8 @@ if ask "[Do you want to set up a 'student' profile?]"; then
     # TODO: There must be a more clever way of doing this
     echo -e "\n${YELLOW}[Setting up the same environment for 'student' account]${NC}"
     wget -O /tmp/setup_student.sh https://raw.githubusercontent.com/tom-howard/tuos_robotics/main/laptops/setup_student.sh
-    sudo -i -u student "chmod +x /tmp/setup_student.sh && /tmp/setup_student.sh"
+    chmod +x /tmp/setup_student.sh
+    sudo -i -u student "/tmp/setup_student.sh"
   else
     echo -e "\n${RED}[Failed to add user 'student']${NC}"
   fi
