@@ -37,7 +37,6 @@ if ! ask "[OK to continue with installation?]"; then
 fi
 
 #################  Part I. ROS, TB3, catkin_ws and dependencies ################
-
 echo -e "\n${YELLOW}[Set the target OS, ROS version and the name of catkin workspace]${NC}"
 name_os_version=${name_os_version:="focal"}
 name_ros_version=${name_ros_version:="noetic"}
@@ -184,7 +183,7 @@ else
   echo -e "\n${YELLOW}[Skipping VcXsrv settings...]${NC}"
 fi
 
-######################### Part IV. Teaching materials ##########################
+########################## Part V. Teaching materials ##########################
 if ask "[Do you want to download COM2009 and COM3528 teaching materials?]"; then
   cd $HOME/$name_catkin_workspace/src
   git clone https://github.com/tom-howard/COM2009
@@ -195,7 +194,7 @@ if ask "[Do you want to download COM2009 and COM3528 teaching materials?]"; then
   catkin build
 fi
 
-############################### Part V. Clean up ###############################
+############################## Part VI. Clean up ###############################
 echo -e "\n${YELLOW}[Clean-up]${NC}"
 sudo apt update -y
 sudo apt upgrade -y
