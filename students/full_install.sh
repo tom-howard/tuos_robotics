@@ -3,8 +3,8 @@
 # Alex Lucas & Tom Howard, University of Sheffield
 # Copyright (c) 2022
 
-# This script instals the ROS Noetic environment with extra packages 
-# to support developing code for the MiRo and Turtlebot 3 robots. 
+# This script instals the ROS Noetic environment with extra packages
+# to support developing code for the MiRo and Turtlebot 3 robots.
 # The script sets up the ROS network for work in simulation (localhost).
 
 RED='\033[0;31m'
@@ -36,7 +36,7 @@ if ! ask "[OK to continue with installation?]"; then
   exit 130
 fi
 
-#################  Part I. ROS, TB3, catkin_ws and dependencies ################ 
+#################  Part I. ROS, TB3, catkin_ws and dependencies ################
 
 echo -e "\n${YELLOW}[Set the target OS, ROS version and the name of catkin workspace]${NC}"
 name_os_version=${name_os_version:="focal"}
@@ -150,7 +150,7 @@ if ask "[Do you want to also set up TUoS Robot Switch scripts?]"; then
   wget -O ~/.tuos/bashrc_robot_switch https://raw.githubusercontent.com/tom-howard/tuos_robotics/main/students/bashrc_robot_switch
 
   echo -e "\n${YELLOW}[Adding the Robotics Kit switch to ~/.bashrc]${NC}"
-  wget -O /tmp/.bashrc_extras https://raw.githubusercontent.com/tom-howard/tuos_robotics/main/laptops/.bashrc_extras
+  wget -O /tmp/.bashrc_extras https://raw.githubusercontent.com/tom-howard/tuos_robotics/main/students/.bashrc_extras
 
   tmp_file=/tmp/.bashrc_extras
   while IFS= read -r line; do
@@ -159,7 +159,7 @@ if ask "[Do you want to also set up TUoS Robot Switch scripts?]"; then
 
   echo -e "\n${YELLOW}[Adding bash aliases]${NC}"
   cd ~
-  wget -O /tmp/.bash_aliases https://raw.githubusercontent.com/tom-howard/tuos_robotics/main/laptops/.bash_aliases
+  wget -O /tmp/.bash_aliases https://raw.githubusercontent.com/tom-howard/tuos_robotics/main/students/.bash_aliases
   touch ~/.bash_aliases
   tmp_file=/tmp/.bash_aliases
   while IFS= read -r line; do
