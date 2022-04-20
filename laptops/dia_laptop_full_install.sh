@@ -265,10 +265,10 @@ if ask "[Do you want to connect this device to DIA-LAB now?]"; then
   sleep 4
   echo -e "\n${YELLOW}Connected to: $(iwgetid -r)"
   echo -e "Connecting back to '$SSID_CURRENT' for the final part of this setup...${NC}"
-  sleep 2
   sudo nmcli dev wifi connect $SSID_CURRENT
+  sleep 4
 else
-  echo -e "\n${RED}[SKIPPED the DIA-LAB connection step]${NC}"
+  echo -e "\n${YELLOW}[SKIPPED the DIA-LAB connection step]${NC}"
 fi
 
 ############################## Part VII. Clean up ###############################
