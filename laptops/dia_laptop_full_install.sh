@@ -43,8 +43,11 @@ echo -e "\n${YELLOW}[Update & Upgrade]${NC}"
 sudo apt update -y
 sudo apt upgrade -y
 
+echo -e "\n${YELLOW}[Installing Misc Tools]${NC}"
+sudo apt install -y chrony ntpdate curl build-essential git net-tools
+# anything else...?
+
 echo -e "\n${YELLOW}[NTP: update time]${NC}"
-sudo apt install -y chrony ntpdate curl build-essential git
 sudo ntpdate ntp.ubuntu.com
 sleep 2
 
@@ -96,7 +99,26 @@ catkin build
 
 source $HOME/.bashrc
 
-################################# Part II. MDK #################################
+################################# Part II. VS Code #################################
+
+if ask "[Install VS Code?]"; then
+  
+  sudo apt update -y
+  sudo apt install -y software-properties-common apt-transport-https wget
+  # Import the Microsoft GPG key:
+  wget -q https://packages.microsoft.com/keys/microsoft.asc -O- | sudo apt-key add -
+  # Enable the Visual Studio Code repository:
+  sudo add-apt-repository "deb [arch=amd64] https://packages.microsoft.com/repos/vscode stable main"
+  # Install Visual Studio Code:
+  sudo apt install -y code
+  # Update everything for good measure:
+  sudo apt update -y
+  sudo apt upgrade -y
+else
+  echo -e "\n${YELLOW}[Skipping VS Code Install...]${NC}"
+fi
+
+################################# Part III. MDK #################################
 if ask "[Do you want to set up MiRo Developer Kit?]"; then
   echo -e "\n${YELLOW}[Install AprilTags with Pip3]${NC}"
   sudo pip3 install apriltag
@@ -125,7 +147,7 @@ else
   echo -e "\n${YELLOW}[Skipping MDK...]${NC}"
 fi
 
-####################### Part III. TUoS Robotics scripts ########################
+####################### Part IV. TUoS Robotics scripts ########################
 if ask "[Do you want to also set up TUoS Robot Switch scripts?]"; then
 
   echo -e "\n${YELLOW}[The following prompt is only relevant for DIA-LAB laptops which connect to real robots]${NC}"
@@ -198,7 +220,7 @@ else
   echo -e "\n${YELLOW}[Skipping TUoS Robotics scripts...]${NC}"
 fi
 
-######################### Part IV. Teaching materials ##########################
+######################### Part V. Teaching materials ##########################
 if ask "[Do you want to download COM2009 and COM3528 teaching materials?]"; then
   cd $HOME/$name_catkin_workspace/src
   git clone https://github.com/tom-howard/COM2009
@@ -207,9 +229,11 @@ if ask "[Do you want to download COM2009 and COM3528 teaching materials?]"; then
   cd ~/mdk/catkin_ws/src
   git clone https://github.com/AlexandrLucas/COM3528
   catkin build
+
+  sudo apt install -y python3-pandas
 fi
 
-########################## Part V. 'Student' profile ###########################
+########################## Part VI. 'Student' profile ###########################
 if ask "[Do you want to set up a 'student' profile?]"; then
   username="student"
   pass="panQJvEl/BD/g"
@@ -229,12 +253,29 @@ if ask "[Do you want to set up a 'student' profile?]"; then
   fi
 fi
 
-############################## Part VI. Clean up ###############################
+############################## Part VII. DIA-LAB ###############################
+
+if ask "[Do you want to connect this device to DIA-LAB now?]"; then
+  SSID_CURRENT=$(iwgetid -r)
+  sudo nmcli dev wifi connect DIA-LAB
+  sleep 4
+  echo -e "\n${YELLOW}Connected to: $(iwgetid -r)"
+  echo -e "Connecting back to '$SSID_CURRENT' for the final part of this setup...${NC}"
+  sleep 2
+  sudo nmcli dev wifi connect $SSID_CURRENT
+else
+  echo -e "\n${RED}[SKIPPED the DIA-LAB connection step]${NC}"
+fi
+
+############################## Part VII. Clean up ###############################
 echo -e "\n${YELLOW}[Clean-up]${NC}"
 sudo apt update -y
 sudo apt upgrade -y
 sudo apt autoremove -y
 sudo apt autoclean -y
 
-echo -e "\n${GREEN}[COMPLETE]: Don't forget to reboot ASAP.${NC}"
+echo -e "\n${GREEN}[INITIAL INSTALL COMPLETE]: Next Steps:"
+echo -e "   * Install VS Code Extensions (Python, Remote - SSH)"
+echo -e "   * Set up the Student account"
+echo -e "   * Don't forget to reboot ASAP.${NC}"
 exit 0
