@@ -33,6 +33,10 @@ if ! ask "[OK to continue with installation?]"; then
   exit 130
 fi
 
+if ask "[Install Nvidia Driver?]"; then
+  sudo apt install -y nvidia-driver-460
+fi
+
 #################  Part I. ROS, TB3, catkin_ws and dependencies ################
 echo -e "\n${YELLOW}[Set the target OS, ROS version and the name of catkin workspace]${NC}"
 name_os_version=${name_os_version:="focal"}
