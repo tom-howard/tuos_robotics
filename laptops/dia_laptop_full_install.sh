@@ -267,7 +267,6 @@ fi
 if ask "[Do you want to connect this device to DIA-LAB now?]"; then
   SSID_CURRENT=$(iwgetid -r)
   sudo nmcli --ask dev wifi connect DIA-LAB
-  sleep 4
   echo -e "\n${YELLOW}Connected to: $(iwgetid -r)"
   echo -e "Connecting back to '$SSID_CURRENT' for the final part of this setup...${NC}"
   sudo nmcli dev wifi connect $SSID_CURRENT
