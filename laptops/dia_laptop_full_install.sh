@@ -43,10 +43,6 @@ echo -e "\n${YELLOW}[Update & Upgrade]${NC}"
 sudo apt update -y
 sudo apt upgrade -y
 
-if ask "[Install Nvidia Driver?]"; then
-  sudo apt install -y nvidia-driver-460
-fi
-
 echo -e "\n${YELLOW}[Installing Misc Tools]${NC}"
 sudo apt install -y chrony ntpdate curl build-essential git net-tools
 # anything else...?
