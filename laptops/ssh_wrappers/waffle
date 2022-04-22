@@ -1,0 +1,66 @@
+#!/usr/bin/env bash
+# CC BY-NC
+# Alex Lucas & Tom Howard, University of Sheffield
+# Copyright (c) 2022
+
+# very WIP!
+
+RED='\033[0;31m'
+YELLOW='\033[1;33m'
+GREEN='\033[0;32m'
+NC='\033[0m'
+
+WAFFLE_NO=$1
+COMMAND=$2
+NUM_MSG="Not a valid Waffle ID. Please enter a number between 1 and 50."
+
+ask() {
+    local reply prompt
+    prompt='y/n'
+    echo -e -n "$1 ${YELLOW} [$prompt] ${NC}>> "
+    read -r reply </dev/tty
+    if [[ -z $reply ]]; then
+        return 1;
+    elif [ "$reply" == "y" ] || [ "$reply" == "Y" ]; then
+        return 0;
+    else
+        return 1;
+    fi
+}
+
+launch() {
+    if ask "You are about to pair with dia-waffle$WAFFLE_NO. OK to continue?"; then
+        echo "$WAFFLE_NO" > ~/.tuos/waffle_number
+    else
+        exit 0
+    fi
+    ssh robot@dia-waffle$WAFFLE_NO 'bash -s' < launch_ros.sh   
+}
+
+# terminal() {
+    
+# }
+
+# off() {
+
+# }
+
+
+
+if [ "$WAFFLE_NO" == "" ]; then
+    echo "$NUM_MSG"
+    exit 0
+elif (( $WAFFLE_NO >= 1 && $WAFFLE_NO <= 50 )); then
+    echo "WAFFLE ID: $WAFFLE_NO"
+else
+    echo "$NUM_MSG"
+    exit 0
+fi
+
+if [ "$COMMAND" == "launch" ] || [ "$COMMAND" == "terminal" ] || [ "$COMMAND" == "off" ]; then
+    echo "Running command: $COMMAND"
+    eval $COMMAND
+else
+    echo "not a valid command. (use 'launch', 'terminal' or 'off')."
+    exit 0 
+fi
