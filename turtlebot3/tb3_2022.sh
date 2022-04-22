@@ -22,15 +22,21 @@ if ask "[INPUT]: Preparing to configure for robot: dia-waffle$WAFFLE_NO. OK to c
     sudo hostnamectl set-hostname dia-waffle$WAFFLE_NO
     sudo sed -i 's/'$OLD_HOST'/dia-waffle'$WAFFLE_NO'/g' /etc/hosts
     sudo sed -i 's/'$OLD_HOST'/dia-waffle'$WAFFLE_NO'/g' ~/.bashrc
-    if ask "[INPUT]: Attempting to update the OpenCR board firmware. Is the OpenCR board connected?"; then
-        export OPENCR_PORT=/dev/ttyACM0
-        export OPENCR_MODEL=waffle_noetic
-        cd ~/device_firmware/opencr/opencr_update/
-        ./update.sh $OPENCR_PORT $OPENCR_MODEL.opencr
-        cd ~
-        echo "[INFO]: OpenCR firmware (should) now be updated!"
-        sleep 5
-        if ask "[INPUT]: Attempting to update RealSense Camera firmware. Is the camera connected?"; then
+    if ask "[INPUT]: Do you want to update the OpenCR board firmware?"; then
+        if ask "[INPUT]: Is the OpenCR board connected?"; then
+            export OPENCR_PORT=/dev/ttyACM0
+            export OPENCR_MODEL=waffle_noetic
+            cd ~/device_firmware/opencr/opencr_update/
+            ./update.sh $OPENCR_PORT $OPENCR_MODEL.opencr
+            cd ~
+            echo "[INFO]: OpenCR firmware (should) now be updated!"
+            sleep 5
+        else
+            echo "[INFO] Couldn't update the OpenCR board."
+        fi
+    fi
+    if ask "[INPUT]: Do you want to update the RealSense Camera firmware?"; then
+        if ask "[INPUT]: Is the camera connected?"; then
             echo "[INFO]: Looking for available devices..."
             rs-fw-update -l
             if ask "[INPUT]: Is the device visible in the list above?"; then
@@ -40,20 +46,18 @@ if ask "[INPUT]: Preparing to configure for robot: dia-waffle$WAFFLE_NO. OK to c
                 rs-fw-update -l
                 echo "[INFO]: The device firmware should now be listed (above) as 05.12.14.50..."
                 sleep 5
-                echo "[INFO]: Robot configuration is now complete. The system now needs to be restarted."
-                if ask "[INPUT]: Do you want to do this now?"; then
-                    echo "[COMPLETE]: Initiating reboot..."
-                    sudo reboot
-                else
-                    echo "[COMPLETE]: Don't forget to reboot ASAP."
-                fi
             else
-                echo "[EXIT]: Script terminated prematurely at RealSense Camera update step."
+                echo "[INFO]: Couldn't connect to the camera."
             fi
         else
-            echo "[EXIT]: Script terminated prematurely at RealSense Camera update step."
+            echo "[INFO]: Couldn't update the camera."
         fi
+    fi
+    echo "[INFO]: Robot configuration is now complete. The system now needs to be restarted."
+    if ask "[INPUT]: Do you want to do this now?"; then
+        echo "[COMPLETE]: Initiating reboot..."
+        sudo reboot
     else
-        echo "[EXIT]: Script terminated prematurely at OpenCR update step."
+        echo "[COMPLETE]: Don't forget to reboot ASAP."
     fi
 fi
