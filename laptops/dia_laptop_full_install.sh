@@ -79,7 +79,14 @@ echo -e "\n${YELLOW}[Source .bashrc]${NC}"
 source $HOME/.bashrc
 
 echo -e "\n${YELLOW}[Install all the necessary ROS and TB3 packages]${NC}"
-sudo apt install -y ros-noetic-desktop-full ros-noetic-rqt-* ros-noetic-gazebo-* ros-noetic-joy ros-noetic-teleop-twist-joy ros-noetic-teleop-twist-keyboard ros-noetic-laser-proc ros-noetic-rgbd-launch ros-noetic-rosserial-arduino ros-noetic-amcl ros-noetic-map-server ros-noetic-move-base ros-noetic-rqt* ros-noetic-gmapping ros-noetic-navigation python3-rosdep python3-rosinstall python3-rosinstall-generator python3-wstool build-essential ros-noetic-dynamixel-sdk ros-noetic-turtlebot3 ros-noetic-turtlebot3-simulations python3-pip python3-catkin-tools ffmpeg
+sudo apt install -y ros-noetic-desktop-full ros-noetic-rqt-* ros-noetic-gazebo-* \
+ros-noetic-joy ros-noetic-teleop-twist-joy ros-noetic-teleop-twist-keyboard \
+ros-noetic-laser-proc ros-noetic-rgbd-launch ros-noetic-rosserial-arduino \
+ros-noetic-amcl ros-noetic-map-server ros-noetic-move-base ros-noetic-rqt* \
+ros-noetic-gmapping ros-noetic-navigation python3-rosdep python3-rosinstall \
+python3-rosinstall-generator python3-wstool build-essential ros-noetic-dynamixel-sdk \
+ros-noetic-turtlebot3 ros-noetic-turtlebot3-simulations \
+python3-pip python3-catkin-tools ffmpeg
 
 echo -e "\n${YELLOW}[Initialise rosdep and update]${NC}"
 sudo rm /etc/ros/rosdep/sources.list.d/20-default.list
