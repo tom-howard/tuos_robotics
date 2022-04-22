@@ -91,6 +91,8 @@ python3-pip python3-catkin-tools ffmpeg
 echo -e "\n${YELLOW}[Initialise rosdep and update]${NC}"
 sudo rm /etc/ros/rosdep/sources.list.d/20-default.list
 sudo sh -c "rosdep init"
+echo "Running rosdep update now..."
+sleep 2
 rosdep update
 
 echo -e "\n${YELLOW}[Environment setup]${NC}"
