@@ -33,15 +33,24 @@ ask() {
 check-for-dialab() {
     SSID_NOW=$(iwgetid -r)
     if [ $SSID_NOW != "DIA-LAB" ]; then
-        if ask "You aren't connected to DIA-LAB yet, do you want to do that now? (note: this will break your internet connection)"; then
+        if [ $1 == "show_explainer" ]; then
+            echo "You aren't connected to the 'DIA-LAB' WiFi network yet."
+            echo "You need to be connected to DIA-LAB in order to establish a ROS Network between the robot and this laptop,"
+            echo "but you WON'T be able to access the Internet..."
+        fi
+        if ask "Do you want to connect to DIA-LAB?"; then
             echo "Connecting to DIA-LAB..."
             nmcli dev wifi connect DIA-LAB
+        else
+            echo "OK, remember to do it later then (if you are planning to run ROS on this laptop)."
         fi
     fi
 }
 
 pair() {
-    check-for-dialab
+    echo "turtlebot" > ~/.tuos/current_robot # set the laptop in 'waffle mode'
+    echo "robot" > ~/.tuos/robot_mode # set the laptop in 'real-robot mode' (as opposed to 'simulation mode')
+    check-for-dialab show_explainer
     if ask "You are about to pair this laptop (dia-laptop$LAPTOP_NO) with dia-waffle$WAFFLE_NO, OK to continue?"; then
         echo "$WAFFLE_NO" > ~/.tuos/waffle_number
         mkdir -p ~/.ssh/
@@ -55,7 +64,7 @@ pair() {
 
 launch() {
     check-for-dialab
-    if ask "You are about to connect to dia-waffle$WAFFLE_NO. OK to continue?"; then
+    if ask "You are about to launch ROS on dia-waffle$WAFFLE_NO. OK to continue?"; then
         echo "$WAFFLE_NO" > ~/.tuos/waffle_number
     else
         exit 0
@@ -66,7 +75,7 @@ launch() {
 terminal() {
     check-for-dialab
     echo "Logging in to dia-waffle$WAFFLE_NO..."
-    ssh robot@dia-waffle$WAFFLE_NO    
+    ssh robot@dia-waffle$WAFFLE_NO -t "tmux new-session -s ros || tmux attach-session -t ros"
 }
 
 # off() {
