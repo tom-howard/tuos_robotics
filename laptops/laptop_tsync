@@ -1,0 +1,17 @@
+#!/bin/bash
+# /usr/local/bin/laptop_tsync
+
+SSID_INIT=$(iwgetid -r)
+echo "Current SSID is: $SSID_INIT"
+if [ $SSID_INIT != 'eduroam' ]; then
+    echo "Connecting to eduroam..." 
+    sudo nmcli dev wifi connect eduroam
+fi
+
+echo "Synchronising with ntp server..." 
+sudo ntpdate ntp.ubuntu.com
+
+if [ $SSID_INIT != 'eduroam' ]; then
+    echo "Connecting back to $SSID_INIT"
+    sudo nmcli dev wifi connect $SSID_INIT
+fi
