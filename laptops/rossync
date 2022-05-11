@@ -1,0 +1,2 @@
+Cmnd_Alias TIMESYNC = /sbin/ntpdate
+%timesyncers ALL=TIMESYNC
