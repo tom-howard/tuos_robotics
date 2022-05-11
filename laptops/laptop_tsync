@@ -1,6 +1,8 @@
 #!/bin/bash
 # /usr/local/bin/laptop_tsync
 
+# this doesn't work because 'student' can't have sudo rights to nmcli!
+
 SSID_INIT=$(iwgetid -r)
 echo "Current SSID is: $SSID_INIT"
 if [ $SSID_INIT != 'eduroam' ]; then

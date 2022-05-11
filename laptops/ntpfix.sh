@@ -4,8 +4,7 @@
 
 sudo apt install -y chrony ntpdate net-tools
 
-sudo wget -O /usr/local/bin/laptop_tsync https://raw.githubusercontent.com/tom-howard/tuos_robotics/main/laptops/laptop_tsync
-sudo chmod +x /usr/local/bin/laptop_tsync
+sudo ntpdate ntp.ubuntu.com
 
 sudo groupadd timesyncers
 sudo adduser student timesyncers
