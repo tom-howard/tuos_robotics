@@ -10,3 +10,5 @@ sudo groupadd timesyncers
 sudo adduser student timesyncers
 
 sudo wget -O /etc/sudoers.d/rossync https://raw.githubusercontent.com/tom-howard/tuos_robotics/main/laptops/rossync
+
+sudo reboot
