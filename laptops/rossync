@@ -1,2 +1,1 @@
-Cmnd_Alias TIMESYNC = /sbin/ntpdate
-%timesyncers ALL=TIMESYNC
+%timesyncers ALL=NOPASSWD:/sbin/ntpdate
