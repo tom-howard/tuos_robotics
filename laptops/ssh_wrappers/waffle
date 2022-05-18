@@ -4,8 +4,6 @@
 # Alex Lucas & Tom Howard, University of Sheffield
 # Copyright (c) 2022
 
-# very WIP!
-
 RED='\033[0;31m'
 YELLOW='\033[1;33m'
 GREEN='\033[0;32m'
@@ -15,11 +13,12 @@ WAFFLE_NO=$1
 COMMAND=$2
 LAPTOP_NO=$(hostname | grep -o -E '[0-9]+')
 NUM_MSG="Not a valid Waffle ID. Please enter a number between 1 and 50."
+laptop_id=$(hostname)
 
 ask() {
     local reply prompt
     prompt='y/n'
-    echo -e -n "$1 ${YELLOW} [$prompt] ${NC}>> "
+    echo -e -n "${YELLOW}[INPUT]${NC} $1 [$prompt] >> "
     read -r reply </dev/tty
     if [[ -z $reply ]]; then
         return 1;
@@ -34,75 +33,115 @@ check-for-dialab() {
     SSID_NOW=$(iwgetid -r)
     if [ $SSID_NOW != "DIA-LAB" ]; then
         if [ $1 == "show_explainer" ]; then
-            echo "You aren't connected to the 'DIA-LAB' WiFi network yet."
-            echo "You need to be connected to DIA-LAB in order to establish a ROS Network between the robot and this laptop,"
-            echo "but you WON'T be able to access the Internet..."
+            echo -n -e "${RED}[$laptop_id]${NC}: You aren't connected to the 'DIA-LAB' WiFi network yet. "
+            echo -n "You need to be connected to DIA-LAB in order to establish a ROS Network between the robot and this laptop "
+            echo "(but you WON'T be able to access the Internet once connected)."
         fi
-        if ask "Do you want to connect to DIA-LAB?"; then
-            echo "Connecting to DIA-LAB..."
-            nmcli dev wifi connect DIA-LAB
+        if ask "Do you want to connect to DIA-LAB now?"; then
+            echo -e "${RED}[$laptop_id]${NC}: Connecting to DIA-LAB..."
+            nmcli c up DIA-LAB > /dev/null
         else
-            echo "OK, remember to do it later then (if you are planning to run ROS on this laptop)."
+            echo -e "${RED}[$laptop_id]${NC}: OK, remember to do it later then (if you are planning to run ROS on this laptop)."
         fi
     fi
 }
 
+ntp_sync() {
+    echo -e "${RED}[$laptop_id]${NC}: Preparing to run an NTP update..."
+    SSID_NOW=$(iwgetid -r)
+    if [ $SSID_NOW != "eduroam" ]; then
+        echo -e "${RED}[$laptop_id]${NC}: Temporarily connecting to eduroam..."
+        nmcli c up eduroam > /dev/null
+        echo -e "${RED}[$laptop_id]${NC}: Syncronising with NTP Server..."
+        sudo ntpdate ntp.ubuntu.com
+        echo -e "${RED}[$laptop_id]${NC}: Connecting back to $SSID_NOW..."
+        nmcli c up $SSID_NOW > /dev/null
+    else
+        echo -e "${RED}[$laptop_id]${NC}: Syncronising with NTP Server..."
+        sudo ntpdate ntp.ubuntu.com
+    fi
+}
+
+check_pairing() {
+    wn=~/.tuos/waffle_number
+    touch $wn
+    if grep -qi "$WAFFLE_NO" $wn; then
+        # local pairing looks OK.
+        # now check the pairing on the waffle side too...
+        robot_response=$(ssh robot@dia-waffle$WAFFLE_NO 'bash -s' < check_pairing_robot.sh $LAPTOP_NO) 
+        if [ $robot_response == "1" ]; then
+            echo -e "${GREEN}[dia-waffle$WAFFLE_NO]${NC}: Robot-Laptop pairing verified."
+        elif [ $robot_response == "0" ]; then
+            echo -e "${GREEN}[dia-waffle$WAFFLE_NO]${NC}: ERROR: Invalid pairing."
+            exit 0
+        else
+            echo -e "${GREEN}[dia-waffle$WAFFLE_NO]${NC}: Something else went wrong...?"
+            exit 0
+        fi
+    else
+        echo -e "${RED}[$laptop_id]${NC}: ERROR: This laptop has not been paired with dia-waffle$WAFFLE_NO." 
+        exit 0
+    fi
+}
+
+# CLI entry points:
+
 pair() {
-    echo "turtlebot" > ~/.tuos/current_robot # set the laptop in 'waffle mode'
-    echo "robot" > ~/.tuos/robot_mode # set the laptop in 'real-robot mode' (as opposed to 'simulation mode')
-    check-for-dialab show_explainer
-    if ask "You are about to pair this laptop (dia-laptop$LAPTOP_NO) with dia-waffle$WAFFLE_NO, OK to continue?"; then
+    if ask "You are about to pair ${RED}dia-laptop$LAPTOP_NO${NC} with ${GREEN}dia-waffle$WAFFLE_NO${NC}. OK to continue?"; then
+        echo -n -e "${RED}[$laptop_id]${NC}: Pairing in progress. "
+        echo "This will take a minute..."
+        echo "turtlebot" > ~/.tuos/current_robot # set the laptop in 'waffle mode'
+        echo "robot" > ~/.tuos/robot_mode # set the laptop in 'real-robot mode' (as opposed to 'simulation mode')
         echo "$WAFFLE_NO" > ~/.tuos/waffle_number
+        ntp_sync
+        check-for-dialab show_explainer
+        
+        # configuring ssh connection:
         mkdir -p ~/.ssh/
         rm -f ~/.ssh/waffle_rsa*
         ssh-keygen -t rsa -b 2048 -f ~/.ssh/waffle_rsa -q -N ""
-
         ssh-copy-id robot@dia-waffle$WAFFLE_NO > /dev/null 2>&1
         ssh robot@dia-waffle$WAFFLE_NO 'bash -s' < robot_pairing.sh $LAPTOP_NO
     fi
 }
 
-launch() {
-    check-for-dialab
-    if ask "You are about to launch ROS on dia-waffle$WAFFLE_NO. OK to continue?"; then
-        echo "$WAFFLE_NO" > ~/.tuos/waffle_number
-    else
-        exit 0
-    fi
-    ssh robot@dia-waffle$WAFFLE_NO 'bash -s' < launch_ros.sh   
-}
+# launch() {
+#     check-for-dialab
+#     if ask "You are about to launch ROS on dia-waffle$WAFFLE_NO. OK to continue?"; then
+#         echo "$WAFFLE_NO" > ~/.tuos/waffle_number
+#     else
+#         exit 0
+#     fi
+#     ssh robot@dia-waffle$WAFFLE_NO 'bash -s' < launch_ros.sh   
+# }
 
 terminal() {
     check-for-dialab
-    echo "Logging in to dia-waffle$WAFFLE_NO..."
-    ssh robot@dia-waffle$WAFFLE_NO -t "tmux new-session -s ros || tmux attach-session -t ros"
+    check_pairing
+    echo -e "${RED}[$laptop_id]${NC}: Logging in to dia-waffle$WAFFLE_NO..."
+    ssh robot@dia-waffle$WAFFLE_NO -t "tmux new-session -s robot || tmux attach-session -t robot"
 }
 
-# off() {
-
-# }
-
-
+off() {
+    check_pairing
+    ssh robot@dia-waffle$WAFFLE_NO -t "sudo shutdown -P now"
+}
 
 if [ "$WAFFLE_NO" == "" ]; then
     echo "$NUM_MSG"
     exit 0
 elif (( $WAFFLE_NO >= 1 && $WAFFLE_NO <= 50 )); then
-    echo "WAFFLE ID: $WAFFLE_NO"
+    true
 else
     echo "$NUM_MSG"
     exit 0
 fi
 
-# if [ "$COMMAND" == "launch" ] || [ "$COMMAND" == "terminal" ] || [ "$COMMAND" == "off" ]; then
-#     echo "Running command: $COMMAND"
-#     eval $COMMAND
-# else
-#     echo "not a valid command. (use 'launch', 'terminal' or 'off')."
-#     exit 0 
-# fi
-
-echo "LAPTOP_ID: $LAPTOP_NO"
-
-echo "Running command: $COMMAND"
-eval $COMMAND
+if [ "$COMMAND" == "pair" ] || [ "$COMMAND" == "terminal" ] || [ "$COMMAND" == "off" ]; then
+    # echo "LAPTOP_ID: $LAPTOP_NO"
+    # echo "Running command: $COMMAND"
+    eval $COMMAND
+else
+    echo -e "${RED}[$laptop_id]${NC}: Invalid usage (use 'pair', 'terminal' or 'off')."
+    exit 0 
+fi
