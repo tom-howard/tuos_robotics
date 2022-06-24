@@ -3,7 +3,7 @@
 
 source /usr/local/bin/ask_user.sh
 
-export rbname=/mnt/u/wsl-ros/ros-backup-2122
+export rbname=/mnt/u/wsl-ros/ros-backup-2223
 
 rbpth=$rbname'.tar.gz'
 rbwpth=$(sed "s/\/mnt\/u/U\:/;s/\//\\\/g" <<< "$rbpth")
