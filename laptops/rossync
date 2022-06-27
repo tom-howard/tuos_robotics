@@ -1,1 +1,1 @@
-%timesyncers ALL=NOPASSWD:/sbin/ntpdate
+ALL ALL=NOPASSWD:/sbin/ntpdate
