@@ -1,10 +1,12 @@
-#! /bin/bash
+#!/usr/bin/env bash
 
-echo "[INFO]: Obtaining the 'tb3_2022.sh' setup script from GitHub..."
+SCRIPT_NAME=$1
+
+echo "[INFO]: Obtaining the '$SCRIPT_NAME' setup script from GitHub..."
 
 cd ~/.tb3_tools/
-wget https://raw.githubusercontent.com/tom-howard/tuos_robotics/main/turtlebot3/tb3_2022.sh
+wget -O $SCRIPT_NAME https://raw.githubusercontent.com/tom-howard/tuos_robotics/main/turtlebot3/$SCRIPT_NAME
 
 echo "[INFO]: Executing setup script..."
 
-chmod +x tb3_2022.sh && ./tb3_2022.sh $1
+chmod +x $SCRIPT_NAME && ./$SCRIPT_NAME
