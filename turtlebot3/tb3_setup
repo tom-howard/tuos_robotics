@@ -10,3 +10,5 @@ wget -O $SCRIPT_NAME https://raw.githubusercontent.com/tom-howard/tuos_robotics/
 echo "[INFO]: Executing setup script..."
 
 chmod +x $SCRIPT_NAME && ./$SCRIPT_NAME
+
+rm -rf ~/.tb3_tools/$SCRIPT_NAME
