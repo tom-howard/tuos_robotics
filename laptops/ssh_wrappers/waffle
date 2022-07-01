@@ -11,13 +11,27 @@ YELLOW='\033[0;93m'
 BLUE='\033[1;34m'
 MAGENTA='\033[0;95m'
 CYAN='\033[0;96m'
+IT='\033[3m'
 NC='\033[0m'
 
-WAFFLE_NO=$1
-COMMAND=$2
-LAPTOP_NO=$(hostname | grep -o -E '[0-9]+')
-NUM_MSG="Not a valid Waffle number (must be between 1 and 50)."
-laptop_id=$(hostname)
+# Internal functions
+
+USAGE="${IT}waffle${NC} command line interface for The University of Sheffield TurtleBot3 Waffles.
+
+Usage:
+waffle [NUM] [COMMAND]
+
+[NUM]     Numeric ID of the robot you are working with (a number between 1 and 50)
+          e.g. ${IT}dia-waffle[NUM]${NC} 
+
+[COMMAND] options:
+  pair    ${IT}Pair${NC} this laptop to the specified robot (dia-waffle[NUM]).
+  link    Same as 'pair' but without syncronising system clocks (quicker).
+  sync    Manually ${IT}syncronise${NC} both system clocks to a common NTP Server.
+  term    Launch a (tmux) ${IT}terminal instance${NC} on the specified robot (dia-waffle[NUM]).
+  ping    Look for the specified robot (dia-waffle[NUM]) on the network by ${IT}pinging${NC} it.
+  off     ${IT}Shutdown${NC} the robot.
+"
 
 ask() {
     local reply prompt
@@ -36,12 +50,12 @@ ask() {
 check-for-dialab() {
     SSID_NOW=$(iwgetid -r)
     if [[ $SSID_NOW != "DIA-LAB" ]]; then
-        if [[ $1 == "show_explainer" ]]; then
+        if [[ "$1" == "loud" ]]; then
             echo -e "${CYAN}[$laptop_id]${NC} You aren't connected to the 'DIA-LAB' WiFi network yet."
             echo -e "You need to be connected to this to run ROS"
             echo -e "(but you WILL lose internet connection)."
         fi
-        if ask "Do you want to connect to DIA-LAB now?"; then
+        if ask "Do you want to connect to DIA-LAB?"; then
             echo -e "${CYAN}[$laptop_id]${NC} Connecting to DIA-LAB..."
             nmcli c up DIA-LAB > /dev/null
         else
@@ -63,46 +77,27 @@ check-pairing() {
             fi
         elif [[ $robot_response == "0" ]]; then
             echo -e "${GREEN}[dia-waffle$WAFFLE_NO]${NC} ${RED}Invalid pairing.${NC}"
-            exit 0
+            exit 2
         else
             echo -e "${GREEN}[dia-waffle$WAFFLE_NO]${NC} ${RED}Unexpected error.${NC}"
-            exit 0
+            exit 2
         fi
     else
-        echo -e "${CYAN}[$laptop_id]${NC} ERROR: This laptop has not been paired with dia-waffle$WAFFLE_NO." 
-        exit 0
+        echo -e "${CYAN}[$laptop_id] ${RED}DENIED: This laptop isn't paired with dia-waffle$WAFFLE_NO.${NC}" 
+        exit 2
     fi
 }
 
 # CLI entry points:
 
-sync() {
-    echo -e "${CYAN}[$laptop_id]${NC} Preparing to run an NTP update..."
-    SSID_NOW=$(iwgetid -r)
-    if [[ $SSID_NOW != "eduroam" ]]; then
-        echo -e "${CYAN}[$laptop_id]${NC} Temporarily connecting to eduroam..."
-        nmcli c up eduroam > /dev/null
-        echo -e "${CYAN}[$laptop_id]${NC} Syncronising with NTP Server..."
-        sudo ntpdate ntp.ubuntu.com > /dev/null
-        echo -e "${CYAN}[$laptop_id]${NC} Time syncronisation complete."
-        echo -e "${CYAN}[$laptop_id]${NC} Connecting back to $SSID_NOW..."
-        nmcli c up $SSID_NOW > /dev/null
-    else
-        echo -e "${CYAN}[$laptop_id]${NC} Syncronising with NTP Server..."
-        sudo ntpdate ntp.ubuntu.com > /dev/null
-        echo -e "${CYAN}[$laptop_id]${NC} Time syncronisation complete."
-    fi
-    ssh robot@dia-waffle$WAFFLE_NO 'bash -s' < robot_sync.sh $LAPTOP_NO
-}
-
 pair() {
-    if ask "You are about to pair dia-laptop${CYAN}$LAPTOP_NO${NC} with dia-waffle${GREEN}$WAFFLE_NO${NC}. OK to continue?"; then
+    if ask "You are about to pair ${CYAN}dia-laptop$LAPTOP_NO${NC} with ${GREEN}dia-waffle$WAFFLE_NO${NC}. OK to continue?"; then
         echo -e "${CYAN}[$laptop_id]${NC} Pairing in progress (this will take a minute)..."
         echo "turtlebot" > ~/.tuos/current_robot # set the laptop to 'waffle mode'
         echo "robot" > ~/.tuos/robot_mode # set the laptop to 'real-robot mode' (as opposed to 'simulation mode')
         echo "$WAFFLE_NO" > ~/.tuos/waffle_number # set the waffle number
 
-        check-for-dialab show_explainer
+        check-for-dialab loud
 
         # configuring ssh connection:
         mkdir -p ~/.ssh/
@@ -111,7 +106,9 @@ pair() {
         ssh-copy-id robot@dia-waffle$WAFFLE_NO > /dev/null 2>&1
         ssh robot@dia-waffle$WAFFLE_NO 'bash -s' < robot_pairing.sh $LAPTOP_NO
 
-        sync
+        if [[ "$1" != "quick" ]]; then
+            sync
+        fi
         check-pairing loud
 
         echo -e "${BLUE}Pairing complete.${NC}"
@@ -120,7 +117,26 @@ pair() {
     fi
 }
 
-terminal() {
+sync() {
+    echo -e "${CYAN}[$laptop_id]${NC} Preparing to run an NTP update on both systems..."
+    SSID_NOW=$(iwgetid -r)
+    if [[ $SSID_NOW != "eduroam" ]]; then
+        echo -e "${CYAN}[$laptop_id]${NC} Temporarily connecting to eduroam..."
+        nmcli c up eduroam > /dev/null
+        echo -e "${CYAN}[$laptop_id]${NC} Syncronising laptop OS to NTP Server..."
+        sudo ntpdate ntp.ubuntu.com > /dev/null
+        echo -e "${CYAN}[$laptop_id]${NC} Laptop time syncronisation complete."
+        echo -e "${CYAN}[$laptop_id]${NC} Connecting back to $SSID_NOW..."
+        nmcli c up $SSID_NOW > /dev/null
+    else
+        echo -e "${CYAN}[$laptop_id]${NC} Syncronising laptop OS to NTP Server..."
+        sudo ntpdate ntp.ubuntu.com > /dev/null
+        echo -e "${CYAN}[$laptop_id]${NC} Laptop time syncronisation complete."
+    fi
+    ssh robot@dia-waffle$WAFFLE_NO 'bash -s' < robot_sync.sh $LAPTOP_NO
+}
+
+term() {
     check-for-dialab
     check-pairing loud
     echo -e "${CYAN}[$laptop_id]${NC} Logging in to dia-waffle$WAFFLE_NO..."
@@ -129,10 +145,15 @@ terminal() {
 
 off() {
     check-pairing
-    if ask "Are you sure you want to shutdown ${GREEN}dia-waffle$WAFFLE_NO?${NC}"; then
+    if [[ "$1" == "no_ask" ]]; then
+        echo "Shutting down the robot now..."
         ssh robot@dia-waffle$WAFFLE_NO -t "sudo poweroff"
     else
-        echo -e "${RED}Shutdown cancelled.${NC}"
+        if ask "Are you sure you want to shutdown ${GREEN}dia-waffle$WAFFLE_NO?${NC}"; then
+            ssh robot@dia-waffle$WAFFLE_NO -t "sudo poweroff"
+        else
+            echo -e "${RED}Shutdown cancelled.${NC}"
+        fi
     fi
 }
 
@@ -141,26 +162,57 @@ waffle_ping() {
     ping dia-waffle$WAFFLE_NO
 }
 
-if [ "$WAFFLE_NO" == "" ]; then
-    echo "$NUM_MSG"
+# Main:
+
+laptop_id=$(hostname)
+LAPTOP_NO=$(hostname | grep -o -E '[0-9]+')
+
+if [[ $# -eq 2 ]]; then
+    WAFFLE_NO=$1
+    COMMAND=$2
+else
+    echo -e "$USAGE"
+    if [ ! -f ~/.tuos/waffle_number ]; then
+        paired_waffle=""
+    else
+        paired_waffle=$(cat ~/.tuos/waffle_number)
+    fi
+    if [[ "$paired_waffle" == "" ]]; then
+        echo -e "This laptop (${CYAN}dia-laptop$LAPTOP_NO${NC}) is not currently paired with a robot."
+    else
+        echo -e "This laptop (${CYAN}dia-laptop$LAPTOP_NO${NC}) is currently paired with ${GREEN}dia-waffle$paired_waffle.${NC}"
+    fi
     exit 0
+fi
+
+NUM_MSG="Not a valid Waffle number (must be between 1 and 50)."
+if [[ "$WAFFLE_NO" == "" ]]; then
+    echo "$NUM_MSG"
+    exit 2
 elif (( $WAFFLE_NO >= 1 && $WAFFLE_NO <= 50 )); then
     true
 else
     echo "$NUM_MSG"
-    exit 0
+    exit 2
 fi
 
 case $COMMAND in 
-    pair|sync|terminal|off)
+    pair|sync|term|off)
         echo -e "${BLUE}Running '$COMMAND' command${NC}..." 
         eval $COMMAND
         ;;
     ping)
         waffle_ping
         ;;
+    link)
+        pair quick
+        ;;
+    foff)
+        off no_ask
+        ;;
     *) 
-        echo -e "${RED}INVALID INPUT]${NC} Available options are: 'pair', 'terminal', 'sync', 'ping', 'off'.${NC}"
+        echo -e "${RED}[INVALID INPUT]...${NC}"
+        echo -e "$USAGE"
         exit 0
         ;;
 esac
