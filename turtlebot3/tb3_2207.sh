@@ -2,6 +2,9 @@
 
 OLD_HOST=$(hostname)
 
+RED='\033[0;31m'
+NC='\033[0m'
+
 ask() {
     local reply prompt
     prompt='y/n'
@@ -20,9 +23,9 @@ ask() {
 # get the last part of the IP address:
 ip_sfx=$(ip -o addr show dev "wlp4s0" | awk '$3 == "inet" {print $4}' | sed -r 's!/.*!!; s!.*\.!!')
 # subtract 100 to get the device number:
-WAFFLE_NO=$(($ipnum-100))
+WAFFLE_NO=$(($ip_sfx-100))
 
-if ask "[INPUT]: Preparing to configure for robot: dia-waffle$WAFFLE_NO. IS THIS CORRECT??"; then
+if ask "[INPUT]: Preparing to configure for robot: ${RED}dia-waffle$WAFFLE_NO${NC}. IS THIS CORRECT??"; then
     echo "[INFO]: Updating hostname..."
     sudo hostnamectl set-hostname dia-waffle$WAFFLE_NO
     sudo sed -i 's/'$OLD_HOST'/dia-waffle'$WAFFLE_NO'/g' /etc/hosts
