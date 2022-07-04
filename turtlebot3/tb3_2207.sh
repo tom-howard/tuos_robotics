@@ -8,7 +8,7 @@ NC='\033[0m'
 ask() {
     local reply prompt
     prompt='y/n'
-    echo -n "$1 [$prompt] >> "
+    echo -e -n "$1 [$prompt] >> "
     read -r reply </dev/tty
     if [[ -z $reply ]]; then
         return 1;
