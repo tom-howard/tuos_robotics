@@ -44,9 +44,14 @@ sudo apt update -y
 sudo apt upgrade -y
 
 echo -e "\n${YELLOW}[Installing Misc Tools]${NC}"
-sudo apt install -y chrony ntpdate curl build-essential git net-tools
+sudo apt install -y chrony ntpdate curl build-essential net-tools
 sudo apt install gnome-clocks
 # anything else...?
+
+# update git:
+sudo add-apt-repository ppa:git-core/ppa
+sudo apt update -y
+sudo apt install -y git
 
 echo -e "\n${YELLOW}[NTP: update time]${NC}"
 sudo ntpdate ntp.ubuntu.com
