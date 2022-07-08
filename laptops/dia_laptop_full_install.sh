@@ -45,6 +45,7 @@ sudo apt upgrade -y
 
 echo -e "\n${YELLOW}[Installing Misc Tools]${NC}"
 sudo apt install -y chrony ntpdate curl build-essential git net-tools
+sudo apt install gnome-clocks
 # anything else...?
 
 echo -e "\n${YELLOW}[NTP: update time]${NC}"
@@ -185,6 +186,8 @@ if ask "[Do you want to also set up TUoS Robot Switch scripts?]"; then
   sudo wget -O /usr/local/bin/pair_with_miro https://raw.githubusercontent.com/tom-howard/tuos_robotics/main/laptops/pair_with_miro
   sudo wget -O /usr/local/bin/pair_with_waffle https://raw.githubusercontent.com/tom-howard/tuos_robotics/main/laptops/pair_with_waffle
   sudo chmod +x *
+  
+  # waffle CLI here (TODO)...
 
   echo -e "\n${YELLOW}[Setting up ~/.tuos scripts]${NC}"
   mkdir -p ~/.tuos
@@ -198,6 +201,9 @@ if ask "[Do you want to also set up TUoS Robot Switch scripts?]"; then
   sudo addgroup sharegroup
   sudo chown :sharegroup /home/Shared
   sudo adduser "$USER" sharegroup
+  
+  # set selected sudo commands to require no password input
+  sudo wget -O /etc/sudoers.d/nopwds https://raw.githubusercontent.com/tom-howard/tuos_robotics/main/laptops/nopwds 
 
   echo -e "\n${YELLOW}[Setting device numbers]${NC}"
   cd /home/Shared
@@ -239,7 +245,7 @@ if ask "[Do you want to download COM2009 and COM3528 teaching materials?]"; then
   git clone https://github.com/AlexandrLucas/COM3528
   catkin build
 
-  sudo apt install -y python3-pandas
+  sudo apt install -y python3-pandas python3-scipy
 fi
 
 ########################## Part VI. 'Student' profile ###########################
