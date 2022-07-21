@@ -20,12 +20,14 @@ rbdir=$(sed "s/\/[^/]*$//" <<< $rbname)
 mkdir -p $rbdir
 
 rblog=$rbname'-log.txt'
-touch $rblog
-
-echo "$(date): Backup from $(hostname) [wsl-ros version: $WSL_ROS_VER]" >> $rblog
+if ! touch $rblog; then
+  echo "Restore failed (cannot access the backup file)."
+  exit 1
+fi
 
 flist=$(awk '!/^ *#/ && NF' ~/wsl_ros_backup_manifest)
 
-if tar --checkpoint=.200 -cjf $rbpth -C / $flist home/student/wsl_ros_backup_manifest ; then
+if tar --checkpoint=.200 --ignore-failed-read -cjf $rbpth -C / $flist home/student/wsl_ros_backup_manifest ; then
+  echo "$(date): Backup from $(hostname) [wsl-ros version: $WSL_ROS_VER]" >> $rblog
   echo -e ".\nBackup complete."
 fi

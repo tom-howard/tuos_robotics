@@ -4,7 +4,6 @@
 # Only add to this file, do not modify existing content
 
 home/student/catkin_ws/
-home/student/myrosdata/
 home/student/.bashrc
 home/student/.bash_aliases
 home/student/.bash_history

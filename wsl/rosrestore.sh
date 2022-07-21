@@ -12,10 +12,8 @@ if ! touch $rblog; then
   exit 1
 fi
 
-echo "$(date): Restore to $(hostname) [wsl-ros version: $WSL_ROS_VER]" >> $rblog
-
 # extract the backup manifest from the archive:
-if ! tar -xjf $rbpth -C / home/student/wsl_ros_backup_manifest; then
+if [ ! $(tar --overwrite -xjf $rbpth -C / home/student/wsl_ros_backup_manifest) ]; then
   flist=$(awk '!/^ *#/ && NF' ~/wsl_ros_backup_manifest)
 
   while IFS= read -r line ; do 
@@ -27,6 +25,7 @@ if ! tar -xjf $rbpth -C / home/student/wsl_ros_backup_manifest; then
   done <<< "$flist"
 fi
 
-if tar --checkpoint=.200 -xjf $rbpth -C / ; then
+if tar --checkpoint=.200 --overwrite -xjf $rbpth -C / ; then
+  echo "$(date): Restore to $(hostname) [wsl-ros version: $WSL_ROS_VER]" >> $rblog
   echo -e ".\nRestore complete."
 fi
