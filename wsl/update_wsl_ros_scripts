@@ -28,7 +28,7 @@ else
     rm -f ~/.bash_aliases
     
     cd ~/tuos_robotics/wsl/
-    cp .bash_aliases ~/
+    cp .bash_aliases wsl_ros_backup_manifest ~/
     
     rm -rf ~/tuos_robotics
     
