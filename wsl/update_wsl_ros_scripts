@@ -19,10 +19,10 @@ else
     
     # ~/.wsl-ros/
     cd ~/.wsl-ros/
-    rm -f bashrc_wsl_ros bashrc_miro bashrc_turtlebot3 get_tuos_user.sh set_display.sh
+    rm -f bashrc_wsl_ros bashrc_miro bashrc_turtlebot3 get_tuos_user.sh set_display.sh wsl_ros_backup_manifest
     
     cd ~/tuos_robotics/wsl/
-    cp bashrc_wsl_ros bashrc_miro bashrc_turtlebot3 get_tuos_user.sh set_display.sh ~/.wsl-ros/
+    cp bashrc_wsl_ros bashrc_miro bashrc_turtlebot3 get_tuos_user.sh set_display.sh wsl_ros_backup_manifest ~/.wsl-ros/
     
     # ~
     rm -f ~/.bash_aliases

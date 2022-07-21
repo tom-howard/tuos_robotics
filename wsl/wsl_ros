@@ -42,7 +42,10 @@ backup_exists() {
 case $COMMAND in
   backup)
     if backup_exists; then
-      if ask "Preparing to backup your WSL-ROS environment: This will overwrite your existing WSL-ROS backup. Are you sure you want to continue?"; then
+      echo -e "Preparing to backup your WSL-ROS environment to:"
+      echo "$rbwpth"
+      echo "(This will overwrite your existing WSL-ROS backup!)" 
+      if ask "Are you sure you want to continue?"; then
         rosbackup.sh
       else
         echo "Backup cancelled."
@@ -61,7 +64,7 @@ case $COMMAND in
         exit 1
       fi
     else
-      echo "Unable to restore: The file '"$rbwpth"' does not exist."
+      echo "Unable to restore! The file '"$rbwpth"' does not exist."
       exit 1
     fi
     ;;

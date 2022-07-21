@@ -1,33 +1,31 @@
-#!/bin/bash
+#!/usr/bin/env bash
+
+if [[ "$rbname" == "" ]]; then
+  echo "You can't run this script standalone. Use 'wsl_ros backup' instead."
+  exit 1
+fi
+
+if [ ! -f ~/wsl_ros_backup_manifest ]; then
+  # no backup manifest exists in ~, so load a default:
+  cp ~/.wsl-ros/wsl_ros_backup_manifest ~
+fi
 
 rbpth=$rbname'.tar.gz'
 rbwpth=$(sed "s/\/mnt\/u/U\:/;s/\//\\\/g" <<< $rbpth)
 
-echo "Backing up your WSL-ROS environment to '"$rbwpth"', please wait..."
+echo "Backing up your WSL-ROS environment to '$rbwpth', please wait..."
 
 rbdir=$(sed "s/\/[^/]*$//" <<< $rbname)
 
 mkdir -p $rbdir
 
 rblog=$rbname'-log.txt'
-
 touch $rblog
 
 echo "$(date): Backup from $(hostname) [wsl-ros version: $WSL_ROS_VER]" >> $rblog
 
-tar --exclude='home/student/.local'    \
-    --exclude='home/student/.cache'    \
-    --exclude='home/student/.config'   \
-    --exclude='home/student/pkgs'      \
-    --exclude='home/student/.wsl-ros'  \
-    --exclude='home/student/.dbus'     \
-    --exclude='home/student/.gazebo'   \
-    --exclude='home/student/.ros'      \
-    --exclude='home/student/.rviz'     \
-    --exclude='home/student/.ignition' \
-    --exclude='home/student/.sdformat' \
-    --exclude='home/student/.vscode-server' \
-    --checkpoint=.200 -cjf $rbpth -C / home/student/
+flist=$(awk '!/^ *#/ && NF' ~/wsl_ros_backup_manifest)
 
-echo "."
-echo "Backup complete."
+if tar --checkpoint=.200 -cjf $rbpth -C / $flist home/student/wsl_ros_backup_manifest ; then
+  echo -e ".\nBackup complete."
+fi
