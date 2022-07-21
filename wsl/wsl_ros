@@ -1,48 +1,84 @@
-#!/bin/bash
-# for locating in /usr/local/bin/
+#!/usr/bin/env bash
+# locate in: /usr/local/bin/
+
+IT='\033[3m'
+NC='\033[0m'
+
+COMMAND=$1
 
 source /usr/local/bin/ask_user.sh
 
-export rbname=/mnt/u/wsl-ros/ros-backup-2223
+export rbname=/mnt/u/wsl-ros/ros-backup-$(echo $WSL_ROS_VER | sed "s/[^0-9']//g")
 
 rbpth=$rbname'.tar.gz'
 rbwpth=$(sed "s/\/mnt\/u/U\:/;s/\//\\\/g" <<< "$rbpth")
 
-if [ -f $rbpth ]; then
-  backup_exists=yes
-else
-  backup_exists=no
+USAGE="${IT}wsl_ros${NC} backup/restore command line interface.
+
+Usage:
+$ wsl_ros [COMMAND]
+
+[COMMAND] options:
+  backup    ${IT}Backup${NC} selected files in your WSL home directory (~) to your University U: drive.
+  restore   ${IT}Restore${NC} an existing backup file from your University U: drive to WSL-ROS.
+
+Backup file: 'U:\\\wsl-ros\\\ros-backup-$(echo $WSL_ROS_VER | sed "s/[^0-9']//g").tar.gz'
+"
+
+if [[ "$COMMAND" == "" ]]; then
+  echo -e "No input command provided...\n"
+  echo -e "$USAGE"
+  exit 1
 fi
 
-if [ $1 == 'backup' ]; then
-  if [ $backup_exists == 'yes' ]; then
-    if ask "Preparing to backup your WSL-ROS environment: This will overwrite your existing WSL-ROS backup. Are you sure you want to continue?"; then
+backup_exists() {
+  if [ -f $rbpth ]; then
+    return 0
+  else
+    return 1
+  fi
+}
+
+case $COMMAND in
+  backup)
+    if backup_exists; then
+      if ask "Preparing to backup your WSL-ROS environment: This will overwrite your existing WSL-ROS backup. Are you sure you want to continue?"; then
+        rosbackup.sh
+      else
+        echo "Backup cancelled."
+        exit 1
+      fi
+    else
       rosbackup.sh
-    else
-      echo "Backup cancelled."
     fi
-  else
-    rosbackup.sh
-  fi
-elif [ $1 == 'restore' ]; then
-  if [ $backup_exists == 'yes' ]; then
-    if ask "Preparing to restore from a previous WSL-ROS backup: Do you want to continue?"; then
-      rosrestore.sh
+    ;;
+  restore)
+    if backup_exists; then
+      if ask "Preparing to restore from a previous WSL-ROS backup: Do you want to continue?"; then
+        rosrestore.sh
+      else
+        echo "Restore cancelled."
+        exit 1
+      fi
     else
-      echo "Restore cancelled."
+      echo "Unable to restore: The file '"$rbwpth"' does not exist."
+      exit 1
     fi
-  else
-    echo "Unable to restore: A '"$rbwpth"' file does not exit."
-  fi
-elif [ $1 == 'first-launch' ]; then
-  echo "Welcome to WSL-ROS!"
-  if [ $backup_exists == 'yes' ]; then
-    if ask "It looks like you already have a backup from a previous session, do you want to restore this now?"; then
-      rosrestore.sh
-    else
-      echo "Nothing was restored. Starting from fresh."
+    ;;
+  first-launch)
+    echo "Welcome to WSL-ROS!"
+    if backup_exists; then
+      if ask "It looks like you already have a backup from a previous session, do you want to restore this now?"; then
+        rosrestore.sh
+      else
+        echo "Nothing was restored. Starting from fresh."
+        exit 1
+      fi
     fi
-  fi
-else
-  echo "$1 is not a valid input, use either 'backup' or 'restore'"
-fi
+    ;;
+  *)
+    echo -e "'$COMMAND' is not a vaild input, see below for options...\n"
+    echo -e "$USAGE"
+    exit 1
+    ;;
+esac

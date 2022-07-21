@@ -1,0 +1,60 @@
+# Custom bashrc settings for TUoS wsl_ros
+
+export WSL_ROS_VER=$(cat ~/.wsl-ros/wsl_ros_ver)
+
+# Terminal prompt:
+PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@WSL-ROS($WSL_ROS_VER)\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ '
+
+# GUI:
+source ~/.wsl-ros/set_display.sh
+export LIBGL_ALWAYS_INDIRECT=
+
+# Other:
+source ~/.wsl-ros/get_tuos_user.sh
+# display a rosrestore prompt to the user
+# if this is the first launch of WSL-ROS:
+if [ ! -f ~/.wsl-ros/no_welcome ]; then
+  touch ~/.wsl-ros/no_welcome
+  wsl_ros first-launch
+fi
+
+# ROS Settings:
+## General:
+export GAZEBO_IP=127.0.0.1
+export EDITOR='nano -w' # Used in rosed
+
+## robot_switch routine is used to switch between the two robot profiles, MiRo and Turtlebot3
+# '~/.current_robot' text file is checked for one of the following strings: 'miro', 'turtlebot3'
+# This is saved to the $CURRENT_ROBOT environment variable 
+# If the file is not present or the string is not valid, the file is reset to Turtlebot3
+###############################################################################
+# Check '~/.current_robot' contents for 'MiRo' or 'Turtlebot3':
+touch ~/.current_robot
+if grep -qi "miro" ~/.current_robot; then
+  export CURRENT_ROBOT=miro
+elif grep -qi "turtlebot" ~/.current_robot; then
+  export CURRENT_ROBOT=turtlebot3	
+else
+  # In all other cases set robot mode to 'Turtlebot3':
+  rm -f ~/.current_robot
+  echo "turtlebot" > ~/.current_robot
+  export CURRENT_ROBOT=turtlebot3
+fi
+
+###############################
+if [ "$CURRENT_ROBOT" == "miro" ]; then
+  # Source MiRo robot profile from .bashrc_miro:
+  . ~/.wsl-ros/bashrc_miro
+elif [ "$CURRENT_ROBOT" == "turtlebot3" ]; then
+  # Source TurtleBot3 robot profile from .bashrc_turtlebot3:
+  . ~/.wsl-ros/bashrc_turtlebot3
+fi
+
+# Remove duplicates from the terminal command history
+HISTSIZE=100000
+HISTFILESIZE=200000
+shopt -s histappend
+export HISTCONTROL=ignoreboth:erasedups
+export PROMPT_COMMAND="history -n; history -w; history -c; history -r"
+tac "$HISTFILE" | awk '!x[$0]++' > /tmp/tmpfile  && tac /tmp/tmpfile > "$HISTFILE"
+rm /tmp/tmpfile
