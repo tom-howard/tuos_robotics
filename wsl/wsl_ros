@@ -57,14 +57,16 @@ case $COMMAND in
     ;;
   restore)
     if backup_exists; then
-      if ask "Preparing to restore from a previous WSL-ROS backup: Do you want to continue?"; then
+      echo -e "Preparing to restore from a previous WSL-ROS backup:"
+      echo "$rbwpth"
+      if ask "Do you want to continue?"; then
         rosrestore.sh
       else
         echo "Restore cancelled."
         exit 1
       fi
     else
-      echo "Unable to restore! The file '"$rbwpth"' does not exist."
+      echo "Unable to restore! The file '$rbwpth' does not exist."
       exit 1
     fi
     ;;
