@@ -1,5 +1,7 @@
 #!/bin/bash
 
+sudo -v
+
 cd ~
 
 rm -rf ~/tuos_robotics
@@ -15,7 +17,7 @@ else
     sudo cp ask_user.sh cleanup_env robot_switch rosbackup.sh rosrestore.sh update_wsl_ros_scripts wsl_ros /usr/local/bin/
     
     cd /usr/local/bin
-    sudo chmod +x ask_user.sh robot_switch rosbackup.sh rosrestore.sh wsl_ros
+    sudo chmod +x ask_user.sh cleanup_env robot_switch rosbackup.sh rosrestore.sh update_wsl_ros_scripts wsl_ros
     
     # ~/.wsl-ros/
     cd ~/.wsl-ros/
