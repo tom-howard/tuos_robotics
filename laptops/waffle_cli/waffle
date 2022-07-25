@@ -14,8 +14,6 @@ CYAN='\033[0;96m'
 IT='\033[3m'
 NC='\033[0m'
 
-# Internal functions
-
 USAGE="${IT}waffle${NC} command line interface for The University of Sheffield TurtleBot3 Waffles.
 
 Usage:
@@ -32,6 +30,8 @@ waffle [NUM] [COMMAND]
   ping    Look for the specified robot (dia-waffle[NUM]) on the network by ${IT}pinging${NC} it.
   off     ${IT}Shutdown${NC} the robot.
 "
+
+# Internal functions
 
 ask() {
     local reply prompt
@@ -53,9 +53,9 @@ check-for-dialab() {
         if [[ "$1" == "loud" ]]; then
             echo -e "${CYAN}[$laptop_id]${NC} You aren't connected to the 'DIA-LAB' WiFi network yet."
             echo -e "You need to be connected to this to run ROS"
-            echo -e "(but you WILL lose internet connection)."
+            echo -e "(but you won't be able to access the internet)."
         fi
-        if ask "Do you want to connect to DIA-LAB?"; then
+        if ask "Do you want to connect to DIA-LAB now?"; then
             echo -e "${CYAN}[$laptop_id]${NC} Connecting to DIA-LAB..."
             nmcli c up DIA-LAB > /dev/null
         else
