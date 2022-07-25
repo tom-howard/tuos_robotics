@@ -14,20 +14,22 @@ CYAN='\033[0;96m'
 IT='\033[3m'
 NC='\033[0m'
 
-USAGE="${IT}waffle${NC} command line interface for The University of Sheffield TurtleBot3 Waffles.
+USAGE="${IT}waffle${NC} command line interface for The University of Sheffield TurtleBot3
+Waffles.
 
-Usage:
-waffle [NUM] [COMMAND]
+Usage: waffle [NUM] [COMMAND]
 
-[NUM]     Numeric ID of the robot you are working with (a number between 1 and 50)
-          e.g. ${IT}dia-waffle[NUM]${NC} 
+[NUM]     Numeric ID of the robot you are working with (a number between
+          1 and 50) e.g. ${IT}dia-waffle[NUM]${NC} 
 
 [COMMAND] options:
   pair    ${IT}Pair${NC} this laptop to the specified robot (dia-waffle[NUM]).
   link    Same as 'pair' but without syncronising system clocks (quicker).
   sync    Manually ${IT}syncronise${NC} both system clocks to a common NTP Server.
-  term    Launch a (tmux) ${IT}terminal instance${NC} on the specified robot (dia-waffle[NUM]).
-  ping    Look for the specified robot (dia-waffle[NUM]) on the network by ${IT}pinging${NC} it.
+  term    Launch a (tmux) ${IT}terminal instance${NC} on the specified robot
+          (dia-waffle[NUM]).
+  ping    Look for the specified robot (dia-waffle[NUM]) on the network by
+          ${IT}pinging${NC} it.
   off     ${IT}Shutdown${NC} the robot.
 "
 
