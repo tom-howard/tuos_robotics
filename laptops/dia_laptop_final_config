@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+sudo -v
+
 SCRIPT_NAME=$1
 
 echo "[INFO]: Obtaining the '$SCRIPT_NAME' setup script from GitHub..."

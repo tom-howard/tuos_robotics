@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+sudo -v
+
 OLD_HOST=$(hostname)
 
 ask() {
