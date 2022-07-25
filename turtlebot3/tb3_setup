@@ -2,17 +2,17 @@
 
 if ! sudo -v; then
     exit 0
-else
-    SCRIPT_NAME=$1
-
-    echo "[INFO]: Obtaining the '$SCRIPT_NAME' setup script from GitHub..."
-
-    cd ~/.tb3_tools/
-    wget -O $SCRIPT_NAME https://raw.githubusercontent.com/tom-howard/tuos_robotics/main/turtlebot3/$SCRIPT_NAME
-
-    echo "[INFO]: Executing setup script..."
-
-    chmod +x $SCRIPT_NAME && ./$SCRIPT_NAME
-
-    rm -rf ~/.tb3_tools/$SCRIPT_NAME
 fi
+
+SCRIPT_NAME=$1
+
+echo "[INFO]: Obtaining the '$SCRIPT_NAME' setup script from GitHub..."
+
+cd ~/.tb3_tools/
+wget -O $SCRIPT_NAME https://raw.githubusercontent.com/tom-howard/tuos_robotics/main/turtlebot3/$SCRIPT_NAME
+
+echo "[INFO]: Executing setup script..."
+
+chmod +x $SCRIPT_NAME && ./$SCRIPT_NAME
+
+rm -rf ~/.tb3_tools/$SCRIPT_NAME

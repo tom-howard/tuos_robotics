@@ -5,24 +5,24 @@
 
 if ! sudo -v; then
     exit 0
-else
-    source /usr/local/bin/ask_user.sh
-
-    echo -n "Enter the new wsl-ros version number: "
-    read -r reply </dev/tty
-    echo "Setting the new wsl-ros version to '$reply'."
-    echo "$reply" > ~/.wsl-ros/wsl_ros_ver
-
-    if ask "Do you want to update all the custom wsl-ros scripts?"; then
-        update_wsl_ros_scripts
-    else
-        echo "No custom scripts were updated."
-    fi
-
-    rm -f ~/.wsl-ros/no_welcome ~/.current_robot
-    rm -rf ~/.gazebo/ ~/.ignition/ ~/.rviz/ ~/.ros/
-    rm -f ~/.python_history
-    rm -rf ~/tuos_robotics
-
-    echo -e "Now run the following command to complete the process:\n\n    history -c && history -w && logout\n\n"
 fi
+
+source /usr/local/bin/ask_user.sh
+
+echo -n "Enter the new wsl-ros version number: "
+read -r reply </dev/tty
+echo "Setting the new wsl-ros version to '$reply'."
+echo "$reply" > ~/.wsl-ros/wsl_ros_ver
+
+if ask "Do you want to update all the custom wsl-ros scripts?"; then
+    update_wsl_ros_scripts
+else
+    echo "No custom scripts were updated."
+fi
+
+rm -f ~/.wsl-ros/no_welcome ~/.current_robot
+rm -rf ~/.gazebo/ ~/.ignition/ ~/.rviz/ ~/.ros/
+rm -f ~/.python_history
+rm -rf ~/tuos_robotics
+
+echo -e "Now run the following command to complete the process:\n\n    history -c && history -w && logout\n\n"
