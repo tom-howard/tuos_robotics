@@ -190,10 +190,13 @@ if ask "[Do you want to also set up TUoS Robot Switch scripts?]"; then
   sudo wget -O /usr/local/bin/robot_mode https://raw.githubusercontent.com/tom-howard/tuos_robotics/main/laptops/robot_mode
   sudo wget -O /usr/local/bin/pair_with_miro https://raw.githubusercontent.com/tom-howard/tuos_robotics/main/laptops/pair_with_miro
   sudo wget -O /usr/local/bin/pair_with_waffle https://raw.githubusercontent.com/tom-howard/tuos_robotics/main/laptops/pair_with_waffle
+  sudo wget -O /usr/local/bin/waffle https://raw.githubusercontent.com/tom-howard/tuos_robotics/main/laptops/waffle_cli/waffle
   sudo chmod +x *
   
-  # waffle CLI here (TODO)...
-
+  sudo wget -o /usr/local/bin/robot_pair_check.sh https://raw.githubusercontent.com/tom-howard/tuos_robotics/main/laptops/waffle_cli/robot_pair_check.sh
+  sudo wget -o /usr/local/bin/robot_pairing.sh https://raw.githubusercontent.com/tom-howard/tuos_robotics/main/laptops/waffle_cli/robot_pairing.sh
+  sudo wget -o /usr/local/bin/robot_sync.sh https://raw.githubusercontent.com/tom-howard/tuos_robotics/main/laptops/waffle_cli/robot_sync.sh
+  
   echo -e "\n${YELLOW}[Setting up ~/.tuos scripts]${NC}"
   mkdir -p ~/.tuos
   cd ~/.tuos
@@ -295,6 +298,6 @@ sudo apt autoclean -y
 
 echo -e "\n${GREEN}[INITIAL INSTALL COMPLETE]: Next Steps:"
 echo -e "   * Install VS Code Extensions (Python, Remote - SSH)"
-echo -e "   * Set up the Student account"
-echo -e "   * Don't forget to reboot ASAP.${NC}"
+echo -e "   * Set up the Student account (VS Code, auto login etc)"
+echo -e "   * Reboot ASAP.${NC}"
 exit 0
