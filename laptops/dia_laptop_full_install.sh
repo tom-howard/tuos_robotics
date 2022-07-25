@@ -193,9 +193,9 @@ if ask "[Do you want to also set up TUoS Robot Switch scripts?]"; then
   sudo wget -O /usr/local/bin/waffle https://raw.githubusercontent.com/tom-howard/tuos_robotics/main/laptops/waffle_cli/waffle
   sudo chmod +x *
   
-  sudo wget -o /usr/local/bin/robot_pair_check.sh https://raw.githubusercontent.com/tom-howard/tuos_robotics/main/laptops/waffle_cli/robot_pair_check.sh
-  sudo wget -o /usr/local/bin/robot_pairing.sh https://raw.githubusercontent.com/tom-howard/tuos_robotics/main/laptops/waffle_cli/robot_pairing.sh
-  sudo wget -o /usr/local/bin/robot_sync.sh https://raw.githubusercontent.com/tom-howard/tuos_robotics/main/laptops/waffle_cli/robot_sync.sh
+  sudo wget -O /usr/local/bin/robot_pair_check.sh https://raw.githubusercontent.com/tom-howard/tuos_robotics/main/laptops/waffle_cli/robot_pair_check.sh
+  sudo wget -O /usr/local/bin/robot_pairing.sh https://raw.githubusercontent.com/tom-howard/tuos_robotics/main/laptops/waffle_cli/robot_pairing.sh
+  sudo wget -O /usr/local/bin/robot_sync.sh https://raw.githubusercontent.com/tom-howard/tuos_robotics/main/laptops/waffle_cli/robot_sync.sh
   
   echo -e "\n${YELLOW}[Setting up ~/.tuos scripts]${NC}"
   mkdir -p ~/.tuos
