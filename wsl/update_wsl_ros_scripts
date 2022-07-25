@@ -1,40 +1,42 @@
 #!/bin/bash
 
-sudo -v
-
-cd ~
-
-rm -rf ~/tuos_robotics
-
-if ! git clone https://github.com/tom-howard/tuos_robotics.git; then
-    echo "Error."
+if ! sudo -v; then
+    exit 0
 else
-    # /usr/local/bin
-    cd /usr/local/bin
-    sudo rm -f ask_user.sh cleanup_env robot_switch rosbackup.sh rosrestore.sh update_wsl_ros_scripts wsl_ros
-    
-    cd ~/tuos_robotics/wsl/
-    sudo cp ask_user.sh cleanup_env robot_switch rosbackup.sh rosrestore.sh update_wsl_ros_scripts wsl_ros /usr/local/bin/
-    
-    cd /usr/local/bin
-    sudo chmod +x ask_user.sh cleanup_env robot_switch rosbackup.sh rosrestore.sh update_wsl_ros_scripts wsl_ros
-    
-    # ~/.wsl-ros/
-    cd ~/.wsl-ros/
-    rm -f bashrc_wsl_ros bashrc_miro bashrc_turtlebot3 get_tuos_user.sh set_display.sh wsl_ros_backup_manifest
-    
-    cd ~/tuos_robotics/wsl/
-    cp bashrc_wsl_ros bashrc_miro bashrc_turtlebot3 get_tuos_user.sh set_display.sh wsl_ros_backup_manifest ~/.wsl-ros/
-    
-    # ~
-    rm -f ~/.bash_aliases
-    
-    cd ~/tuos_robotics/wsl/
-    cp .bash_aliases wsl_ros_backup_manifest ~/
-    
-    rm -rf ~/tuos_robotics
-    
     cd ~
-    echo "Done."
-    
+
+    rm -rf ~/tuos_robotics
+
+    if ! git clone https://github.com/tom-howard/tuos_robotics.git; then
+        echo "Error."
+    else
+        # /usr/local/bin
+        cd /usr/local/bin
+        sudo rm -f ask_user.sh cleanup_env robot_switch rosbackup.sh rosrestore.sh update_wsl_ros_scripts wsl_ros
+        
+        cd ~/tuos_robotics/wsl/
+        sudo cp ask_user.sh cleanup_env robot_switch rosbackup.sh rosrestore.sh update_wsl_ros_scripts wsl_ros /usr/local/bin/
+        
+        cd /usr/local/bin
+        sudo chmod +x ask_user.sh cleanup_env robot_switch rosbackup.sh rosrestore.sh update_wsl_ros_scripts wsl_ros
+        
+        # ~/.wsl-ros/
+        cd ~/.wsl-ros/
+        rm -f bashrc_wsl_ros bashrc_miro bashrc_turtlebot3 get_tuos_user.sh set_display.sh wsl_ros_backup_manifest
+        
+        cd ~/tuos_robotics/wsl/
+        cp bashrc_wsl_ros bashrc_miro bashrc_turtlebot3 get_tuos_user.sh set_display.sh wsl_ros_backup_manifest ~/.wsl-ros/
+        
+        # ~
+        rm -f ~/.bash_aliases
+        
+        cd ~/tuos_robotics/wsl/
+        cp .bash_aliases wsl_ros_backup_manifest ~/
+        
+        rm -rf ~/tuos_robotics
+        
+        cd ~
+        echo "Done."
+        
+    fi
 fi

@@ -1,16 +1,18 @@
 #!/usr/bin/env bash
 
-sudo -v
+if ! sudo -v; then
+    exit 0
+else
+    SCRIPT_NAME=$1
 
-SCRIPT_NAME=$1
+    echo "[INFO]: Obtaining the '$SCRIPT_NAME' setup script from GitHub..."
 
-echo "[INFO]: Obtaining the '$SCRIPT_NAME' setup script from GitHub..."
+    cd ~/.tuos/
+    wget -O setup_script.sh https://raw.githubusercontent.com/tom-howard/tuos_robotics/main/laptops/$SCRIPT_NAME
 
-cd ~/.tuos/
-wget -O setup_script.sh https://raw.githubusercontent.com/tom-howard/tuos_robotics/main/laptops/$SCRIPT_NAME
+    echo "[INFO]: Executing setup script..."
 
-echo "[INFO]: Executing setup script..."
+    chmod +x setup_script.sh && ./setup_script.sh
 
-chmod +x setup_script.sh && ./setup_script.sh
-
-rm -rf ~/.tb3_tools/setup_script.sh
+    rm -rf ~/.tb3_tools/setup_script.sh
+fi
