@@ -20,7 +20,7 @@ Waffles.
 Usage: waffle [NUM] [COMMAND]
 
 [NUM]     Numeric ID of the robot you are working with (a number between
-          1 and 50) e.g. ${IT}dia-waffle[NUM]${NC} 
+          1 and 50) e.g. ${IT}dia-waffle[NUM]${NC}.
 
 [COMMAND] options:
   pair    ${IT}Pair${NC} this laptop to the specified robot (dia-waffle[NUM]).
@@ -72,7 +72,7 @@ check-pairing() {
     if grep -qi "$WAFFLE_NO" $wn; then
         # local pairing looks OK.
         # now check the pairing on the waffle side too...
-        robot_response=$(ssh robot@dia-waffle$WAFFLE_NO 'bash -s' < robot_pair_check.sh $LAPTOP_NO) 
+        robot_response=$(ssh robot@dia-waffle$WAFFLE_NO 'bash -s' < /usr/local/bin/robot_pair_check.sh $LAPTOP_NO) 
         if [[ $robot_response == "1" ]]; then
             if [[ $1 == "loud" ]]; then
                 echo -e "${GREEN}[dia-waffle$WAFFLE_NO]${NC} Robot-Laptop pairing verified."
@@ -93,7 +93,8 @@ check-pairing() {
 # CLI entry points:
 
 pair() {
-    if ask "You are about to pair ${CYAN}dia-laptop$LAPTOP_NO${NC} with ${GREEN}dia-waffle$WAFFLE_NO${NC}. OK to continue?"; then
+    echo -e "You are about to pair ${CYAN}dia-laptop$LAPTOP_NO${NC} with ${GREEN}dia-waffle$WAFFLE_NO${NC}."
+    if ask "OK to continue?"; then
         echo -e "${CYAN}[$laptop_id]${NC} Pairing in progress (this will take a minute)..."
         echo "turtlebot" > ~/.tuos/current_robot # set the laptop to 'waffle mode'
         echo "robot" > ~/.tuos/robot_mode # set the laptop to 'real-robot mode' (as opposed to 'simulation mode')
@@ -106,7 +107,7 @@ pair() {
         rm -f ~/.ssh/waffle_rsa*
         ssh-keygen -t rsa -b 2048 -f ~/.ssh/waffle_rsa -q -N ""
         ssh-copy-id robot@dia-waffle$WAFFLE_NO > /dev/null 2>&1
-        ssh robot@dia-waffle$WAFFLE_NO 'bash -s' < robot_pairing.sh $LAPTOP_NO
+        ssh robot@dia-waffle$WAFFLE_NO 'bash -s' < /usr/local/bin/robot_pairing.sh $LAPTOP_NO
 
         if [[ "$1" != "quick" ]]; then
             sync
@@ -135,7 +136,7 @@ sync() {
         sudo ntpdate ntp.ubuntu.com > /dev/null
         echo -e "${CYAN}[$laptop_id]${NC} Laptop time syncronisation complete."
     fi
-    ssh robot@dia-waffle$WAFFLE_NO 'bash -s' < robot_sync.sh $LAPTOP_NO
+    ssh robot@dia-waffle$WAFFLE_NO 'bash -s' < /usr/local/bin/robot_sync.sh $LAPTOP_NO
 }
 
 term() {
