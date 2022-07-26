@@ -12,4 +12,6 @@ alias tb3_rviz="roslaunch com2009_simulations rviz.launch"
 
 # MiRo
 alias miro_sim='cd ~/mdk/sim && ./launch_sim.sh'
+alias miro_full='cd ~/mdk/sim && ./launch_full.sh'
 alias miro_gui='cd ~/mdk/bin/shared && ./client_gui.py'
+alias cd_mdk='cd ~/mdk/catkin_ws/src/'
