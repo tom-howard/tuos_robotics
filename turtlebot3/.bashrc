@@ -125,4 +125,3 @@ export ROS_MASTER_URI=http://$(hostname):11311
 export ROS_HOSTNAME=$(hostname)
 export TURTLEBOT3_MODEL=waffle
 export LDS_MODEL=LDS-01
-# hello?
