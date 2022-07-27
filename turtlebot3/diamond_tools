@@ -1,0 +1,49 @@
+#!/usr/bin/env bash
+# locate in /usr/local/bin/
+
+if [[ $# -eq 0 ]]; then
+  echo "No input command provided. Exiting."
+  exit 1
+else
+  COMMAND=$1
+fi
+
+sudo_check() {
+  if ! sudo -v; then
+    echo "Invalid credentials. Exiting."
+    exit 1
+  fi
+}
+
+getx() {
+  SCRIPT=$1
+  echo "[INFO]: Obtaining '$SCRIPT' script from GitHub..."
+  cd ~/.tb3_tools/
+  rm -f $SCRIPT
+  wget https://raw.githubusercontent.com/tom-howard/tuos_robotics/main/turtlebot3/$SCRIPT
+  echo "[INFO]: Executing script..."
+  chmod +x $SCRIPT && ./$SCRIPT
+}
+
+case $COMMAND in 
+  setup)
+    sudo_check
+    if [[ $2 == "" ]]; then
+      SCRIPT=tb3_setup.sh
+    else
+      SCRIPT=$2
+    fi
+    getx $SCRIPT
+    ;;
+  update)
+    sudo_check
+    getx update_tools.sh
+    ;;
+  catkin)
+    getx catkin_refresh.sh
+    ;;
+  *)
+    echo "Not a valid input."
+    exit 1
+    ;;
+esac
