@@ -9,9 +9,9 @@ else
 fi
 
 sudo_check() {
-  if ! sudo -v; then
+  if [[ ! $(sudo echo 0) ]]; then
     echo "Invalid credentials. Exiting."
-    exit 1
+    exit
   fi
 }
 
