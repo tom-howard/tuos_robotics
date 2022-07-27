@@ -3,8 +3,9 @@
 
 # A script to clean up the environment before creating an OS image for distribution.
 
-if ! sudo -v; then
-    exit 0
+if [[ ! $(sudo echo 0) ]]; then
+    echo "Invalid credentials. Exiting."
+    exit
 fi
 
 source /usr/local/bin/ask_user.sh

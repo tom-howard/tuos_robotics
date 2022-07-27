@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 
-if ! sudo -v; then
-    exit 0
+if [[ ! $(sudo echo 0) ]]; then
+    echo "Invalid credentials. Exiting."
+    exit
 fi
 
 SCRIPT_NAME=$1
