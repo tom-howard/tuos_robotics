@@ -1,13 +1,6 @@
 #!/usr/bin/env bash
 # locate in /usr/local/bin/
 
-if [[ $# -eq 0 ]]; then
-  echo "No input command provided. Exiting."
-  exit 1
-else
-  COMMAND=$1
-fi
-
 sudo_check() {
   if [[ ! $(sudo echo 0) ]]; then
     echo "Did not pass sudo check. Exiting."
@@ -24,6 +17,18 @@ getx() {
   echo "[INFO]: Executing script..."
   chmod +x $SCRIPT && ./$SCRIPT
 }
+
+if [[ $# -eq 0 ]]; then
+  echo "No input command provided. Exiting."
+  exit 1
+else
+  COMMAND=$1
+fi
+
+if [[ $(iwgetid -r) != "eduroam" ]]; then
+  echo "Connecting to eduroam..."
+  nmcli c up eduroam
+fi
 
 case $COMMAND in 
   setup)
