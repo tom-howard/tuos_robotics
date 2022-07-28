@@ -26,4 +26,4 @@ cd ~
 /tmp/profile_updates.sh
 
 # run as user
-sudo -i -u robot "/tmp/profile_updates.sh"
+sudo -i -u student "/tmp/profile_updates.sh"
