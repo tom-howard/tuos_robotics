@@ -1,2 +1,2 @@
 # tuos_robotics
-Scripts for MiRos, TurtleBots and Robot Laptops
+Scripts for TurtleBot3s, Robot Laptops and WSL
