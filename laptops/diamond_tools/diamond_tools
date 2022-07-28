@@ -1,0 +1,46 @@
+#!/usr/bin/env bash
+# locate in /usr/local/bin/
+
+if [[ $# -eq 0 ]]; then
+  echo "No input command provided. Exiting."
+  exit 1
+else
+  COMMAND=$1
+fi
+
+sudo_check() {
+  if [[ ! $(sudo echo 0) ]]; then
+    echo "Did not pass sudo check. Exiting."
+    exit
+  fi
+}
+
+getx() {
+  SCRIPT=$1
+  echo "[INFO]: Obtaining '$SCRIPT' script from GitHub..."
+  cd ~/.tuos/
+  rm -f $SCRIPT
+  wget https://raw.githubusercontent.com/tom-howard/tuos_robotics/main/laptops/diamond_tools/$SCRIPT
+  echo "[INFO]: Executing script..."
+  chmod +x $SCRIPT && ./$SCRIPT
+}
+
+case $COMMAND in 
+  setup)
+    sudo_check
+    if [[ $# -eq 1 ]]; then
+      SCRIPT=laptop_setup.sh
+    else
+      SCRIPT=$2
+    fi
+    getx $SCRIPT
+    ;;
+  update)
+    sudo_check
+    getx update_tools.sh
+    ;;
+  *)
+    echo "Not a valid input."
+    exit 1
+    ;;
+esac
