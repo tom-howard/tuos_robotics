@@ -191,6 +191,7 @@ if ask "[Do you want to also set up TUoS Robot Switch scripts?]"; then
   sudo wget -O /usr/local/bin/pair_with_miro https://raw.githubusercontent.com/tom-howard/tuos_robotics/main/laptops/pair_with_miro
   sudo wget -O /usr/local/bin/pair_with_waffle https://raw.githubusercontent.com/tom-howard/tuos_robotics/main/laptops/pair_with_waffle
   sudo wget -O /usr/local/bin/waffle https://raw.githubusercontent.com/tom-howard/tuos_robotics/main/laptops/waffle_cli/waffle
+  sudo wget -O /usr/local/bin/diamond_tools https://raw.githubusercontent.com/tom-howard/tuos_robotics/main/laptops/diamond_tools/diamond_tools
   sudo chmod +x *
   
   sudo wget -O /usr/local/bin/robot_pair_check.sh https://raw.githubusercontent.com/tom-howard/tuos_robotics/main/laptops/waffle_cli/robot_pair_check.sh
