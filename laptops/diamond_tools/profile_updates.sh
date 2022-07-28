@@ -3,7 +3,13 @@
 cd ~
 rm -f ~/.bash_aliases ~/.bashrc
 wget -O ~/.bash_aliases https://raw.githubusercontent.com/tom-howard/tuos_robotics/main/laptops/.bash_aliases
-wget -O ~/.bashrc https://raw.githubusercontent.com/tom-howard/tuos_robotics/main/laptops/.bashrc # DOESN'T EXIST YET!
+cp /etc/skel/.bashrc ~/
+
+wget -O /tmp/.bashrc_extras https://raw.githubusercontent.com/tom-howard/tuos_robotics/main/laptops/.bashrc_extras
+tmp_file=/tmp/.bashrc_extras
+while IFS= read -r line; do
+  echo "$line" >> ~/.bashrc
+done < "$tmp_file"
 
 cd ~/.tuos
 rm -f bashrc_miro bashrc_turtlebot3 bashrc_robot_switch
