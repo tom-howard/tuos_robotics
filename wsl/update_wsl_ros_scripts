@@ -14,26 +14,24 @@ if ! git clone https://github.com/tom-howard/tuos_robotics.git; then
 else
     # /usr/local/bin
     cd /usr/local/bin
-    sudo rm -f ask_user.sh cleanup_env robot_switch rosbackup.sh rosrestore.sh update_wsl_ros_scripts wsl_ros
-    
+    files="ask_user.sh cleanup_env robot_switch rosbackup.sh rosrestore.sh update_wsl_ros_scripts wsl_ros"
+    sudo rm -f $files
     cd ~/tuos_robotics/wsl/
-    sudo cp ask_user.sh cleanup_env robot_switch rosbackup.sh rosrestore.sh update_wsl_ros_scripts wsl_ros /usr/local/bin/
-    
+    sudo cp $files /usr/local/bin/
     cd /usr/local/bin
-    sudo chmod +x ask_user.sh cleanup_env robot_switch rosbackup.sh rosrestore.sh update_wsl_ros_scripts wsl_ros
+    sudo chmod +x $files
     
     # ~/.wsl-ros/
+    files="bashrc_wsl_ros bashrc_miro bashrc_turtlebot3 get_tuos_user.sh set_display.sh default_backup_exclusions"
     cd ~/.wsl-ros/
-    rm -f bashrc_wsl_ros bashrc_miro bashrc_turtlebot3 get_tuos_user.sh set_display.sh wsl_ros_backup_manifest
-    
+    rm -f $files
     cd ~/tuos_robotics/wsl/
-    cp bashrc_wsl_ros bashrc_miro bashrc_turtlebot3 get_tuos_user.sh set_display.sh wsl_ros_backup_manifest ~/.wsl-ros/
+    cp $files ~/.wsl-ros/
     
     # ~
     rm -f ~/.bash_aliases
-    
     cd ~/tuos_robotics/wsl/
-    cp .bash_aliases wsl_ros_backup_manifest ~/
+    cp .bash_aliases ~/
     
     rm -rf ~/tuos_robotics
     

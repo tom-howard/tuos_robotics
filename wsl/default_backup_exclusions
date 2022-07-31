@@ -1,0 +1,18 @@
+# A list of items to ignore during 'wsl_ros backup'
+# List files and folders here to be excluded from the backup
+# Items must be quoted relative to the home directory
+#   e.g.: /home/student/... (as below)
+# We recommend you leave most of these items here alone and 
+#   only ADD to the bottom of the list, if necessary.
+
+.cache
+.config
+.dbus
+.gazebo
+.ignition
+.landscape
+.local
+.ros
+.rviz
+.sdformat
+.vscode-server
