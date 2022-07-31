@@ -1,0 +1,44 @@
+#!/usr/bin/env bash
+
+# Diamond Tools for WSL
+# locate in /usr/local/bin/
+
+echo "Admin use only."
+sudo_check() {
+  if [[ ! $(sudo echo 0) ]]; then
+    echo "Did not pass sudo check. Exiting."
+    exit
+  fi
+}
+
+getx() {
+  SCRIPT=$1
+  echo "[INFO]: Obtaining '$SCRIPT' script from GitHub..."
+  cd ~/.wsl-ros/
+  rm -f $SCRIPT
+  wget https://raw.githubusercontent.com/tom-howard/tuos_robotics/main/wsl/diamond_tools/$SCRIPT
+  echo "[INFO]: Executing script..."
+  chmod +x $SCRIPT && ./$SCRIPT
+}
+
+if [[ $# -eq 0 ]]; then
+  echo "No input command provided. Exiting."
+  exit 1
+else
+  COMMAND=$1
+fi
+
+case $COMMAND in 
+  update)
+    sudo_check
+    getx update.sh
+    ;;
+  cleanup)
+    sudo_check
+    getx cleanup.sh
+    ;;
+  *)
+    echo "Not a valid input."
+    exit 1
+    ;;
+esac

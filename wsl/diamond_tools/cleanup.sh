@@ -1,7 +1,6 @@
-#!/bin/bash
-# for locating in '/usr/local/bin/'
+#!/usr/bin/env bash
 
-# A script to clean up the environment before creating an OS image for distribution.
+# Clean up the WSL environment, prior to creating an image of it...
 
 if [[ ! $(sudo echo 0) ]]; then
     echo "Invalid credentials. Exiting."
@@ -16,14 +15,17 @@ echo "Setting the new wsl-ros version to '$reply'."
 echo "$reply" > ~/.wsl-ros/wsl_ros_ver
 
 if ask "Do you want to update all the custom wsl-ros scripts?"; then
-    update_wsl_ros_scripts
+    diamond_tools update
 else
     echo "No custom scripts were updated."
 fi
 
 rm -f ~/.wsl-ros/no_welcome ~/.current_robot
-rm -rf ~/.gazebo/ ~/.ignition/ ~/.rviz/ ~/.ros/
+rm -rf ~/.gazebo/ ~/.ignition/ ~/.rviz/ ~/.ros/ ~/.vscode_server
 rm -f ~/.python_history
 rm -rf ~/tuos_robotics
+rm -f ~/.wsl-ros/update.sh ~/.wsl-ros/cleanup.sh
 
-echo -e "Now run the following command to complete the process:\n\n    history -c && history -w && logout\n\n"
+echo -e "All done."
+echo -e "Now run the following command to complete the process:\n"
+echo -e "    history -c && history -w && logout\n"
