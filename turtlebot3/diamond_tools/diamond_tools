@@ -1,4 +1,6 @@
 #!/usr/bin/env bash
+
+# Diamond Tools for TB3 Waffles
 # locate in /usr/local/bin/
 
 if [[ $# -eq 0 ]]; then
@@ -10,7 +12,7 @@ fi
 
 sudo_check() {
   if [[ ! $(sudo echo 0) ]]; then
-    echo "Invalid credentials. Exiting."
+    echo "Failed sudo check. Exiting."
     exit
   fi
 }
@@ -20,7 +22,7 @@ getx() {
   echo "[INFO]: Obtaining '$SCRIPT' script from GitHub..."
   cd ~/.tb3_tools/
   rm -f $SCRIPT
-  wget https://raw.githubusercontent.com/tom-howard/tuos_robotics/main/turtlebot3/$SCRIPT
+  wget https://raw.githubusercontent.com/tom-howard/tuos_robotics/main/turtlebot3/diamond_tools/$SCRIPT
   echo "[INFO]: Executing script..."
   chmod +x $SCRIPT && ./$SCRIPT
 }
@@ -28,7 +30,7 @@ getx() {
 case $COMMAND in 
   setup)
     sudo_check
-    if [[ $2 == "" ]]; then
+    if [[ $# -eq 1 ]]; then
       SCRIPT=tb3_setup.sh
     else
       SCRIPT=$2
