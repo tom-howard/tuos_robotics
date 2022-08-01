@@ -116,8 +116,6 @@ if ! shopt -oq posix; then
   fi
 fi
 
-export PATH=$PATH:~/.tb3_tools/
-
 source /opt/ros/noetic/setup.bash
 source ~/catkin_ws/devel/setup.bash
 
