@@ -21,7 +21,7 @@ else
 fi
 
 rm -f ~/.wsl-ros/no_welcome ~/.current_robot
-rm -rf ~/.gazebo/ ~/.ignition/ ~/.rviz/ ~/.ros/
+rm -rf ~/.gazebo/ ~/.ignition/ ~/.rviz/ ~/.ros/ ~/.dbus ~/.landscape
 rm -f ~/.python_history
 rm -rf ~/tuos_robotics
 rm -f ~/.wsl-ros/update.sh ~/.wsl-ros/cleanup.sh
