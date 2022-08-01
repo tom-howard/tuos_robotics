@@ -1,4 +1,6 @@
 #!/usr/bin/env bash
+
+# Diamond Tools for Robot Laptops:
 # locate in /usr/local/bin/
 
 sudo_check() {

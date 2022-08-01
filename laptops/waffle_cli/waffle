@@ -24,8 +24,8 @@ Usage: waffle [NUM] [COMMAND]
 
 [COMMAND] options:
   pair    ${IT}Pair${NC} this laptop to the specified robot (dia-waffle[NUM]).
-  link    Same as 'pair' but without syncronising system clocks (quicker).
-  sync    Manually ${IT}syncronise${NC} both system clocks to a common NTP Server.
+  link    Same as 'pair' but without synchronising system clocks (quicker).
+  sync    Manually ${IT}synchronise${NC} both system clocks to a common NTP Server.
   term    Launch a (tmux) ${IT}terminal instance${NC} on the specified robot
           (dia-waffle[NUM]).
   ping    Look for the specified robot (dia-waffle[NUM]) on the network by
@@ -126,15 +126,15 @@ sync() {
     if [[ $SSID_NOW != "eduroam" ]]; then
         echo -e "${CYAN}[$laptop_id]${NC} Temporarily connecting to eduroam..."
         nmcli c up eduroam > /dev/null
-        echo -e "${CYAN}[$laptop_id]${NC} Syncronising laptop OS to NTP Server..."
+        echo -e "${CYAN}[$laptop_id]${NC} Synchronising laptop OS to NTP Server..."
         sudo ntpdate ntp.ubuntu.com > /dev/null
-        echo -e "${CYAN}[$laptop_id]${NC} Laptop time syncronisation complete."
+        echo -e "${CYAN}[$laptop_id]${NC} Laptop time synchronisation complete."
         echo -e "${CYAN}[$laptop_id]${NC} Connecting back to $SSID_NOW..."
         nmcli c up $SSID_NOW > /dev/null
     else
-        echo -e "${CYAN}[$laptop_id]${NC} Syncronising laptop OS to NTP Server..."
+        echo -e "${CYAN}[$laptop_id]${NC} Synchronising laptop OS to NTP Server..."
         sudo ntpdate ntp.ubuntu.com > /dev/null
-        echo -e "${CYAN}[$laptop_id]${NC} Laptop time syncronisation complete."
+        echo -e "${CYAN}[$laptop_id]${NC} Laptop time synchronisation complete."
     fi
     ssh robot@dia-waffle$WAFFLE_NO 'bash -s' < /usr/local/bin/robot_sync.sh $LAPTOP_NO
 }
@@ -188,7 +188,7 @@ else
     exit 0
 fi
 
-NUM_MSG="Not a valid Waffle number (must be between 1 and 50)."
+NUM_MSG="Not a valid Waffle number ([NUM] must be between 1 and 50)."
 if [[ "$WAFFLE_NO" == "" ]]; then
     echo "$NUM_MSG"
     exit 2
