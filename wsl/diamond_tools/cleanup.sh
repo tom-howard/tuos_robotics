@@ -22,7 +22,7 @@ fi
 
 rm -f ~/.wsl-ros/no_welcome ~/.current_robot
 rm -rf ~/.gazebo/ ~/.ignition/ ~/.rviz/ ~/.ros/ ~/.dbus ~/.landscape
-rm -f ~/.python_history ~/.wget-hsts
+rm -f ~/.python_history ~/.wget-hsts ~/.backup_exclusions
 rm -rf ~/tuos_robotics
 rm -f ~/.wsl-ros/update.sh ~/.wsl-ros/cleanup.sh
 
