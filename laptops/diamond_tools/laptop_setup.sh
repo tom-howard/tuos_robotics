@@ -47,8 +47,9 @@ if ask "[INPUT] IS THIS CORRECT??"; then
     touch $tmp_file
     echo -e "#!/usr/bin/env bash\n" >> $tmp_file
     echo -e "rm -f ~/.tuos/waffle_number" >> $tmp_file
-    # run as current user:
     chmod +x $tmp_file
+    # run as current user:
+    $tmp_file
     # run as 'student':
     sudo -i -u student "$tmp_file"
     rm -f $tmp_file
