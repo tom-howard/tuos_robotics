@@ -144,10 +144,9 @@ if ask "[Install Anaconda?]"; then
   sudo apt install -y libgl1-mesa-glx
   wget -O ~/anaconda.sh https://repo.anaconda.com/archive/Anaconda3-2022.05-Linux-x86_64.sh
   bash ~/anaconda.sh
-  source ~/.bashrc
-  conda config --set auto_activate_base false
-  conda update conda
-  source ~/.bashrc
+  source $HOME/.bashrc
+  echo "auto_activate_base: false" > $HOME/.condarc
+  source $HOME/.bashrc
   sudo addgroup condagroup
   sudo chgrp -R condagroup $HOME/anaconda3
   sudo chmod 770 -R $HOME/anaconda3
@@ -327,5 +326,6 @@ sudo apt autoclean -y
 echo -e "\n${GREEN}[INITIAL INSTALL COMPLETE]: Next Steps:"
 echo -e "   * Install VS Code Extensions (Python, Remote - SSH)"
 echo -e "   * Set up the Student account (VS Code, auto login etc)"
+echo -e "   * Update conda (conda update conda)"
 echo -e "   * Reboot ASAP.${NC}"
 exit 0
