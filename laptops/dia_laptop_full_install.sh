@@ -135,30 +135,6 @@ else
   echo -e "\n${YELLOW}[Skipping VS Code Install...]${NC}"
 fi
 
-if ask "[Install Anaconda?]"; then
-  echo -e "${GREEN} Notes:"
-  echo -e "  1. Accept the default install location, when asked."
-  echo -e "  2. Allow the installer to initialise conda straight away."
-  echo -e "Conda installation will start in a moment...\n${NC}"
-  sleep 5
-  sudo apt install -y libgl1-mesa-glx
-  wget -O ~/anaconda.sh https://repo.anaconda.com/archive/Anaconda3-2022.05-Linux-x86_64.sh
-  bash ~/anaconda.sh
-  source $HOME/.bashrc
-  echo "auto_activate_base: false" > $HOME/.condarc
-  source $HOME/.bashrc
-  sudo addgroup condagroup
-  sudo chgrp -R condagroup $HOME/anaconda3
-  sudo chmod 770 -R $HOME/anaconda3
-  sudo adduser "$USER" condagroup
-  rm -f ~/.bashrc
-  cp /etc/skel/.bashrc ~/
-  rm ~/anaconda.sh
-  echo -e "\n${YELLOW}[Completed Anaconda Install.]${NC}"
-else
-  echo -e "\n${YELLOW}[Skipping Anaconda Install...]${NC}"
-fi
-
 ################################# Part III. MDK #################################
 if ask "[Do you want to set up MiRo Developer Kit?]"; then
   echo -e "\n${YELLOW}[Install AprilTags with Pip3]${NC}"
@@ -230,7 +206,7 @@ if ask "[Do you want to also set up TUoS Robot Switch scripts?]"; then
   wget -O ~/.tuos/bashrc_miro https://raw.githubusercontent.com/tom-howard/tuos_robotics/main/laptops/bashrc_miro
   wget -O ~/.tuos/bashrc_turtlebot3 https://raw.githubusercontent.com/tom-howard/tuos_robotics/main/laptops/bashrc_turtlebot3
   wget -O ~/.tuos/bashrc_robot_switch https://raw.githubusercontent.com/tom-howard/tuos_robotics/main/laptops/bashrc_robot_switch
-  wget -O ~/.tuos/bashrc_conda https://raw.githubusercontent.com/tom-howard/tuos_robotics/main/laptops/bashrc_conda
+  touch ~/.tuos/bashrc_conda
 
   echo -e "\n${YELLOW}[Setting up 'Shared' group]${NC}"
   sudo mkdir -p /home/Shared/
@@ -282,6 +258,38 @@ if ask "[Do you want to download COM2009 and COM3528 teaching materials?]"; then
   catkin build
 fi
 
+############################## Anaconda ########################################
+
+if ask "[Install Anaconda?]"; then
+  echo -e "${GREEN} Notes:"
+  echo -e "  1. Accept the default install location, when asked."
+  echo -e "  2. Allow the installer to initialise conda straight away."
+  echo -e "Conda installation will start in a moment...\n${NC}"
+  sleep 5
+  sudo apt install -y libgl1-mesa-glx
+  wget -O ~/anaconda.sh https://repo.anaconda.com/archive/Anaconda3-2022.05-Linux-x86_64.sh
+  bash ~/anaconda.sh
+  echo "auto_activate_base: false" > $HOME/.condarc
+  
+  sudo chgrp -R sharegroup $HOME/anaconda3
+  sudo chmod 770 -R $HOME/anaconda3
+  echo "$(grep -A 14  "# >>> conda" ~/.bashrc)" > /home/Shared/bashrc_conda
+  cp /home/Shared/bashrc_conda ~/.tuos/ 
+  rm -f ~/.bashrc
+  cp /etc/skel/.bashrc ~/
+  
+  wget -O /tmp/.bashrc_extras https://raw.githubusercontent.com/tom-howard/tuos_robotics/main/laptops/.bashrc_extras
+  tmp_file=/tmp/.bashrc_extras
+  while IFS= read -r line; do
+    grep -qxF "$line" ~/.bashrc || echo "$line" >> ~/.bashrc
+  done < "$tmp_file"
+
+  rm ~/anaconda.sh
+  echo -e "\n${YELLOW}[Completed Anaconda Install.]${NC}"
+else
+  echo -e "\n${YELLOW}[Skipping Anaconda Install...]${NC}"
+fi
+
 ########################## Part VI. 'Student' profile ###########################
 if ask "[Do you want to set up a 'student' profile?]"; then
   username="student"
@@ -290,7 +298,6 @@ if ask "[Do you want to set up a 'student' profile?]"; then
   if [ $? -eq 0 ]; then
     echo -e "\n${YELLOW}[User 'student' has been added to system]${NC}"
     sudo adduser student sharegroup
-    sudo adduser student condagroup
 
     # Most of the commands above are now simply copied over
     # TODO: There must be a more clever way of doing this

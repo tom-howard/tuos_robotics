@@ -30,19 +30,22 @@ cd $HOME/.tuos
 wget -O $HOME/.tuos/bashrc_miro https://raw.githubusercontent.com/tom-howard/tuos_robotics/main/laptops/bashrc_miro
 wget -O $HOME/.tuos/bashrc_turtlebot3 https://raw.githubusercontent.com/tom-howard/tuos_robotics/main/laptops/bashrc_turtlebot3
 wget -O $HOME/.tuos/bashrc_robot_switch https://raw.githubusercontent.com/tom-howard/tuos_robotics/main/laptops/bashrc_robot_switch
-wget -O $HOME/.tuos/bashrc_conda https://raw.githubusercontent.com/tom-howard/tuos_robotics/main/laptops/bashrc_conda
+cp /home/Shared/bashrc_conda ~/.tuos/
+echo "auto_activate_base: false" > $HOME/.condarc
+
 tmp_file=/tmp/.bashrc_extras_student
 wget -O $tmp_file https://raw.githubusercontent.com/tom-howard/tuos_robotics/main/laptops/.bashrc_extras
 while IFS= read -r line; do
     grep -qxF "$line" $HOME/.bashrc || echo "$line" >> $HOME/.bashrc
 done < "$tmp_file"
-echo "auto_activate_base: false" > $HOME/.condarc
+
 tmp_file=/tmp/.bash_aliases_student
 wget -O $tmp_file https://raw.githubusercontent.com/tom-howard/tuos_robotics/main/laptops/.bash_aliases
 touch $HOME/.bash_aliases
 while IFS= read -r line; do
     grep -qxF "$line" $HOME/.bash_aliases || echo "$line" >> $HOME/.bash_aliases
 done < "$tmp_file"
+
 # COM2009 and COM3528
 source $HOME/.bashrc
 cd $HOME/catkin_ws/src
