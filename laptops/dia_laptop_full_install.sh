@@ -22,11 +22,9 @@ ask() {
     fi
 }
 
-
 echo -e "${YELLOW}[Note] Target OS version  >>> Ubuntu 20.04.x (Focal Fossa) or Linux Mint 21.x${NC}"
 echo -e "${YELLOW}[Note] Target ROS version >>> ROS Noetic Ninjemys${NC}"
 echo -e "${YELLOW}[Note] Catkin workspace   >>> $HOME/catkin_ws${NC}\n"
-
 
 if ! ask "[OK to continue with installation?]"; then
   echo -e "${YELLOW}Exiting.${NC}"
@@ -46,7 +44,6 @@ sudo apt upgrade -y
 echo -e "\n${YELLOW}[Installing Misc Tools]${NC}"
 sudo apt install -y chrony ntpdate curl build-essential net-tools
 sudo apt install gnome-clocks
-# anything else...?
 
 # update git:
 sudo add-apt-repository ppa:git-core/ppa
@@ -206,7 +203,6 @@ if ask "[Do you want to also set up TUoS Robot Switch scripts?]"; then
   wget -O ~/.tuos/bashrc_miro https://raw.githubusercontent.com/tom-howard/tuos_robotics/main/laptops/bashrc_miro
   wget -O ~/.tuos/bashrc_turtlebot3 https://raw.githubusercontent.com/tom-howard/tuos_robotics/main/laptops/bashrc_turtlebot3
   wget -O ~/.tuos/bashrc_robot_switch https://raw.githubusercontent.com/tom-howard/tuos_robotics/main/laptops/bashrc_robot_switch
-  touch ~/.tuos/bashrc_conda
 
   echo -e "\n${YELLOW}[Setting up 'Shared' group]${NC}"
   sudo mkdir -p /home/Shared/
@@ -219,7 +215,7 @@ if ask "[Do you want to also set up TUoS Robot Switch scripts?]"; then
 
   echo -e "\n${YELLOW}[Setting device numbers]${NC}"
   cd /home/Shared
-  sudo touch laptop_number miro_number waffle_number
+  sudo touch laptop_number miro_number waffle_number bashrc_conda
   sudo chown "$USER" *
   sudo chgrp sharegroup *
   echo "$PC_NO" > laptop_number
@@ -258,38 +254,6 @@ if ask "[Do you want to download COM2009 and COM3528 teaching materials?]"; then
   catkin build
 fi
 
-############################## Anaconda ########################################
-
-if ask "[Install Anaconda?]"; then
-  echo -e "${GREEN} Notes:"
-  echo -e "  1. Accept the default install location, when asked."
-  echo -e "  2. Allow the installer to initialise conda straight away."
-  echo -e "Conda installation will start in a moment...\n${NC}"
-  sleep 5
-  sudo apt install -y libgl1-mesa-glx
-  wget -O ~/anaconda.sh https://repo.anaconda.com/archive/Anaconda3-2022.05-Linux-x86_64.sh
-  bash ~/anaconda.sh
-  echo "auto_activate_base: false" > $HOME/.condarc
-  
-  sudo chgrp -R sharegroup $HOME/anaconda3
-  sudo chmod 770 -R $HOME/anaconda3
-  echo "$(grep -A 14  "# >>> conda" ~/.bashrc)" > /home/Shared/bashrc_conda
-  cp /home/Shared/bashrc_conda ~/.tuos/ 
-  rm -f ~/.bashrc
-  cp /etc/skel/.bashrc ~/
-  
-  wget -O /tmp/.bashrc_extras https://raw.githubusercontent.com/tom-howard/tuos_robotics/main/laptops/.bashrc_extras
-  tmp_file=/tmp/.bashrc_extras
-  while IFS= read -r line; do
-    grep -qxF "$line" ~/.bashrc || echo "$line" >> ~/.bashrc
-  done < "$tmp_file"
-
-  rm ~/anaconda.sh
-  echo -e "\n${YELLOW}[Completed Anaconda Install.]${NC}"
-else
-  echo -e "\n${YELLOW}[Skipping Anaconda Install...]${NC}"
-fi
-
 ########################## Part VI. 'Student' profile ###########################
 if ask "[Do you want to set up a 'student' profile?]"; then
   username="student"
@@ -321,6 +285,23 @@ if ask "[Do you want to connect this device to DIA-LAB now?]"; then
   sleep 4
 else
   echo -e "\n${YELLOW}[SKIPPED the DIA-LAB connection step]${NC}"
+fi
+
+############################## Anaconda ########################################
+
+if ask "[Install Anaconda?]"; then
+  echo -e "${GREEN} Notes:"
+  echo -e "  1. Accept the default install location, when asked."
+  echo -e "  2. Allow the installer to initialise conda straight away."
+  echo -e "Conda installation will start in a moment...\n${NC}"
+  sleep 5
+  
+  cd ~
+  wget -O ~/conda_install.sh https://raw.githubusercontent.com/tom-howard/tuos_robotics/main/laptops/conda_install.sh
+  chmod +x conda_install.sh
+  ./conda_install.sh
+else
+  echo -e "\n${YELLOW}[Skipping Anaconda Install...]${NC}"
 fi
 
 ############################## Part VII. Clean up ###############################

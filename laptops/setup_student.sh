@@ -30,8 +30,6 @@ cd $HOME/.tuos
 wget -O $HOME/.tuos/bashrc_miro https://raw.githubusercontent.com/tom-howard/tuos_robotics/main/laptops/bashrc_miro
 wget -O $HOME/.tuos/bashrc_turtlebot3 https://raw.githubusercontent.com/tom-howard/tuos_robotics/main/laptops/bashrc_turtlebot3
 wget -O $HOME/.tuos/bashrc_robot_switch https://raw.githubusercontent.com/tom-howard/tuos_robotics/main/laptops/bashrc_robot_switch
-cp /home/Shared/bashrc_conda ~/.tuos/
-echo "auto_activate_base: false" > $HOME/.condarc
 
 tmp_file=/tmp/.bashrc_extras_student
 wget -O $tmp_file https://raw.githubusercontent.com/tom-howard/tuos_robotics/main/laptops/.bashrc_extras
