@@ -55,7 +55,12 @@ if ask "[INPUT] IS THIS CORRECT??"; then
     rm -f $tmp_file
 
     echo "[INFO] Robot configuration is now complete."
-    echo "Restart the device ASAP."
+    if ask "[INPUT] Do you want to shutdown the laptop now?"; then
+        echo "[INFO] Powering off..."
+        sudo poweroff
+    else
+        echo "[INFO] Don't forget to reboot/poweroff ASAP."
+    fi
 else
     echo "[INFO] CANCELLED."
 fi

@@ -30,6 +30,7 @@ if ask "[INPUT] Preparing to configure for robot: dia-waffle$WAFFLE_NO. IS THIS 
     echo "[INFO] Camera firmware version should be displayed above as 05.12.14.50... (hopefully!)"
     sleep 5
     echo "[COMPLETE] Robot configuration is now complete."
+    echo "IT IS NOW SAFE TO TURN OFF YOUR ROBOT!!!"
     if ask "[INPUT] Do you want to shutdown the robot now?"; then
         echo "[INFO] Powering off..."
         sudo poweroff
