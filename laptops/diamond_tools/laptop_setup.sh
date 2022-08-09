@@ -54,7 +54,7 @@ if ask "[INPUT] IS THIS CORRECT??"; then
     sudo -i -u student "$tmp_file"
     rm -f $tmp_file
 
-    echo "[INFO] Robot configuration is now complete."
+    echo "[INFO] Laptop setup is now complete."
     if ask "[INPUT] Do you want to shutdown the laptop now?"; then
         echo "[INFO] Powering off..."
         sudo poweroff
