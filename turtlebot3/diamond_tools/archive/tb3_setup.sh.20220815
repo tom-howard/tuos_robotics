@@ -25,17 +25,6 @@ if ask "[INPUT] Preparing to configure for robot: dia-waffle$WAFFLE_NO. IS THIS 
     echo "[INFO] Updating hostname..."
     sudo hostnamectl set-hostname dia-waffle$WAFFLE_NO
     sudo sed -i 's/'$OLD_HOST'/dia-waffle'$WAFFLE_NO'/g' /etc/hosts
-    if ask "[INPUT] Do you want to update the OpenCR board firmware?"; then
-        export OPENCR_PORT=/dev/ttyACM0
-        export OPENCR_MODEL=waffle_noetic
-        cd ~/device_firmware/opencr/opencr_update/
-        ./update.sh $OPENCR_PORT $OPENCR_MODEL.opencr
-        cd ~
-        echo "[INFO] OpenCR firmware *should* now be updated!"
-        sleep 5
-    else
-        echo "[INFO] Skipped OpenCR updates."
-    fi
     echo "[INFO] Checking the RealSense Camera Firmware..."
     rs-fw-update -l
     echo "[INFO] Camera firmware version should be displayed above as 05.12.14.50... (hopefully!)"
