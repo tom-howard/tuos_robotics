@@ -46,6 +46,9 @@ case $COMMAND in
     sudo_check
     getx update_tools.sh
     ;;
+  catkin)
+    getx catkin_refresh.sh
+    ;;
   *)
     echo "Not a valid input."
     exit 1
