@@ -27,9 +27,6 @@ ask() {
 
 ##############
 
-echo -e "\n${YELLOW}[Installing AprilTags with PIP3]${NC}"
-sudo pip3 install apriltag
-
 echo -e "\n${YELLOW}[Downloading and unpacking MDK into ~/pkgs]${NC}"
 mkdir -p ~/pkgs
 cd ~/pkgs/
@@ -68,5 +65,9 @@ if ask "[Do you want to build the catkin workspace for MDK?]"; then
     catkin build
 fi
 
+if ask "[Do you want to remove the MDK archive?]"; then
+    echo -e "\n${YELLOW}[Removing MDK archive]${NC}"
+    rm ~/pkgs/mdk_2-230105.tgz
+fi
 
 echo -e "\n${GREEN}[COMPLETE]: MDK installed.${NC}"
