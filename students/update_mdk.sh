@@ -63,6 +63,8 @@ if ask "[Do you want to build the catkin workspace for MDK?]"; then
     cd ~/mdk/catkin_ws/
     catkin clean
     catkin build
+    cd ~/mdk/catkin_ws/build/miro2_msg/
+    make install
 fi
 
 if ask "[Do you want to remove the MDK archive?]"; then
