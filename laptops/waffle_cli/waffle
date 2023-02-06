@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # CC BY-NC
-# Alex Lucas & Tom Howard, University of Sheffield
+# Tom Howard, University of Sheffield
 # Copyright (c) 2022
 
 # Terminal Prompt Colour Options:
@@ -96,8 +96,6 @@ pair() {
     echo -e "You are about to pair ${CYAN}dia-laptop$LAPTOP_NO${NC} with ${GREEN}dia-waffle$WAFFLE_NO${NC}."
     if ask "OK to continue?"; then
         echo -e "${CYAN}[$laptop_id]${NC} Pairing in progress (this will take a minute)..."
-        echo "turtlebot" > ~/.tuos/current_robot # set the laptop to 'waffle mode'
-        echo "robot" > ~/.tuos/robot_mode # set the laptop to 'real-robot mode' (as opposed to 'simulation mode')
         echo "$WAFFLE_NO" > ~/.tuos/waffle_number # set the waffle number
 
         check-for-dialab loud
@@ -198,6 +196,9 @@ else
     echo "$NUM_MSG"
     exit 2
 fi
+
+echo "turtlebot" > ~/.tuos/current_robot # set the laptop to 'waffle mode'
+echo "robot" > ~/.tuos/robot_mode # set the laptop to 'real-robot mode' (as opposed to 'simulation mode')
 
 case $COMMAND in 
     pair|sync|term|off)
