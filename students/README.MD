@@ -8,6 +8,8 @@ This part of the repo is for COM2009 and COM3528 students (and anyone else inter
 
 Download and run the automated script `full_install.sh`, which *should* set everything up for you.
 
+>**Note:** *Keep an eye on terminal output, as there will be a few prompts that will require your input.*
+
 ```bash
 wget https://raw.githubusercontent.com/tom-howard/tuos_robotics/main/students/full_install.sh
 chmod +x full_install.sh && ./full_install.sh
@@ -23,5 +25,3 @@ To install/update the MDK only, use the `update_mdk.sh`. Note that this does not
 wget https://raw.githubusercontent.com/tom-howard/tuos_robotics/main/students/update_mdk.sh
 chmod +x update_mdk.sh && ./update_mdk.sh
 ```
-
->**Note:** *Keep an eye on terminal output, as there will be a few prompts that will require your input.*
