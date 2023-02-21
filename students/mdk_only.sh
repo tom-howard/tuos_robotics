@@ -43,11 +43,10 @@ unset MIRO_SYSTEM
 
 echo -e "\n${YELLOW}[Install MDK]${NC}"
 source ~/.bashrc
-env | grep MDK
 cd ~/pkgs/mdk-230105/bin/deb64
 ./install_mdk.sh
 
-if ask "[Do you want to remove the newly added MDK ~/.bashrc entries?]"; then
+if ask "[Do you want to remove the newly added MDK ~/.bashrc entries?]\n Select 'Yes' if using TUoS robot switching scripts"; then
     echo -e "\n${YELLOW}[Removing MDK ~/.bashrc entries]${NC}"
     sed -i '/# MDK/d' ~/.bashrc
     sed -i '/source ~\/mdk\/setup.bash/d' ~/.bashrc

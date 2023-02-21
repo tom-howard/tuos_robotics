@@ -26,15 +26,8 @@ ask() {
     fi
 }
 
-
 echo -e "${YELLOW}[Note] Target OS version  >>> Ubuntu 20.04.x (Focal Fossa) or Linux Mint 21.x${NC}"
 echo -e "${YELLOW}[Note] Target ROS version >>> ROS Noetic Ninjemys${NC}"
-echo -e "${YELLOW}[Note] Catkin workspace   >>> $HOME/catkin_ws${NC}\n"
-
-
-if ! ask "[OK to continue with installation?]"; then
-  exit 130
-fi
 
 #################  Part I. ROS, TB3, catkin_ws and dependencies ################
 echo -e "\n${YELLOW}[Set the target OS, ROS version and the name of catkin workspace]${NC}"
@@ -104,26 +97,40 @@ if ask "[Do you want to set up MiRo Developer Kit?]"; then
   echo -e "\n${YELLOW}[Install AprilTags with Pip3]${NC}"
   sudo pip3 install apriltag
 
-  echo -e "\n${YELLOW}[Download and unpack MDK into ~/pkgs]${NC}"
+  echo -e "\n${YELLOW}[Downloading and unpacking MDK into ~/pkgs]${NC}"
   mkdir -p ~/pkgs
   cd ~/pkgs/
-  wget --no-check-certificate 'https://docs.google.com/uc?export=download&id=1V8pNrwcMY7ucjEzf6NzoAuLK3GORac1k' -O mdk_2-210921.tgz
-  tar -xvzf mdk_2-210921.tgz
-  cd mdk-210921/bin/script
+  wget --no-check-certificate 'https://docs.google.com/uc?export=download&id=1vNODaenljocVWalM4cOW4Kax-RB4U3nh' -O mdk_2-230105.tgz
+  tar -xvzf mdk_2-230105.tgz
 
-  # Remove MDK .bashrc entries
+  echo -e "\n${YELLOW}[Remove MDK soft link]${NC}"
   rm ~/mdk
+  echo -e "\n${YELLOW}[Remove MDK .bashrc entries]${NC}"
   sed -i '/# MDK/d' ~/.bashrc
   sed -i '/source ~\/mdk\/setup.bash/d' ~/.bashrc
+  unset MIRO_DIR_MDK
+  unset MIRO_SYSTEM
 
   echo -e "\n${YELLOW}[Install MDK]${NC}"
+  source ~/.bashrc
+  cd ~/pkgs/mdk-230105/bin/deb64
   ./install_mdk.sh
-  cd ~/mdk/catkin_ws/
-  catkin build
 
-  echo -e "\n${YELLOW}[Add MDK extras]${NC}"
+  echo -e "\n${YELLOW}[Add the 'launch_full' script]${NC}"
   wget -O ~/mdk/sim/launch_full.sh https://gist.githubusercontent.com/AlexandrLucas/703831843f9b46edc2e2032bcd08651f/raw/launch_full.sh
   chmod +x ~/mdk/sim/launch_full.sh
+
+  echo -e "\n${YELLOW}[Cleaning and building MDK workspace]${NC}"
+  source ~/.bashrc
+  cd ~/mdk/catkin_ws/
+  catkin clean
+  catkin build
+  cd ~/mdk/catkin_ws/build/miro2_msg/
+  make install
+
+  echo -e "\n${YELLOW}[Removing MDK archive]${NC}"
+  rm ~/pkgs/mdk_2-230105.tgz
+
 else
   echo -e "\n${YELLOW}[Skipping MDK...]${NC}"
 fi
