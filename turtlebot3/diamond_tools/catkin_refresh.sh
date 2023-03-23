@@ -15,5 +15,5 @@ rm -r turtlebot3_description/ turtlebot3_teleop/ turtlebot3_navigation/ turtlebo
 cd ~/catkin_ws/src/
 git clone https://github.com/tom-howard/COM2009.git
 cd ~/catkin_ws/src/COM2009/
-rm -rf com2009_assignment2/ com2009_examples/ com2009_simulations/
+rm -rf tuos_ros_examples/ com2009_simulations/ tuos_ros_simulations/
 cd ~/catkin_ws/ && catkin build
