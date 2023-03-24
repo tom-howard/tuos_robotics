@@ -17,11 +17,11 @@ chmod +x full_install.sh && ./full_install.sh
 
 ### MDK only
 
-To install/update the MDK only, use the `update_mdk.sh`. Note that this does not install MDK dependencies, nor does it install robot switching scripts.
+To install/update the MDK only, use the `mdk_only.sh`. Note that this does not install MDK dependencies, nor does it install robot switching scripts.
 
 >**Note:** COM3528 students, you should use the main script in the first instance, and only use the this one if you're MDK installation somehow ended up broken  
 
 ```bash
-wget https://raw.githubusercontent.com/tom-howard/tuos_robotics/main/students/update_mdk.sh
-chmod +x update_mdk.sh && ./update_mdk.sh
+wget https://raw.githubusercontent.com/tom-howard/tuos_robotics/main/students/mdk_only.sh
+chmod +x mdk_only.sh && ./mdk_only.sh
 ```
