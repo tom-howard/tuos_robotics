@@ -2,7 +2,7 @@
 
 # CC BY-NC
 # Tom Howard, University of Sheffield
-# Copyright (c) 2022
+# Copyright (c) 2023
 
 # Terminal Prompt Colour Options:
 RED='\033[0;31m'
@@ -72,7 +72,7 @@ check-pairing() {
     if grep -qi "$WAFFLE_NO" $wn; then
         # local pairing looks OK.
         # now check the pairing on the waffle side too...
-        robot_response=$(ssh robot@dia-waffle$WAFFLE_NO 'bash -s' < /usr/local/bin/robot_pair_check.sh $LAPTOP_NO) 
+        robot_response=$(ssh -i ~/.ssh/waffle_rsa robot@dia-waffle$WAFFLE_NO 'bash -s' < /usr/local/bin/robot_pair_check.sh $LAPTOP_NO) 
         if [[ $robot_response == "1" ]]; then
             if [[ $1 == "loud" ]]; then
                 echo -e "${GREEN}[dia-waffle$WAFFLE_NO]${NC} Robot-Laptop pairing verified."
@@ -104,8 +104,8 @@ pair() {
         mkdir -p ~/.ssh/
         rm -f ~/.ssh/waffle_rsa*
         ssh-keygen -t rsa -b 2048 -f ~/.ssh/waffle_rsa -q -N ""
-        ssh-copy-id robot@dia-waffle$WAFFLE_NO > /dev/null 2>&1
-        ssh robot@dia-waffle$WAFFLE_NO 'bash -s' < /usr/local/bin/robot_pairing.sh $LAPTOP_NO
+        ssh-copy-id -i ~/.ssh/waffle_rsa robot@dia-waffle$WAFFLE_NO > /dev/null 2>&1
+        ssh -i ~/.ssh/waffle_rsa robot@dia-waffle$WAFFLE_NO 'bash -s' < /usr/local/bin/robot_pairing.sh $LAPTOP_NO
 
         if [[ "$1" != "quick" ]]; then
             sync
@@ -134,24 +134,24 @@ sync() {
         sudo ntpdate ntp.ubuntu.com > /dev/null
         echo -e "${CYAN}[$laptop_id]${NC} Laptop time synchronisation complete."
     fi
-    ssh robot@dia-waffle$WAFFLE_NO 'bash -s' < /usr/local/bin/robot_sync.sh $LAPTOP_NO
+    ssh -i ~/.ssh/waffle_rsa robot@dia-waffle$WAFFLE_NO 'bash -s' < /usr/local/bin/robot_sync.sh $LAPTOP_NO
 }
 
 term() {
     check-for-dialab
     check-pairing loud
     echo -e "${CYAN}[$laptop_id]${NC} Logging in to dia-waffle$WAFFLE_NO..."
-    ssh robot@dia-waffle$WAFFLE_NO -t "tmux new-session -s robot || tmux attach-session -t robot"
+    ssh -i ~/.ssh/waffle_rsa robot@dia-waffle$WAFFLE_NO -t "tmux new-session -s robot || tmux attach-session -t robot"
 }
 
 off() {
     check-pairing
     if [[ "$1" == "no_ask" ]]; then
         echo "Shutting down the robot now..."
-        ssh robot@dia-waffle$WAFFLE_NO -t "sudo poweroff"
+        ssh -i ~/.ssh/waffle_rsa robot@dia-waffle$WAFFLE_NO -t "sudo poweroff"
     else
         if ask "Are you sure you want to shutdown ${GREEN}dia-waffle$WAFFLE_NO?${NC}"; then
-            ssh robot@dia-waffle$WAFFLE_NO -t "sudo poweroff"
+            ssh -i ~/.ssh/waffle_rsa robot@dia-waffle$WAFFLE_NO -t "sudo poweroff"
         else
             echo -e "${RED}Shutdown cancelled.${NC}"
         fi
