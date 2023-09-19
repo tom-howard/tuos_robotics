@@ -56,7 +56,7 @@ if [ ! -d "$BACKUP_ROOT_DIR" ]; then
 fi
 
 usage() {
-  echo -e "${IT}wsl_ros${NC} backup/restore command line interface.
+  echo -e "${IT}wsl_ros${NC} backup/restore/update tool.
 
   Usage:
   $ wsl_ros [COMMAND]
@@ -64,6 +64,7 @@ usage() {
   [COMMAND] options:
     backup    ${IT}Backup${NC} files in your WSL home directory.
     restore   ${IT}Restore${NC} an existing backup file.
+    update    ${IT}Update${NC} all custom TUoS WSL-ROS scripts (if applicable).
 
   Backup file: "
   echo "    $BACKUP_FILE_PATH_WINDOWS"
@@ -136,6 +137,19 @@ restore() {
   fi
 }
 
+check_for_updates() {
+  wget -qO ~/.wsl-ros/remote_ver https://raw.githubusercontent.com/tom-howard/tuos_robotics/main/wsl/remote_ver 
+
+  LOCAL_VER=$(cat ~/.wsl-ros/local_ver)
+  REMOTE_VER=$(cat ~/.wsl-ros/remote_ver)
+
+  if [ $REMOTE_VER -gt $LOCAL_VER ]; then
+    echo "Updating WSL-ROS scripts..."
+    diamond_tools update
+    echo "$REMOTE_VER" > ~/.wsl-ros/local_ver
+  fi
+}
+
 if [[ "$COMMAND" == "" ]]; then
   echo -e "No input command provided...\n"
   usage
@@ -176,6 +190,7 @@ case $COMMAND in
     ;;
   first-launch)
     echo "Welcome to WSL-ROS!"
+    check_for_updates
     if backup_exists; then
       echo -e "It looks like you already have a backup from a previous session:"
       echo "  $BACKUP_FILE_PATH_WINDOWS"
@@ -187,6 +202,9 @@ case $COMMAND in
       fi
     fi
     ;;
+  update)
+    check_for_updates
+    ;;  
   *)
     echo -e "'$COMMAND' is not a vaild input, see below for options...\n"
     usage
