@@ -7,12 +7,32 @@ if [[ ! $(sudo echo 0) ]]; then
     exit
 fi
 
-source /usr/local/bin/ask_user.sh
+ask() {
+  local prompt default reply
+  prompt='y/n'
+  default=''
+  while true; do
+    # Ask the question (not using "read -p" as it uses stderr not stdout)
+    echo -n "$1 [$prompt] "
+    # Read the answer (use /dev/tty in case stdin is redirected from somewhere else)
+    read -r reply </dev/tty
+    # Default?
+    if [[ -z $reply ]]; then
+        reply=$default
+    fi
+    # Check if the reply is valid
+    case "$reply" in
+        Y*|y*) return 0 ;;
+        N*|n*) return 1 ;;
+    esac
+  done
+}
 
 echo -n "Enter the new wsl-ros version number: "
 read -r reply </dev/tty
 echo "Setting the new wsl-ros version to '$reply'."
 echo "$reply" > ~/.wsl-ros/wsl_ros_ver
+echo "1" > ~/.wsl-ros/local_ver
 
 if ask "Do you want to update all the custom wsl-ros scripts?"; then
     diamond_tools update
