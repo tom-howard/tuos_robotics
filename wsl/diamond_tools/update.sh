@@ -14,7 +14,7 @@ if ! git clone https://github.com/tom-howard/tuos_robotics.git; then
 else
     # /usr/local/bin
     cd /usr/local/bin
-    files="ask_user.sh robot_switch rosbackup.sh rosrestore.sh wsl_ros"
+    files="robot_switch wsl_ros"
     sudo rm -f $files
     cd ~/tuos_robotics/wsl/
     sudo cp $files /usr/local/bin/
@@ -26,13 +26,15 @@ else
     sudo chmod +x /usr/local/bin/diamond_tools
 
     # ~/.wsl-ros/
-    files="bashrc_miro bashrc_turtlebot3 bashrc_wsl_ros default_backup_exclusions get_tuos_user.sh set_display.sh"
+    files="bashrc_miro bashrc_turtlebot3 bashrc_wsl_ros default_backup_exclusions default_backup_dir.sh get_tuos_user.sh set_display.sh"
     cd ~/.wsl-ros/
     rm -f $files
     cd ~/tuos_robotics/wsl/
     cp $files ~/.wsl-ros/
     
     # ~
+    rm -rf ~/wsl-ros-configs
+    mkdir -p ~/wsl-ros-configs
     rm -f ~/.bash_aliases
     cd ~/tuos_robotics/wsl/
     cp .bash_aliases ~/
