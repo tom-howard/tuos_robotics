@@ -1,0 +1,89 @@
+#!/usr/bin/env bash
+# locate in: /usr/local/bin/
+
+IT='\033[3m'
+NC='\033[0m'
+
+COMMAND=$1
+
+source /usr/local/bin/ask_user.sh
+
+export rbname=/mnt/u/wsl-ros/ros-backup-$(echo $WSL_ROS_VER | sed "s/[^0-9']//g")
+
+rbpth=$rbname'.tar.gz'
+rbwpth=$(sed "s/\/mnt\/u/U\:/;s/\//\\\/g" <<< "$rbpth")
+
+USAGE="${IT}wsl_ros${NC} backup/restore command line interface.
+
+Usage:
+$ wsl_ros [COMMAND]
+
+[COMMAND] options:
+  backup    ${IT}Backup${NC} selected files in your WSL home directory (~) to your University U: drive.
+  restore   ${IT}Restore${NC} an existing backup file from your University U: drive to WSL-ROS.
+
+Backup file: 'U:\\\wsl-ros\\\ros-backup-$(echo $WSL_ROS_VER | sed "s/[^0-9']//g").tar.gz'
+"
+
+if [[ "$COMMAND" == "" ]]; then
+  echo -e "No input command provided...\n"
+  echo -e "$USAGE"
+  exit 1
+fi
+
+backup_exists() {
+  if [ -f $rbpth ]; then
+    return 0
+  else
+    return 1
+  fi
+}
+
+case $COMMAND in
+  backup)
+    if backup_exists; then
+      echo -e "Preparing to backup your WSL-ROS environment to:"
+      echo "$rbwpth"
+      echo "(This will overwrite your existing WSL-ROS backup!)" 
+      if ask "Are you sure you want to continue?"; then
+        rosbackup.sh
+      else
+        echo "Backup cancelled."
+        exit 1
+      fi
+    else
+      rosbackup.sh
+    fi
+    ;;
+  restore)
+    if backup_exists; then
+      echo -e "Preparing to restore from a previous WSL-ROS backup:"
+      echo "$rbwpth"
+      if ask "Do you want to continue?"; then
+        rosrestore.sh
+      else
+        echo "Restore cancelled."
+        exit 1
+      fi
+    else
+      echo "Unable to restore! The file '$rbwpth' does not exist."
+      exit 1
+    fi
+    ;;
+  first-launch)
+    echo "Welcome to WSL-ROS!"
+    if backup_exists; then
+      if ask "It looks like you already have a backup from a previous session, do you want to restore this now?"; then
+        rosrestore.sh
+      else
+        echo "Nothing was restored. Starting from fresh."
+        exit 1
+      fi
+    fi
+    ;;
+  *)
+    echo -e "'$COMMAND' is not a vaild input, see below for options...\n"
+    echo -e "$USAGE"
+    exit 1
+    ;;
+esac
