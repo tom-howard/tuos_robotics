@@ -4,49 +4,6 @@
 IT='\033[3m'
 NC='\033[0m'
 
-COMMAND=$1
-
-rbroot=/mnt/"$wsl_ros_backup_path"
-if [ ! -d "$rbroot" ]; then
-  echo "Error: can't access $rbroot"
-  exit 1
-fi
-
-BACKUP_FILE_NAME=ros-backup-$(echo $WSL_ROS_VER | sed "s/[^0-9']//g")
-BACKUP_FILE_PATH_NOEX="$rbroot"/wsl-ros/"$BACKUP_FILE_NAME"
-BACKUP_FILE_PATH_FULL=$BACKUP_FILE_PATH_NOEX'.tar.gz'
-BACKUP_FILE_PATH_WINDOWS=$(sed "s/\/mnt\/u/U\:/;s/\//\\\/g" <<< "$BACKUP_FILE_PATH_FULL")
-BACKUP_FILE_DIR=$(sed "s/\/[^/]*$//" <<< $BACKUP_FILE_PATH_NOEX)
-BACKUP_LOGFILE=$BACKUP_FILE_PATH_NOEX'-log.txt'
-
-usage() {
-  echo -e "${IT}wsl_ros${NC} backup/restore command line interface.
-
-  Usage:
-  $ wsl_ros [COMMAND]
-
-  [COMMAND] options:
-    backup    ${IT}Backup${NC} files in your WSL home directory.
-    restore   ${IT}Restore${NC} an existing backup file.
-
-  Backup file: "
-  echo "    $BACKUP_FILE_PATH_WINDOWS"
-}
-
-if [[ "$COMMAND" == "" ]]; then
-  echo -e "No input command provided...\n"
-  usage
-  exit 1
-fi
-
-backup_exists() {
-  if [ -f $BACKUP_FILE_PATH_FULL ]; then
-    return 0
-  else
-    return 1
-  fi
-}
-
 ask() {
   # adapted from https://gist.github.com/davejamesmiller/1965569
   local prompt default reply
@@ -69,6 +26,51 @@ ask() {
   done
 }
 
+COMMAND=$1
+# INPUT CHECKS
+if [[ $# -eq 2 ]] && [[ "$COMMAND" == "restore" ]]; then
+  BACKUP_FILE_PATH_FULL=$2
+  BACKUP_FILE_PATH_NOEX="${BACKUP_FILE_PATH_FULL%.*}"
+  BACKUP_FILE_NAME=$(basename $BACKUP_FILE_PATH_FULL .tar.gz)
+  BACKUP_ROOT_DIR=${BACKUP_FILE_PATH_FULL%/*}    
+else
+  BACKUP_FILE_NAME=ros-backup-$(echo $WSL_ROS_VER | sed "s/[^0-9']//g")
+  BACKUP_ROOT_DIR=/mnt/"$wsl_ros_backup_path"
+  BACKUP_FILE_PATH_NOEX="$BACKUP_ROOT_DIR"/wsl-ros/"$BACKUP_FILE_NAME"
+  BACKUP_FILE_PATH_FULL=$BACKUP_FILE_PATH_NOEX'.tar.gz'
+fi
+
+BACKUP_FILE_DIR=${BACKUP_FILE_PATH_FULL%/*}
+BACKUP_FILE_PATH_WINDOWS=$(sed "s/\/mnt\/u/U\:/;s/\//\\\/g" <<< "$BACKUP_FILE_PATH_FULL")
+BACKUP_LOGFILE=$BACKUP_FILE_PATH_NOEX'-log.txt'
+
+if [ ! -d "$BACKUP_ROOT_DIR" ]; then
+  echo "Error: can't access $BACKUP_ROOT_DIR"
+  exit 1
+fi
+
+usage() {
+  echo -e "${IT}wsl_ros${NC} backup/restore command line interface.
+
+  Usage:
+  $ wsl_ros [COMMAND]
+
+  [COMMAND] options:
+    backup    ${IT}Backup${NC} files in your WSL home directory.
+    restore   ${IT}Restore${NC} an existing backup file.
+
+  Backup file: "
+  echo "    $BACKUP_FILE_PATH_WINDOWS"
+}
+
+backup_exists() {
+  if [ -f $BACKUP_FILE_PATH_FULL ]; then
+    return 0
+  else
+    return 1
+  fi
+}
+
 touch_backup() {
   if ! touch $BACKUP_LOGFILE; then
     echo "Error: unable to access a backup file at:"
@@ -80,6 +82,7 @@ touch_backup() {
 archive_backup() {
   archive_dir=$BACKUP_FILE_DIR/archive
   mkdir -p $archive_dir
+  cp $BACKUP_FILE_PATH_FULL $BACKUP_FILE_DIR/archive/$BACKUP_FILE_NAME"-$(date "+%Y%m%d%H%M%S").tar.gz"
   check_dir=true
   while [ "$check_dir" = true ]; do
     archive_num=$(find $archive_dir -type f | wc -l)
@@ -92,8 +95,6 @@ archive_backup() {
       check_dir=false
     fi
   done
-
-  cp $BACKUP_FILE_PATH_FULL $BACKUP_FILE_DIR/archive/$BACKUP_FILE_NAME"-$(date "+%Y%m%d%H%M%S").tar.gz"
 }
 
 backup() {
@@ -129,15 +130,21 @@ restore() {
   fi
 }
 
+if [[ "$COMMAND" == "" ]]; then
+  echo -e "No input command provided...\n"
+  usage
+  exit 1
+fi
+
 case $COMMAND in
   backup)
     if backup_exists; then
       echo -e "Preparing to backup your WSL-ROS environment to:"
       echo "  $BACKUP_FILE_PATH_WINDOWS"
-      echo "  ***This will overwrite your existing WSL-ROS backup!***" 
+      echo "***This will overwrite your existing WSL-ROS backup!***" 
       if ask "Are you sure you want to continue?"; then
         archive_backup
-        # backup
+        backup
       else
         echo "Backup cancelled."
         exit 1
@@ -180,3 +187,4 @@ case $COMMAND in
     exit 1
     ;;
 esac
+
