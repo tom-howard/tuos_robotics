@@ -12,12 +12,12 @@ if [ ! -d "$rbroot" ]; then
   exit 1
 fi
 
-rbfname=ros-backup-$(echo $WSL_ROS_VER | sed "s/[^0-9']//g")
-rbname="$rbroot"/wsl-ros/"$rbfname"
-rbpth=$rbname'.tar.gz'
-rbwpth=$(sed "s/\/mnt\/u/U\:/;s/\//\\\/g" <<< "$rbpth")
-rbdir=$(sed "s/\/[^/]*$//" <<< $rbname)
-rblog=$rbname'-log.txt'
+BACKUP_FILE_NAME=ros-backup-$(echo $WSL_ROS_VER | sed "s/[^0-9']//g")
+BACKUP_FILE_PATH_NOEX="$rbroot"/wsl-ros/"$BACKUP_FILE_NAME"
+BACKUP_FILE_PATH_FULL=$BACKUP_FILE_PATH_NOEX'.tar.gz'
+BACKUP_FILE_PATH_WINDOWS=$(sed "s/\/mnt\/u/U\:/;s/\//\\\/g" <<< "$BACKUP_FILE_PATH_FULL")
+BACKUP_FILE_DIR=$(sed "s/\/[^/]*$//" <<< $BACKUP_FILE_PATH_NOEX)
+BACKUP_LOGFILE=$BACKUP_FILE_PATH_NOEX'-log.txt'
 
 usage() {
   echo -e "${IT}wsl_ros${NC} backup/restore command line interface.
@@ -30,7 +30,7 @@ usage() {
     restore   ${IT}Restore${NC} an existing backup file.
 
   Backup file: "
-  echo "    $rbwpth"
+  echo "    $BACKUP_FILE_PATH_WINDOWS"
 }
 
 if [[ "$COMMAND" == "" ]]; then
@@ -40,7 +40,7 @@ if [[ "$COMMAND" == "" ]]; then
 fi
 
 backup_exists() {
-  if [ -f $rbpth ]; then
+  if [ -f $BACKUP_FILE_PATH_FULL ]; then
     return 0
   else
     return 1
@@ -70,15 +70,15 @@ ask() {
 }
 
 touch_backup() {
-  if ! touch $rblog; then
+  if ! touch $BACKUP_LOGFILE; then
     echo "Error: unable to access a backup file at:"
-    echo "  $rbwpth"
+    echo "  $BACKUP_FILE_PATH_WINDOWS"
     exit 1
   fi
 }
 
 archive_backup() {
-  archive_dir=$rbdir/archive
+  archive_dir=$BACKUP_FILE_DIR/archive
   mkdir -p $archive_dir
   check_dir=true
   while [ "$check_dir" = true ]; do
@@ -93,7 +93,7 @@ archive_backup() {
     fi
   done
 
-  cp $rbpth $rbdir/archive/$rbfname"-$(date "+%Y%m%d%H%M%S").tar.gz"
+  cp $BACKUP_FILE_PATH_FULL $BACKUP_FILE_DIR/archive/$BACKUP_FILE_NAME"-$(date "+%Y%m%d%H%M%S").tar.gz"
 }
 
 backup() {
@@ -102,14 +102,14 @@ backup() {
     cp ~/.wsl-ros/default_backup_exclusions ~/.backup_exclusions
   fi
 
-  echo "Backing up your WSL-ROS environment to '$rbwpth', please wait..."
+  echo "Backing up your WSL-ROS environment to '$BACKUP_FILE_PATH_WINDOWS', please wait..."
 
-  mkdir -p $rbdir
+  mkdir -p $BACKUP_FILE_DIR
 
   touch_backup
 
-  if tar -X $HOME/.backup_exclusions --exclude='.wsl-ros' --checkpoint=.200 -cjf $rbpth -C $HOME .; then
-    echo "$(date): Backup from $(hostname) [wsl-ros version: $WSL_ROS_VER]" >> $rblog
+  if tar -X $HOME/.backup_exclusions --exclude='.wsl-ros' --checkpoint=.200 -cjf $BACKUP_FILE_PATH_FULL -C $HOME .; then
+    echo "$(date): Backup from $(hostname) [wsl-ros version: $WSL_ROS_VER]" >> $BACKUP_LOGFILE
     echo -e ".\nBackup complete."
   else
     echo -e "An error occurred during the backup process...\nYOUR DATA MAY NOT HAVE BEEN BACKED UP CORRECTLY."
@@ -117,12 +117,12 @@ backup() {
 }
 
 restore() {
-  echo "Restoring your files from '$rbwpth', please wait..."
+  echo "Restoring your files from '$BACKUP_FILE_PATH_WINDOWS', please wait..."
   
   touch_backup
 
-  if tar --checkpoint=.200 -xjf $rbpth -C $HOME ; then
-    echo "$(date): Restore to $(hostname) [wsl-ros version: $WSL_ROS_VER]" >> $rblog
+  if tar --checkpoint=.200 -xjf $BACKUP_FILE_PATH_FULL -C $HOME ; then
+    echo "$(date): Restore to $(hostname) [wsl-ros version: $WSL_ROS_VER]" >> $BACKUP_LOGFILE
     echo -e ".\nRestore complete."
   else
     echo -e "An error occurred during the restore process...\nYOUR DATA MAY NOT HAVE BEEN RECOVERED CORRECTLY."
@@ -133,7 +133,7 @@ case $COMMAND in
   backup)
     if backup_exists; then
       echo -e "Preparing to backup your WSL-ROS environment to:"
-      echo "  $rbwpth"
+      echo "  $BACKUP_FILE_PATH_WINDOWS"
       echo "  ***This will overwrite your existing WSL-ROS backup!***" 
       if ask "Are you sure you want to continue?"; then
         archive_backup
@@ -149,7 +149,7 @@ case $COMMAND in
   restore)
     if backup_exists; then
       echo -e "Preparing to restore from a previous WSL-ROS backup:"
-      echo "$rbwpth"
+      echo "$BACKUP_FILE_PATH_WINDOWS"
       if ask "Do you want to continue?"; then
         restore
       else
@@ -157,7 +157,7 @@ case $COMMAND in
         exit 1
       fi
     else
-      echo "Unable to restore! The file '$rbwpth' does not exist."
+      echo "Unable to restore! The file '$BACKUP_FILE_PATH_WINDOWS' does not exist."
       exit 1
     fi
     ;;
@@ -165,7 +165,7 @@ case $COMMAND in
     echo "Welcome to WSL-ROS!"
     if backup_exists; then
       echo -e "It looks like you already have a backup from a previous session:"
-      echo "  $rbwpth"
+      echo "  $BACKUP_FILE_PATH_WINDOWS"
       if ask "Do you want to restore this now?"; then
         restore
       else
