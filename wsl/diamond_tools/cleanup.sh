@@ -40,7 +40,7 @@ else
     echo "No custom scripts were updated."
 fi
 
-rm -f ~/.wsl-ros/no_welcome ~/.current_robot ~/.backup_exclusions
+rm -f ~/.wsl-ros/no_welcome ~/.wsl-ros/remote_ver ~/.current_robot ~/.backup_exclusions
 rm -rf ~/.gazebo/ ~/.ignition/ ~/.rviz/ ~/.ros/ ~/.dbus ~/.landscape
 rm -f ~/.python_history ~/.wget-hsts ~/.backup_exclusions
 rm -rf ~/tuos_robotics
