@@ -9,7 +9,7 @@ cd ~
 
 rm -rf ~/tuos_robotics
 
-if ! git clone https://github.com/tom-howard/tuos_robotics.git; then
+if ! git clone -q https://github.com/tom-howard/tuos_robotics.git; then
     echo "Error."
 else
     # /usr/local/bin
@@ -33,8 +33,6 @@ else
     cp $files ~/.wsl-ros/
     
     # ~
-    rm -rf ~/wsl-ros-configs
-    mkdir -p ~/wsl-ros-configs
     rm -f ~/.bash_aliases
     cd ~/tuos_robotics/wsl/
     cp .bash_aliases ~/

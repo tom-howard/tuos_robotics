@@ -46,6 +46,9 @@ rm -f ~/.python_history ~/.wget-hsts ~/.backup_exclusions
 rm -rf ~/tuos_robotics
 rm -f ~/.wsl-ros/update.sh ~/.wsl-ros/cleanup.sh
 
+rm -rf ~/wsl-ros-configs
+mkdir -p ~/wsl-ros-configs
+
 echo -e "All done."
 echo -e "Now run the following command to complete the process:\n"
 echo -e "    history -c && history -w && logout\n"
