@@ -26,11 +26,11 @@ ask() {
   done
 }
 
-if [ ! -f ~/wsl-ros-user-settings/backup_dir.sh ]; then
-  # no backup_dir script exists so load a default:
-  cp ~/.wsl-ros/default_backup_dir.sh ~/wsl-ros-user-settings/backup_dir.sh
+if [ ! -f ~/.wsl-ros/backup_dir.sh ]; then
+  # no backup_dir script exists so create a default:
+  echo "export WSL_ROS_BACKUP_PATH=u" > ~/.wsl-ros/backup_dir.sh
 fi
-source ~/wsl-ros-user-settings/backup_dir.sh
+source ~/.wsl-ros/backup_dir.sh
 
 COMMAND=$1
 # INPUT CHECKS

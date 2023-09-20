@@ -26,7 +26,7 @@ else
     sudo chmod +x /usr/local/bin/diamond_tools
 
     # ~/.wsl-ros/
-    files="bashrc_miro bashrc_turtlebot3 bashrc_wsl_ros default_backup_exclusions default_backup_dir.sh get_tuos_user.sh set_display.sh"
+    files="bashrc_miro bashrc_turtlebot3 bashrc_wsl_ros default_backup_exclusions get_tuos_user.sh set_display.sh"
     cd ~/.wsl-ros/
     rm -f $files
     cd ~/tuos_robotics/wsl/
