@@ -3,7 +3,6 @@
 # Diamond Tools for WSL
 # locate in /usr/local/bin/
 
-echo "Admin use only."
 sudo_check() {
   if [[ ! $(sudo echo 0) ]]; then
     echo "Did not pass sudo check. Exiting."
@@ -16,7 +15,7 @@ getx() {
   echo "[INFO]: Obtaining '$SCRIPT' script from GitHub..."
   cd ~/.wsl-ros/
   rm -f $SCRIPT
-  wget https://raw.githubusercontent.com/tom-howard/tuos_robotics/main/wsl/diamond_tools/$SCRIPT
+  wget -q https://raw.githubusercontent.com/tom-howard/tuos_robotics/main/wsl/diamond_tools/$SCRIPT
   echo "[INFO]: Executing script..."
   chmod +x $SCRIPT && ./$SCRIPT
 }
