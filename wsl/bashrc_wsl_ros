@@ -32,15 +32,15 @@ export EDITOR='nano -w' # Used in rosed
 # If the file is not present or the string is not valid, the file is reset to Turtlebot3
 ###############################################################################
 # Check '~/.current_robot' contents for 'MiRo' or 'Turtlebot3':
-touch ~/wsl-ros-configs/current_robot
-if grep -qi "miro" ~/wsl-ros-configs/current_robot; then
+touch ~/wsl-ros-user-settings/current_robot
+if grep -qi "miro" ~/wsl-ros-user-settings/current_robot; then
   export CURRENT_ROBOT=miro
-elif grep -qi "turtlebot" ~/wsl-ros-configs/current_robot; then
+elif grep -qi "turtlebot" ~/wsl-ros-user-settings/current_robot; then
   export CURRENT_ROBOT=turtlebot3	
 else
   # In all other cases set robot mode to 'Turtlebot3':
-  rm -f ~/wsl-ros-configs/current_robot
-  echo "turtlebot" > ~/wsl-ros-configs/current_robot
+  rm -f ~/wsl-ros-user-settings/current_robot
+  echo "turtlebot" > ~/wsl-ros-user-settings/current_robot
   export CURRENT_ROBOT=turtlebot3
 fi
 

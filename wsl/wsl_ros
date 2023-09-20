@@ -26,11 +26,11 @@ ask() {
   done
 }
 
-if [ ! -f ~/wsl-ros-configs/backup_dir.sh ]; then
+if [ ! -f ~/wsl-ros-user-settings/backup_dir.sh ]; then
   # no backup_dir script exists so load a default:
-  cp ~/.wsl-ros/default_backup_dir.sh ~/wsl-ros-configs/backup_dir.sh
+  cp ~/.wsl-ros/default_backup_dir.sh ~/wsl-ros-user-settings/backup_dir.sh
 fi
-source ~/wsl-ros-configs/backup_dir.sh
+source ~/wsl-ros-user-settings/backup_dir.sh
 
 COMMAND=$1
 # INPUT CHECKS
@@ -105,9 +105,9 @@ archive_backup() {
 }
 
 backup() {
-  if [ ! -f ~/wsl-ros-configs/backup_exclusions ]; then
+  if [ ! -f ~/wsl-ros-user-settings/backup_exclusions ]; then
     # no exclusions file exists in ~, so load a default:
-    cp ~/.wsl-ros/default_backup_exclusions ~/wsl-ros-configs/backup_exclusions
+    cp ~/.wsl-ros/default_backup_exclusions ~/wsl-ros-user-settings/backup_exclusions
   fi
 
   echo "Backing up your WSL-ROS environment to '$BACKUP_FILE_PATH_WINDOWS', please wait..."
@@ -116,7 +116,7 @@ backup() {
 
   touch_backup
 
-  if tar -X $HOME/wsl-ros-configs/backup_exclusions --exclude='.wsl-ros' --checkpoint=.200 -cjf $BACKUP_FILE_PATH_FULL -C $HOME .; then
+  if tar -X $HOME/wsl-ros-user-settings/backup_exclusions --exclude='.wsl-ros' --checkpoint=.200 -cjf $BACKUP_FILE_PATH_FULL -C $HOME .; then
     echo "$(date): Backup from $(hostname) [wsl-ros version: $WSL_ROS_VER]" >> $BACKUP_LOGFILE
     echo -e ".\nBackup complete."
   else
