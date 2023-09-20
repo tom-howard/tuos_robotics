@@ -34,7 +34,7 @@ source ~/wsl-ros-configs/backup_dir.sh
 
 COMMAND=$1
 # INPUT CHECKS
-if [[ $# -eq 2 ]] && [[ "$COMMAND" == "restore" ]]; then
+if ([[ $# -eq 2 ]] && [[ "$COMMAND" == "backup" ]]) || ([[ $# -eq 2 ]] && [[ "$COMMAND" == "restore" ]]); then
   BACKUP_FILE_PATH_FULL=$2
   BACKUP_FILE_PATH_NOEX="${BACKUP_FILE_PATH_FULL%.*}"
   BACKUP_FILE_NAME=$(basename $BACKUP_FILE_PATH_FULL .tar.gz)
