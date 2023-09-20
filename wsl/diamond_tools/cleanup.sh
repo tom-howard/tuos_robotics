@@ -40,14 +40,11 @@ else
     echo "No custom scripts were updated."
 fi
 
-rm -f ~/.wsl-ros/no_welcome ~/.current_robot
+rm -f ~/.wsl-ros/no_welcome ~/.current_robot ~/.backup_exclusions
 rm -rf ~/.gazebo/ ~/.ignition/ ~/.rviz/ ~/.ros/ ~/.dbus ~/.landscape
 rm -f ~/.python_history ~/.wget-hsts ~/.backup_exclusions
 rm -rf ~/tuos_robotics
 rm -f ~/.wsl-ros/update.sh ~/.wsl-ros/cleanup.sh
-
-rm -rf ~/wsl-ros-user-settings
-mkdir -p ~/wsl-ros-user-settings
 
 echo -e "All done."
 echo -e "Now run the following command to complete the process:\n"
