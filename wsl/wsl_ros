@@ -147,6 +147,7 @@ check_for_updates() {
     echo "Updating WSL-ROS scripts..."
     diamond_tools update
     echo "$REMOTE_VER" > ~/.wsl-ros/local_ver
+    echo "Update complete."
   fi
 }
 
