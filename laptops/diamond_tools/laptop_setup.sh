@@ -36,7 +36,6 @@ if ask "[INPUT] IS THIS CORRECT??"; then
     echo "[INFO] Updating hostname..."
     sudo hostnamectl set-hostname dia-laptop$LAPTOP_NO
     sudo sed -i 's/'$OLD_HOST'/dia-laptop'$LAPTOP_NO'/g' /etc/hosts
-    sudo sed -i 's/'$OLD_HOST'/dia-laptop'$LAPTOP_NO'/g' ~/.bashrc
 
     echo "[INFO] Removing '~/.tuos/waffle_number' from both user profiles..."
     
