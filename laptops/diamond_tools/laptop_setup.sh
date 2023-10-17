@@ -23,9 +23,7 @@ if [[ $SSID_NOW != "DIA-LAB" ]]; then
 fi
 
 # get the last part of the IP address:
-ip_sfx=$(ip -o addr show dev "wlo1" | awk '$3 == "inet" {print $4}' | sed -r 's!/.*!!; s!.*\.!!')
-# subtract 100 to get the device number:
-LAPTOP_NO=$ip_sfx
+LAPTOP_NO=$(ip -o addr show dev "wlo1" | awk '$3 == "inet" {print $4}' | sed -r 's!/.*!!; s!.*\.!!')
 
 SSID_NOW=$(iwgetid -r)
 if [[ $SSID_NOW != "eduroam" ]]; then
