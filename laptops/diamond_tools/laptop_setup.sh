@@ -37,8 +37,14 @@ if ask "[INPUT] IS THIS CORRECT??"; then
     sudo hostnamectl set-hostname dia-laptop$LAPTOP_NO
     sudo sed -i 's/'$OLD_HOST'/dia-laptop'$LAPTOP_NO'/g' /etc/hosts
 
-    echo "[INFO] Removing '~/.tuos/waffle_number' from both user profiles..."
+    echo "[INFO] Setting default device numbers..."
     
+    echo "$LAPTOP_NO" > /home/Shared/laptop_number
+    echo "$LAPTOP_NO" > /home/Shared/miro_number
+    echo "$LAPTOP_NO" > /home/Shared/waffle_number
+
+    echo "[INFO] Removing '~/.tuos/waffle_number' from both user profiles..."
+
     tmp_file=/tmp/remove_waffle_no.sh
     rm -f $tmp_file
     touch $tmp_file
