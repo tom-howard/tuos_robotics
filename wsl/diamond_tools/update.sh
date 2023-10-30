@@ -14,7 +14,7 @@ if ! git clone -q https://github.com/tom-howard/tuos_robotics.git; then
 else
     # /usr/local/bin
     cd /usr/local/bin
-    files="robot_switch wsl_ros"
+    files="robot_switch wsl_ros waffle"
     sudo rm -f $files
     cd ~/tuos_robotics/wsl/
     sudo cp $files /usr/local/bin/
