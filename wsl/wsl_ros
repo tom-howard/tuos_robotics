@@ -39,6 +39,11 @@ if ([[ $# -eq 2 ]] && [[ "$COMMAND" == "backup" ]]) || ([[ $# -eq 2 ]] && [[ "$C
   BACKUP_FILE_PATH_NOEX="${BACKUP_FILE_PATH_FULL%.*}"
   BACKUP_FILE_NAME=$(basename $BACKUP_FILE_PATH_FULL .tar.gz)
   BACKUP_ROOT_DIR=${BACKUP_FILE_PATH_FULL%/*}    
+elif ([[ "$COMMAND" == "recover" ]]); then
+  BACKUP_FILE_NAME=ros-backup-2209
+  BACKUP_ROOT_DIR=/mnt/u
+  BACKUP_FILE_PATH_NOEX="$BACKUP_ROOT_DIR"/wsl-ros/"$BACKUP_FILE_NAME"
+  BACKUP_FILE_PATH_FULL=$BACKUP_FILE_PATH_NOEX'.tar.gz'
 else
   BACKUP_FILE_NAME=ros-backup-$(echo $WSL_ROS_VER | sed "s/[^0-9']//g")
   BACKUP_ROOT_DIR=/mnt/"$WSL_ROS_BACKUP_PATH"
@@ -65,6 +70,7 @@ usage() {
     backup    ${IT}Backup${NC} files in your WSL home directory.
     restore   ${IT}Restore${NC} an existing backup file.
     update    ${IT}Update${NC} all custom TUoS WSL-ROS scripts (if applicable).
+    recover   ${IT}Recover${NC} data from an old WSL-ROS backup file (from version 2209).
 
   Backup file: "
   echo "    $BACKUP_FILE_PATH_WINDOWS"
@@ -137,6 +143,28 @@ restore() {
   fi
 }
 
+recover() {
+  echo "Recovering files from '$BACKUP_FILE_PATH_WINDOWS'..."
+  touch_backup
+
+  RECOVERY_DIR=backup_recovery
+
+  mkdir -p ~/$RECOVERY_DIR
+  
+  if tar --checkpoint=.200 -xjf $BACKUP_FILE_PATH_FULL -C $HOME/$RECOVERY_DIR ; then
+    echo "$(date): Recovery of 2209 data to $(hostname) [wsl-ros version: $WSL_ROS_VER]" >> $BACKUP_LOGFILE
+    mv ~/catkin_ws ~/$RECOVERY_DIR/catkin_ws_pre_recovery
+    mv ~/$RECOVERY_DIR/home/student/catkin_ws ~/
+    mv ~/$RECOVERY_DIR/home/student ~/$RECOVERY_DIR/old_wsl_ros_data
+    rm -rf ~/$RECOVERY_DIR/home
+    echo -e ".\nRecovery complete..."
+    echo "Your Catkin Workspace has been restored. All other files can be found in:"
+    echo "  $HOME/$RECOVERY_DIR"
+  else
+    echo -e "An error occurred while trying to untar your backup file, sorry."
+  fi 
+}
+
 check_for_updates() {
   wget -qO ~/.wsl-ros/remote_ver https://raw.githubusercontent.com/tom-howard/tuos_robotics/main/wsl/remote_ver 
 
@@ -149,6 +177,15 @@ check_for_updates() {
     echo "$REMOTE_VER" > ~/.wsl-ros/local_ver
     echo "Update complete."
   fi
+}
+
+welcome_msg() {
+  echo -e "${IT}Welcome to WSL-ROS!${NC}
+Version $WSL_ROS_VER (September 2023)
+  
+Created by Tom Howard and Alex Lucas
+(c) 2023 The University of Sheffield
+"
 }
 
 if [[ "$COMMAND" == "" ]]; then
@@ -189,8 +226,23 @@ case $COMMAND in
       exit 1
     fi
     ;;
+  recover)
+    if backup_exists; then
+      echo -e "Preparing to RECOVER a backup from a previous WSL-ROS version (2209):"
+      echo "  $BACKUP_FILE_PATH_WINDOWS"
+      if ask "Do you want to continue?"; then
+        recover
+      else
+        echo "Recovery cancelled."
+        exit 1
+      fi
+    else
+      echo "Unable to restore! The file '$BACKUP_FILE_PATH_WINDOWS' does not exist."
+      exit 1
+    fi
+    ;;
   first-launch)
-    echo "Welcome to WSL-ROS!"
+    welcome_msg
     check_for_updates
     if backup_exists; then
       echo -e "It looks like you already have a backup from a previous session:"
@@ -212,4 +264,3 @@ case $COMMAND in
     exit 1
     ;;
 esac
-
