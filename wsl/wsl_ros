@@ -223,6 +223,8 @@ case $COMMAND in
       fi
     else
       echo "Unable to restore! The file '$BACKUP_FILE_PATH_WINDOWS' does not exist."
+      echo "Trying to restore a backup from an older version of WSL-ROS (2209)?"
+      echo "Use 'wsl_ros recover' instead."
       exit 1
     fi
     ;;
@@ -237,7 +239,7 @@ case $COMMAND in
         exit 1
       fi
     else
-      echo "Unable to restore! The file '$BACKUP_FILE_PATH_WINDOWS' does not exist."
+      echo "Unable to recover! The file '$BACKUP_FILE_PATH_WINDOWS' does not exist."
       exit 1
     fi
     ;;
