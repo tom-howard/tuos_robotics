@@ -22,8 +22,8 @@ ask() {
     fi
     # Check if the reply is valid
     case "$reply" in
-        Y*|y*) return 0 ;;
-        N*|n*) return 1 ;;
+      Y*|y*) return 0 ;;
+      N*|n*) return 1 ;;
     esac
   done
 }
@@ -35,9 +35,9 @@ echo "$reply" > ~/.wsl-ros/wsl_ros_ver
 echo "1" > ~/.wsl-ros/local_ver
 
 if ask "Do you want to update all the custom wsl-ros scripts?"; then
-    diamond_tools update
+  diamond_tools update
 else
-    echo "No custom scripts were updated."
+  echo "No custom scripts were updated."
 fi
 
 rm -f ~/.wsl-ros/no_welcome ~/.wsl-ros/remote_ver ~/.current_robot ~/.backup_exclusions
