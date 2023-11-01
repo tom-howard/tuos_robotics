@@ -3,8 +3,8 @@
 # Clean up the WSL environment, prior to creating an image of it...
 
 if [[ ! $(sudo echo 0) ]]; then
-    echo "Invalid credentials. Exiting."
-    exit
+  echo "Invalid credentials. Exiting."
+  exit
 fi
 
 ask() {
@@ -18,7 +18,7 @@ ask() {
     read -r reply </dev/tty
     # Default?
     if [[ -z $reply ]]; then
-        reply=$default
+      reply=$default
     fi
     # Check if the reply is valid
     case "$reply" in
