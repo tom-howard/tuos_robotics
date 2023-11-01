@@ -46,6 +46,8 @@ rm -f ~/.python_history ~/.wget-hsts ~/.backup_exclusions
 rm -rf ~/tuos_robotics
 rm -f ~/.wsl-ros/update.sh ~/.wsl-ros/cleanup.sh
 echo "export XSERVER=true" > ~/.wsl-ros/xserver.sh
+unset TUOS_USER # historic
+unset WIN_USER
 
 echo -e "All done."
 echo -e "Now run the following command to complete the process:\n"
