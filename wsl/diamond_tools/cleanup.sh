@@ -48,6 +48,7 @@ rm -f ~/.wsl-ros/update.sh ~/.wsl-ros/cleanup.sh
 echo "export XSERVER=true" > ~/.wsl-ros/xserver.sh
 unset TUOS_USER # historic
 unset WIN_USER
+unset CURRENT_ROBOT
 
 echo -e "All done."
 echo -e "Now run the following command to complete the process:\n"
