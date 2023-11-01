@@ -41,5 +41,5 @@ else
     rm -rf ~/tuos_robotics
     
     cd ~
-    echo "Done."
+    echo "[INFO]: Update complete."
 fi

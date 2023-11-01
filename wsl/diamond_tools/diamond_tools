@@ -12,11 +12,11 @@ sudo_check() {
 
 getx() {
   SCRIPT=$1
-  echo "[INFO]: Obtaining '$SCRIPT' script from GitHub..."
+  echo "[INFO]: Obtaining $COMMAND script..."
   cd ~/.wsl-ros/
   rm -f $SCRIPT
   wget -q https://raw.githubusercontent.com/tom-howard/tuos_robotics/main/wsl/diamond_tools/$SCRIPT
-  echo "[INFO]: Executing script..."
+  echo "[INFO]: Executing $COMMAND script..."
   chmod +x $SCRIPT && ./$SCRIPT
 }
 
