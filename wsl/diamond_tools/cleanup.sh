@@ -47,11 +47,11 @@ rm -rf ~/tuos_robotics
 rm -f ~/.wsl-ros/update.sh ~/.wsl-ros/cleanup.sh
 
 if ask "Is this image for the Software Download Service?"; then
-	echo "export XSERVER=false" > ~/.wsl-ros/xserver.sh
-	echo "export WSL_ROS_BACKUP_PATH=c" > ~/.wsl-ros/backup_dir.sh
-	head -n 1 /etc/fstab > /tmp/fstab ; sudo mv /tmp/fstab /etc/
+  echo "export XSERVER=false" > ~/.wsl-ros/xserver.sh
+  echo "export WSL_ROS_BACKUP_PATH=c" > ~/.wsl-ros/backup_dir.sh
+  head -n 1 /etc/fstab > /tmp/fstab ; sudo mv /tmp/fstab /etc/
 else
-	echo "export XSERVER=true" > ~/.wsl-ros/xserver.sh
+  echo "export XSERVER=true" > ~/.wsl-ros/xserver.sh
 fi
 
 unset WIN_USER
