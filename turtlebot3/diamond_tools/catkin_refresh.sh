@@ -11,9 +11,9 @@ git clone -b noetic-devel https://github.com/ROBOTIS-GIT/turtlebot3.git
 cd ~/catkin_ws/src/turtlebot3
 rm -r turtlebot3_description/ turtlebot3_teleop/ turtlebot3_navigation/ turtlebot3_slam/ turtlebot3_example/
 
-# Clone the COM2009 repo
+# Clone the tuos_ros repo
 cd ~/catkin_ws/src/
-git clone https://github.com/tom-howard/COM2009.git
-cd ~/catkin_ws/src/COM2009/
-rm -rf tuos_ros_examples/ com2009_simulations/ tuos_ros_simulations/
+git clone https://github.com/tom-howard/tuos_ros.git
+cd ~/catkin_ws/src/tuos_ros/
+rm -rf tuos_examples/ com2009_simulations/ tuos_simulations/
 cd ~/catkin_ws/ && catkin build
