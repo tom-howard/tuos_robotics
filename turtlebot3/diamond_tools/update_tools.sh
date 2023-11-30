@@ -16,6 +16,8 @@ chmod +x /tmp/profile_updates.sh
 
 # run as admin
 /tmp/profile_updates.sh
+diamond_tools catkin
 
 # run as user
 sudo -i -u robot "/tmp/profile_updates.sh"
+echo "Run 'diamond_tools catkin' on the standard user profile asap..."
