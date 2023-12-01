@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+RED='\033[0;31m'
+IT='\033[3m'
+NC='\033[0m'
+
+echo -e "${RED}Not available on the Robotics Laptops!${NC} \n    The ${IT}wsl_ros Command Line Tool${NC} is only available on WSL-ROS!"
