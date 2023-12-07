@@ -36,9 +36,21 @@ if ask "[INPUT] Preparing to configure for robot: dia-waffle$WAFFLE_NO. IS THIS 
     else
         echo "[INFO] Skipped OpenCR updates."
     fi
-    echo "[INFO] Checking the RealSense Camera Firmware..."
+    echo "[INFO] Checking for a RealSense Camera..."
     rs-fw-update -l
-    echo "[INFO] Camera firmware version should be displayed above as 05.12.14.50... (hopefully!)"
+    if ask "[INPUT] is the RealSense Camera visible in the device list above?"; then
+        if ask "[INPUT] Update the RealSense Camera Firmware (to 05.12.14.50)?"; then
+            rs-fw-update -f ~/device_firmware/realsense_d435/Signed_Image_UVC_5_12_14_50.bin
+            sleep 5
+            echo "[INFO] Checking the RealSense Camera Firmware (again)..."
+            rs-fw-update -l
+            echo "[INFO] Camera firmware version should now be displayed above as 05.12.14.50 (hopefully!)"
+        else
+            echo "[INFO] Skipped RealSense Firmware updates."
+        fi
+    else
+        echo "[INFO] Skipped RealSense Firmware updates."
+    fi
     sleep 5
     echo "[COMPLETE] Robot configuration is now complete."
     echo "IT IS NOW SAFE TO TURN OFF YOUR ROBOT!!!"
