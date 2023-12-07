@@ -18,6 +18,9 @@ chmod +x /tmp/profile_updates.sh
 /tmp/profile_updates.sh
 diamond_tools catkin
 
-# run as user
+# run as 'robot'
 sudo -i -u robot "/tmp/profile_updates.sh"
-echo "Run 'diamond_tools catkin' on the standard user profile asap..."
+
+# copy the pre-built Catkin Workspace over for use by 'robot':
+sudo rm -rf /home/robot/catkin_ws/
+sudo cp -r ~/catkin_ws/ /home/robot/
