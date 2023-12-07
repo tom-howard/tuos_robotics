@@ -9,7 +9,7 @@ mkdir -p ~/catkin_ws/src
 cd ~/catkin_ws/src
 git clone -b noetic-devel https://github.com/ROBOTIS-GIT/turtlebot3.git
 cd ~/catkin_ws/src/turtlebot3
-rm -r turtlebot3_description/ turtlebot3_teleop/ turtlebot3_navigation/ turtlebot3_slam/ turtlebot3_example/
+rm -r turtlebot3_description/ turtlebot3_navigation/ turtlebot3_slam/ turtlebot3_example/
 
 # Clone the tuos_ros repo
 cd ~/catkin_ws/src/
