@@ -24,3 +24,4 @@ sudo -i -u robot "/tmp/profile_updates.sh"
 # copy the pre-built Catkin Workspace over for use by 'robot':
 sudo rm -rf /home/robot/catkin_ws/
 sudo cp -r ~/catkin_ws/ /home/robot/
+sudo chmod -R 777 /home/robot/catkin_ws/
