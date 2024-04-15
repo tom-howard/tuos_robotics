@@ -17,3 +17,8 @@ git clone https://github.com/tom-howard/tuos_ros.git
 cd ~/catkin_ws/src/tuos_ros/
 rm -rf tuos_examples/ com2009_simulations/ tuos_simulations/
 cd ~/catkin_ws/ && catkin build
+
+# copy the pre-built Catkin Workspace over for use by 'robot':
+sudo rm -rf /home/robot/catkin_ws/
+sudo cp -r ~/catkin_ws/ /home/robot/
+sudo chmod -R 777 /home/robot/catkin_ws/
