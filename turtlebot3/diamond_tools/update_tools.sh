@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-sudo apt update && sudo apt upgrade -y
+# sudo apt update && sudo apt upgrade -y
 
 files="/usr/local/bin/diamond_tools /usr/local/bin/wsl_ros /usr/local/bin/waffle"
 sudo rm -f $files
