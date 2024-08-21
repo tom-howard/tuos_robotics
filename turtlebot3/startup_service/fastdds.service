@@ -1,0 +1,17 @@
+[Unit]
+Description=FastDDS Discovery Service
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Environment=LD_LIBRARY_PATH=/home/waffle/tb3_ws/install/tcp_tunnel/lib:/opt/ros/humble/lib/x86_64-linux-gnu:/opt/ros/humble/lib
+ExecStartPre=/bin/sleep 7
+ExecStart=/bin/bash -c '/opt/ros/humble/bin/fastdds discovery -i 0 -p 11811'
+Restart=always
+User=fastdds
+Group=fastdds
+WorkingDirectory=/opt/ros/humble
+
+[Install]
+WantedBy=multi-user.target
+
