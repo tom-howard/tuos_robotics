@@ -12,6 +12,9 @@ waffle_id=$(hostname)
 laptop_id=$1
 
 echo -e "${GREEN}[$waffle_id]${NC} Pairing Robot to ${CYAN}dia-laptop$laptop_id${NC}..."
+ 
+
+touch ~/.tb3_tools/dia_laptop
 echo "$laptop_id" > ~/.tb3_tools/dia_laptop
 
 # remove all ssh keys other than the one that has just been created:
