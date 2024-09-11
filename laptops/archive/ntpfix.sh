@@ -9,6 +9,6 @@ sudo ntpdate ntp.ubuntu.com
 sudo groupadd timesyncers
 sudo adduser student timesyncers
 
-sudo wget -O /etc/sudoers.d/rossync https://raw.githubusercontent.com/tom-howard/tuos_robotics/main/laptops/rossync
+sudo wget -O /etc/sudoers.d/rossync https://raw.githubusercontent.com/tom-howard/tuos_robotics/humble/laptops/rossync
 
 sudo reboot

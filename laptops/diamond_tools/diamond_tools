@@ -15,7 +15,7 @@ getx() {
   echo "[INFO]: Obtaining '$SCRIPT' script from GitHub..."
   cd ~/.tuos/
   rm -f $SCRIPT
-  wget https://raw.githubusercontent.com/tom-howard/tuos_robotics/main/laptops/diamond_tools/$SCRIPT
+  wget https://raw.githubusercontent.com/tom-howard/tuos_robotics/humble/laptops/diamond_tools/$SCRIPT
   echo "[INFO]: Executing script..."
   chmod +x $SCRIPT && ./$SCRIPT
 }

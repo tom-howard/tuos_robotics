@@ -1,7 +1,4 @@
 #!/bin/bash
-# CC BY-NC
-# Alex Lucas & Tom Howard, University of Sheffield
-# Copyright (c) 2022
 
 RED='\033[0;31m'
 YELLOW='\033[1;33m'
@@ -22,12 +19,8 @@ ask() {
     fi
 }
 
-
-# echo -e "${YELLOW}[Note] Target OS version  >>> Ubuntu 20.04.x (Focal Fossa) or Linux Mint 21.x${NC}"
 echo -e "${YELLOW}[Note] Target OS version >>> Ubuntu 22.04.x (Jammy Jellyfish)${NC}"
-# echo -e "${YELLOW}[Note] Target ROS version >>> ROS Noetic Ninjemys${NC}"
 echo -e "${YELLOW}[Note] Target ROS version >>> ROS2 Humble Hawksbill${NC}"
-echo -e "${YELLOW}[Note] Catkin workspace   >>> $HOME/catkin_ws${NC}\n"
 
 if ! ask "[OK to continue with installation?]"; then
   echo -e "${YELLOW}Exiting.${NC}"
@@ -63,6 +56,7 @@ sudo update-locale LC_ALL=en_GB.UTF-8 LANG=en_GB.UTF-8
 locale  # verify settings
 
 echo -e "\n${YELLOW}[NTP: update time]${NC}"
+sudo apt install -y chrony ntpdate curl build-essential git
 sudo ntpdate ntp.ubuntu.com
 sleep 2
 
@@ -70,74 +64,49 @@ sleep 2
 sudo apt install software-properties-common
 sudo add-apt-repository universe
 
-# Add
 
+# Adding the ROS 2 GPG key
+sudo apt update && sudo apt install curl -y
+sudo curl -sSL https://raw.githubusercontent.com/ros/rosdistro/master/ros.key -o /usr/share/keyrings/ros-archive-keyring.gpg
 
-echo -e "\n${YELLOW}[Add the ROS repository]${NC}"
-if [ ! -e /etc/apt/sources.list.d/ros-latest.list ]; then
-  sudo sh -c "echo \"deb http://packages.ros.org/ros/ubuntu ${name_os_version} main\" > /etc/apt/sources.list.d/ros-latest.list"
-fi
+# Adding repo to sources list
+echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/ros-archive-keyring.gpg] http://packages.ros.org/ros2/ubuntu $(. /etc/os-release && echo $UBUNTU_CODENAME) main" | sudo tee /etc/apt/sources.list.d/ros2.list > /dev/null
 
-echo -e "\n${YELLOW}[Download the ROS keys]${NC}"
-roskey=`apt-key list | grep "Open Robotics"`               
-if [ -z "$roskey" ]; then
-  curl -s https://raw.githubusercontent.com/ros/rosdistro/master/ros.asc | sudo apt-key add -
-fi
-
-echo -e "\n${YELLOW}[Check the ROS keys]${NC}"
-roskey=`apt-key list | grep "Open Robotics"`
-if [ -n "$roskey" ]; then
-  echo -e "\n${YELLOW}[ROS key exists in the list]${NC}"
-else
-  echo -e "\n${RED}[Failed to receive the ROS key, aborts the installation]${NC}"
-  exit 0
-fi
-
-echo -e "\n${YELLOW}[Update & Upgrade]${NC}"
-sudo apt update -y
-sudo apt upgrade -y
+sudo apt -y update
+sudo apt -y upgrade
 
 echo -e "\n${YELLOW}[Source .bashrc]${NC}"
 source $HOME/.bashrc
 
 echo -e "\n${YELLOW}[Install all the necessary ROS and TB3 packages]${NC}"
-sudo apt install -y ros-noetic-desktop-full ros-noetic-rqt-* ros-noetic-gazebo-* \
-  ros-noetic-joy ros-noetic-teleop-twist-joy ros-noetic-teleop-twist-keyboard \
-  ros-noetic-laser-proc ros-noetic-rgbd-launch ros-noetic-rosserial-arduino \
-  ros-noetic-amcl ros-noetic-map-server ros-noetic-move-base ros-noetic-rqt* \
-  ros-noetic-gmapping ros-noetic-navigation python3-rosdep python3-rosinstall \
-  python3-rosinstall-generator python3-wstool build-essential ros-noetic-dynamixel-sdk \
-  ros-noetic-turtlebot3 ros-noetic-turtlebot3-simulations \
-  python3-pip python3-catkin-tools ffmpeg
+sudo apt install -y build-essential ros-humble-desktop ros-dev-tools ros-humble-gazebo-* \
+    ros-humble-cartographer ros-humble-cartographer-ros ros-humble-navigation2 \
+    ros-humble-nav2-bringup ros-humble-turtlebot3 ros-humble-turtlebot3-msgs \
+    ros-humble-turtlebot3-simulations ros-humble-turtlebot3-gazebo \
+    python3-rosdep python3-colcon-common-extensions ros-humble-rqt* \
+    ros-humble-librealsense2* ros-humble-realsense2-* ffmpeg \
+    ros-humble-dynamixel-sdk
 
-sudo apt install -y python3-pandas python3-scipy
+sudo apt-get install python3-pip python3-numpy python3-scipy
 
 pip install setuptools==58.2.0
 
-echo -e "\n${YELLOW}[Initialise rosdep and update]${NC}"
-sudo rm /etc/ros/rosdep/sources.list.d/20-default.list
-sudo sh -c "rosdep init"
-echo "Running rosdep update now..."
-sleep 2
-rosdep update
 
-echo -e "\n${YELLOW}[Environment setup]${NC}"
-source /opt/ros/$name_ros_version/setup.sh
+echo -e "\n${YELLOW}[Setting up the environment]"
+echo "source /opt/ros/$name_ros_version/setup.bash" >> $HOME/.bashrc
 source $HOME/.bashrc
 
-echo -e "\n${YELLOW}[Create and build the TB3 catkin workspace]${NC}"
+echo -e "\n${YELLOW}[Create and build the ROS2 workspace]${NC}"
 mkdir -p $HOME/$name_ros2_workspace/src
 cd $HOME/$name_ros2_workspace/src
-catkin_init_workspace
-cd $HOME/$name_ros2_workspace
-catkin build
+colcon build --symlink-install
 
 source $HOME/.bashrc
 
 ################################# Part II. VS Code #################################
 
 if ask "[Install VS Code?]"; then
-  
+
   sudo apt update -y
   sudo apt install -y software-properties-common apt-transport-https wget
   # Import the Microsoft GPG key:
@@ -153,37 +122,8 @@ else
   echo -e "\n${YELLOW}[Skipping VS Code Install...]${NC}"
 fi
 
-################################# Part III. MDK #################################
-if ask "[Do you want to set up MiRo Developer Kit?]"; then
-  echo -e "\n${YELLOW}[Install AprilTags with Pip3]${NC}"
-  sudo pip3 install apriltag
-
-  echo -e "\n${YELLOW}[Download and unpack MDK into ~/pkgs]${NC}"
-  mkdir -p ~/pkgs
-  cd ~/pkgs/
-  wget --no-check-certificate 'https://docs.google.com/uc?export=download&id=1V8pNrwcMY7ucjEzf6NzoAuLK3GORac1k' -O mdk_2-210921.tgz
-  tar -xvzf mdk_2-210921.tgz
-  cd mdk-210921/bin/script
-
-  # Remove MDK .bashrc entries
-  rm ~/mdk
-  sed -i '/# MDK/d' ~/.bashrc
-  sed -i '/source ~\/mdk\/setup.bash/d' ~/.bashrc
-
-  echo -e "\n${YELLOW}[Install MDK]${NC}"
-  ./install_mdk.sh
-  cd ~/mdk/catkin_ws/
-  catkin build
-
-  echo -e "\n${YELLOW}[Add MDK extras]${NC}"
-  wget -O ~/mdk/sim/launch_full.sh https://gist.githubusercontent.com/AlexandrLucas/703831843f9b46edc2e2032bcd08651f/raw/launch_full.sh
-  chmod +x ~/mdk/sim/launch_full.sh
-else
-  echo -e "\n${YELLOW}[Skipping MDK...]${NC}"
-fi
-
-####################### Part IV. TUoS Robotics scripts ########################
-if ask "[Do you want to also set up TUoS Robot Switch scripts?]"; then
+####################### Part IV. TUosimS Robotics scripts ########################
+if ask "[Do you want to also set up TUoS scripts?]"; then
 
   echo -e "\n${YELLOW}[The following prompt is only relevant for DIA-LAB laptops which connect to real robots]${NC}"
   echo -e "\n${YELLOW}[Simply hit ENTER if you're installing this on your own PC]${NC}\n"
@@ -200,20 +140,18 @@ if ask "[Do you want to also set up TUoS Robot Switch scripts?]"; then
     PC_NO=1
   fi
 
-  # Remove the new MDK ~/.bashrc entries (will be done separately in a different way)
-
-  echo -e "\n${YELLOW}[Setting up /usr/local/bin/ scripts]${NC}"
+    echo -e "\n${YELLOW}[Setting up /usr/local/bin/ scripts]${NC}"
   cd /usr/local/bin/
   sudo wget -O /usr/local/bin/robot_mode https://raw.githubusercontent.com/tom-howard/tuos_robotics/humble/laptops/robot_mode
   sudo wget -O /usr/local/bin/pair_with_waffle https://raw.githubusercontent.com/tom-howard/tuos_robotics/humble/laptops/pair_with_waffle
   sudo wget -O /usr/local/bin/waffle https://raw.githubusercontent.com/tom-howard/tuos_robotics/humble/laptops/waffle_cli/waffle
   sudo wget -O /usr/local/bin/diamond_tools https://raw.githubusercontent.com/tom-howard/tuos_robotics/humble/laptops/diamond_tools/diamond_tools
   sudo chmod +x *
-  
+
   sudo wget -O /usr/local/bin/robot_pair_check.sh https://raw.githubusercontent.com/tom-howard/tuos_robotics/humble/laptops/waffle_cli/robot_pair_check.sh
   sudo wget -O /usr/local/bin/robot_pairing.sh https://raw.githubusercontent.com/tom-howard/tuos_robotics/humble/laptops/waffle_cli/robot_pairing.sh
   sudo wget -O /usr/local/bin/robot_sync.sh https://raw.githubusercontent.com/tom-howard/tuos_robotics/humble/laptops/waffle_cli/robot_sync.sh
-  
+
   echo -e "\n${YELLOW}[Setting up ~/.tuos scripts]${NC}"
   mkdir -p ~/.tuos
   cd ~/.tuos
@@ -225,9 +163,9 @@ if ask "[Do you want to also set up TUoS Robot Switch scripts?]"; then
   sudo addgroup sharegroup
   sudo chown :sharegroup /home/Shared
   sudo adduser "$USER" sharegroup
-  
-  # set selected sudo commands to require no password input
-  sudo wget -O /etc/sudoers.d/nopwds https://raw.githubusercontent.com/tom-howard/tuos_robotics/humble/laptops/nopwds 
+
+    # set selected sudo commands to require no password input
+  sudo wget -O /etc/sudoers.d/nopwds https://raw.githubusercontent.com/tom-howard/tuos_robotics/humble/laptops/nopwds
 
   echo -e "\n${YELLOW}[Setting device numbers]${NC}"
   cd /home/Shared
@@ -236,8 +174,6 @@ if ask "[Do you want to also set up TUoS Robot Switch scripts?]"; then
   sudo chgrp sharegroup *
   echo "$PC_NO" > laptop_number
   echo "$PC_NO" > waffle_number
-
-  echo -e "\n${YELLOW}[Adding the Robotics Kit switch to ~/.bashrc, if not found]${NC}"
 
   echo -e "\n${YELLOW}[Adding bash aliases, if not found]${NC}"
   cd ~
@@ -253,13 +189,9 @@ else
 fi
 
 ######################### Part V. Teaching materials ##########################
-if ask "[Do you want to download COM2009 and COM3528 teaching materials?]"; then
+if ask "[Do you want to download the COM2009 teaching materials?]"; then
   cd $HOME/$name_ros2_workspace/src
   git clone https://github.com/tom-howard/COM2009
-  catkin build
-
-  cd ~/mdk/catkin_ws/src
-  git clone https://github.com/AlexandrLucas/COM3528
   catkin build
 fi
 
@@ -282,6 +214,7 @@ if ask "[Do you want to set up a 'student' profile?]"; then
     echo -e "\n${RED}[Failed to add user 'student']${NC}"
   fi
 fi
+
 
 ############################## Part VII. DIA-LAB ###############################
 

@@ -11,7 +11,7 @@ Download and run the automated script `full_install.sh`, which *should* set ever
 >**Note:** *Keep an eye on terminal output, as there will be a few prompts that will require your input.*
 
 ```bash
-wget https://raw.githubusercontent.com/tom-howard/tuos_robotics/main/students/full_install.sh
+wget https://raw.githubusercontent.com/tom-howard/tuos_robotics/humble/students/full_install.sh
 chmod +x full_install.sh && ./full_install.sh
 ```
 
@@ -22,6 +22,6 @@ To install/update the MDK only, use the `mdk_only.sh`. Note that this does not i
 >**Note:** COM3528 students, you should use the main script in the first instance, and only use the this one if you're MDK installation somehow ended up broken  
 
 ```bash
-wget https://raw.githubusercontent.com/tom-howard/tuos_robotics/main/students/mdk_only.sh
+wget https://raw.githubusercontent.com/tom-howard/tuos_robotics/humble/students/mdk_only.sh
 chmod +x mdk_only.sh && ./mdk_only.sh
 ```

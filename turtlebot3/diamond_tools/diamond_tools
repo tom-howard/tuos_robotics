@@ -22,7 +22,7 @@ getx() {
   echo "[INFO]: Obtaining '$SCRIPT' script from GitHub..."
   cd ~/.tb3_tools/
   rm -f $SCRIPT
-  wget https://raw.githubusercontent.com/tom-howard/tuos_robotics/main/turtlebot3/diamond_tools/$SCRIPT
+  wget https://raw.githubusercontent.com/tom-howard/tuos_robotics/humble/turtlebot3/diamond_tools/$SCRIPT
   echo "[INFO]: Executing script..."
   chmod +x $SCRIPT && ./$SCRIPT
 }

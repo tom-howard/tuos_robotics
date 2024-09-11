@@ -2,7 +2,7 @@
 
 # ROS settings for TurtleBot3 (localhost)
 source /opt/ros/noetic/setup.bash
-source ~/catkin_ws/devel/setup.bash
+source ~/tb3_ws/install/setup.bash
 export TURTLEBOT3_MODEL=waffle
 
 if [ ! -f ~/.tuos/waffle_number ]; then
@@ -12,12 +12,16 @@ fi
 if [ ! -f ~/.tuos/robot_mode ]; then
     echo "robot" > ~/.tuos/robot_mode
 elif grep -qi "robot" ~/.tuos/robot_mode; then
-    RMU=http://dia-waffle$(cat ~/.tuos/waffle_number):11311
+    RDS="dia-waffle$WAFFLE_NO:11811;dia-waffle$WAFFLE_NO:11888"
+    LHOST_ONLY=0
 elif grep -qi "sim" ~/.tuos/robot_mode; then
-    RMU=http://localhost:11311
+    RDS=""
+    LHOST_ONLY=1
 else
-    RMU=http://dia-waffle$(cat ~/.tuos/waffle_number):11311
+    RDS="dia-waffle$WAFFLE_NO:11811;dia-waffle$WAFFLE_NO:11888"
+    LHOST_ONLY=0
 fi
 
-export ROS_MASTER_URI=$RMU
+export ROS_DISCOVERY_SERVER=$RDS
+export ROS_LOCALHOST_ONLY=$LHOST_ONLY
 export ROS_HOSTNAME=$(hostname)

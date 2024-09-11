@@ -27,8 +27,8 @@ if ask "[INPUT] Preparing to configure for robot: dia-waffle$WAFFLE_NO. IS THIS 
     sudo sed -i 's/'$OLD_HOST'/dia-waffle'$WAFFLE_NO'/g' /etc/hosts
     if ask "[INPUT] Do you want to update the OpenCR board firmware?"; then
         export OPENCR_PORT=/dev/ttyACM0
-        export OPENCR_MODEL=waffle_noetic
-        cd ~/device_firmware/opencr/opencr_update/
+        export OPENCR_MODEL=waffle
+        cd $HOME/firmware/opencr_update/
         ./update.sh $OPENCR_PORT $OPENCR_MODEL.opencr
         cd ~
         echo "[INFO] OpenCR firmware *should* now be updated!"
@@ -39,12 +39,12 @@ if ask "[INPUT] Preparing to configure for robot: dia-waffle$WAFFLE_NO. IS THIS 
     echo "[INFO] Checking for a RealSense Camera..."
     rs-fw-update -l
     if ask "[INPUT] is the RealSense Camera visible in the device list above?"; then
-        if ask "[INPUT] Update the RealSense Camera Firmware (to 05.12.14.50)?"; then
-            rs-fw-update -f ~/device_firmware/realsense_d435/Signed_Image_UVC_5_12_14_50.bin
+        if ask "[INPUT] Update the RealSense Camera Firmware (to 05.16.0.1)?"; then
+            rs-fw-update -f ~/firmware/realsense/Signed_Image_UVC_5_16_0_1.bin
             sleep 5
             echo "[INFO] Checking the RealSense Camera Firmware (again)..."
             rs-fw-update -l
-            echo "[INFO] Camera firmware version should now be displayed above as 05.12.14.50 (hopefully!)"
+            echo "[INFO] Camera firmware version should now be displayed above as 05.16.0.1 (hopefully!)"
         else
             echo "[INFO] Skipped RealSense Firmware updates."
         fi
@@ -63,3 +63,4 @@ if ask "[INPUT] Preparing to configure for robot: dia-waffle$WAFFLE_NO. IS THIS 
 else
     echo "[INFO] CANCELLED."
 fi
+

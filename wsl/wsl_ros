@@ -166,7 +166,7 @@ recover() {
 }
 
 check_for_updates() {
-  wget -qO ~/.wsl-ros/remote_ver https://raw.githubusercontent.com/tom-howard/tuos_robotics/main/wsl/update_triggers/remote_ver_$WSL_ROS_VER 
+  wget -qO ~/.wsl-ros/remote_ver https://raw.githubusercontent.com/tom-howard/tuos_robotics/humble/wsl/update_triggers/remote_ver_$WSL_ROS_VER 
 
   LOCAL_VER=$(cat ~/.wsl-ros/local_ver)
   REMOTE_VER=$(cat ~/.wsl-ros/remote_ver)

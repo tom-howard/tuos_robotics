@@ -1,3 +1,2 @@
 # ROS Robot Switching
 source ~/.tuos/bashrc_robot_switch
-source /home/Shared/bashrc_conda 
