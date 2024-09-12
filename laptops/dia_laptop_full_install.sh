@@ -79,7 +79,7 @@ if [ ! -e /etc/apt/sources.list.d/ros-latest.list ]; then
 fi
 
 echo -e "\n${YELLOW}[Download the ROS keys]${NC}"
-roskey=`apt-key list | grep "Open Robotics"`               
+roskey=`apt-key list | grep "Open Robotics"`
 if [ -z "$roskey" ]; then
   curl -s https://raw.githubusercontent.com/ros/rosdistro/master/ros.asc | sudo apt-key add -
 fi
@@ -137,7 +137,7 @@ source $HOME/.bashrc
 ################################# Part II. VS Code #################################
 
 if ask "[Install VS Code?]"; then
-  
+
   sudo apt update -y
   sudo apt install -y software-properties-common apt-transport-https wget
   # Import the Microsoft GPG key:
@@ -209,11 +209,11 @@ if ask "[Do you want to also set up TUoS Robot Switch scripts?]"; then
   sudo wget -O /usr/local/bin/waffle https://raw.githubusercontent.com/tom-howard/tuos_robotics/humble/laptops/waffle_cli/waffle
   sudo wget -O /usr/local/bin/diamond_tools https://raw.githubusercontent.com/tom-howard/tuos_robotics/humble/laptops/diamond_tools/diamond_tools
   sudo chmod +x *
-  
+
   sudo wget -O /usr/local/bin/robot_pair_check.sh https://raw.githubusercontent.com/tom-howard/tuos_robotics/humble/laptops/waffle_cli/robot_pair_check.sh
   sudo wget -O /usr/local/bin/robot_pairing.sh https://raw.githubusercontent.com/tom-howard/tuos_robotics/humble/laptops/waffle_cli/robot_pairing.sh
   sudo wget -O /usr/local/bin/robot_sync.sh https://raw.githubusercontent.com/tom-howard/tuos_robotics/humble/laptops/waffle_cli/robot_sync.sh
-  
+
   echo -e "\n${YELLOW}[Setting up ~/.tuos scripts]${NC}"
   mkdir -p ~/.tuos
   cd ~/.tuos
@@ -225,9 +225,9 @@ if ask "[Do you want to also set up TUoS Robot Switch scripts?]"; then
   sudo addgroup sharegroup
   sudo chown :sharegroup /home/Shared
   sudo adduser "$USER" sharegroup
-  
+
   # set selected sudo commands to require no password input
-  sudo wget -O /etc/sudoers.d/nopwds https://raw.githubusercontent.com/tom-howard/tuos_robotics/humble/laptops/nopwds 
+  sudo wget -O /etc/sudoers.d/nopwds https://raw.githubusercontent.com/tom-howard/tuos_robotics/humble/laptops/nopwds
 
   echo -e "\n${YELLOW}[Setting device numbers]${NC}"
   cd /home/Shared
@@ -256,10 +256,6 @@ fi
 if ask "[Do you want to download COM2009 and COM3528 teaching materials?]"; then
   cd $HOME/$name_ros2_workspace/src
   git clone https://github.com/tom-howard/COM2009
-  catkin build
-
-  cd ~/mdk/catkin_ws/src
-  git clone https://github.com/AlexandrLucas/COM3528
   catkin build
 fi
 

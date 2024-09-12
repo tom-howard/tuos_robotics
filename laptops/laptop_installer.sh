@@ -192,7 +192,7 @@ fi
 if ask "[Do you want to download the COM2009 teaching materials?]"; then
   cd $HOME/$name_ros2_workspace/src
   git clone https://github.com/tom-howard/COM2009
-  catkin build
+  colcon build --symlink-install
 fi
 
 ########################## Part VI. 'Student' profile ###########################

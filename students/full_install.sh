@@ -163,13 +163,10 @@ fi
 
 ########################## Part V. Teaching materials ##########################
 if ask "[Do you want to download COM2009 and COM3528 teaching materials?]"; then
-  cd $HOME/$name_catkin_workspace/src
+  cd $HOME/$name_ros2_workspace/src
   git clone https://github.com/tom-howard/COM2009
-  catkin build
-
-  cd ~/mdk/catkin_ws/src
-  git clone https://github.com/AlexandrLucas/COM3528
-  catkin build
+  cd $HOME/$name_ros2_workspace
+  colcon build --symlink-install
 fi
 
 ############################## Part VI. Clean up ###############################

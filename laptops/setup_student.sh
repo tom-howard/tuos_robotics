@@ -2,8 +2,7 @@
 cd $HOME
 # TB3
 source /opt/ros/humble/setup.sh
-mkdir -p $HOME/tb3_ws/src
-
+mkdir -p $HOME/tb3_ws/src && cd "$_"
 colcon build --symlink-install
 
 # TUoS Robotics scripts
@@ -21,7 +20,7 @@ done < "$tmp_file"
 
 # COM2009 and COM3528
 source $HOME/.bashrc
-cd $HOME/catkin_ws/src
+cd $HOME/tb3_ws/src
 git clone https://github.com/tom-howard/COM2009.git
+cd $HOME/tb3_ws
 colcon build --symlink-install
-
