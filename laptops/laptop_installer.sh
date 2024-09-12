@@ -184,6 +184,13 @@ if ask "[Do you want to also set up TUoS scripts?]"; then
     grep -qxF "$line" ~/.bash_aliases || echo "$line" >> ~/.bash_aliases
   done < "$tmp_file"
 
+  wget -O /tmp/.bashrc_extras https://raw.githubusercontent.com/tom-howard/tuos_robotics/humble/laptops/.bashrc_extras
+  touch ~/.bashrc_extras
+  tmp_file=/tmp/.bashrc_extras
+  while IFS= read -r line; do
+    grep -qxF "$line" ~/.bashrc_extras || echo "$line" >> ~/.bashrc
+  done < "$tmp_file"
+
 else
   echo -e "\n${YELLOW}[Skipping TUoS Robotics scripts...]${NC}"
 fi
@@ -192,6 +199,7 @@ fi
 if ask "[Do you want to download the COM2009 teaching materials?]"; then
   cd $HOME/$name_ros2_workspace/src
   git clone https://github.com/tom-howard/COM2009
+  cd $HOME/$name_ros2_workspace
   colcon build --symlink-install
 fi
 
