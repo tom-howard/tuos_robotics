@@ -184,13 +184,8 @@ if ask "[Do you want to also set up TUoS scripts?]"; then
     grep -qxF "$line" ~/.bash_aliases || echo "$line" >> ~/.bash_aliases
   done < "$tmp_file"
 
-  wget -O /tmp/.bashrc_extras https://raw.githubusercontent.com/tom-howard/tuos_robotics/humble/laptops/.bashrc_extras
-  touch ~/.bashrc_extras
-  tmp_file=/tmp/.bashrc_extras
-  while IFS= read -r line; do
-    grep -qxF "$line" ~/.bashrc_extras || echo "$line" >> ~/.bashrc
-  done < "$tmp_file"
-
+  wget -O $HOME/.tuos/.bashrc_extras https://raw.githubusercontent.com/tom-howard/tuos_robotics/humble/laptops/.bashrc_extras
+  echo "source $HOME/.tuos/.bashrc_extras" >> $HOME/.bashrc
 else
   echo -e "\n${YELLOW}[Skipping TUoS Robotics scripts...]${NC}"
 fi

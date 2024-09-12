@@ -1,3 +1,8 @@
 # ROS Robot Switching
-source ~/.tuos/bashrc_turtlebot3
-export ROS_DOMAIN_ID=$(cat /home/Shared/laptop_number)
+source /opt/ros/humble/setup.bash
+source $HOME/tb3_ws/setup.bash
+export WAFFLE_NO=$(cat ~/.tuos/waffle_number 2>/dev/null)
+source $HOME/.tuos/bashrc_turtlebot3
+source /usr/share/gazebo/setup.bash
+source /usr/share/colcon_cd/function/colcon_cd.sh
+source /usr/share/colcon_cd/function/colcon_cd-argcomplete.bash
