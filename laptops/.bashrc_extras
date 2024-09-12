@@ -1,2 +1,3 @@
 # ROS Robot Switching
-source ~/.tuos/bashrc_robot_switch
+source ~/.tuos/bashrc_turtlebot3
+export ROS_DOMAIN_ID=$(cat /home/Shared/laptop_number)

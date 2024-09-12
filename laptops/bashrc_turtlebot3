@@ -16,15 +16,19 @@ if [ ! -f ~/.tuos/robot_mode ]; then
 elif grep -qi "robot" ~/.tuos/robot_mode; then
     RDS="dia-waffle$WAFFLE_NO:11811;dia-waffle$WAFFLE_NO:11888"
     LHOST_ONLY=0
+    SUPER_CLIENT=TRUE
 elif grep -qi "sim" ~/.tuos/robot_mode; then
     RDS=""
     LHOST_ONLY=1
+    SUPER_CLIENT=FALSE
 else
     RDS="dia-waffle$WAFFLE_NO:11811;dia-waffle$WAFFLE_NO:11888"
     LHOST_ONLY=0
+    SUPER_CLIENT=TRUE
 fi
 
 # Export the updated variables for ROS settings
 export ROS_DISCOVERY_SERVER=$RDS
 export ROS_LOCALHOST_ONLY=$LHOST_ONLY
 export ROS_HOSTNAME=$(hostname)
+export ROS_SUPER_CLIENT=$SUPER_CLIENT
