@@ -1,7 +1,9 @@
-source /opt/ros/noetic/setup.bash
-source ~/catkin_ws/devel/setup.bash
-
-export ROS_MASTER_URI=http://$(hostname):11311
-export ROS_HOSTNAME=$(hostname)
+# ROS Robot Switching
 export TURTLEBOT3_MODEL=waffle
-export LDS_MODEL=LDS-01
+source /opt/ros/humble/setup.bash
+source $HOME/tb3_ws/install/setup.bash
+export WAFFLE_NO=$(cat ~/.tuos/waffle_number 2>/dev/null)
+source $HOME/.tuos/bashrc_turtlebot3
+source /usr/share/gazebo/setup.bash
+source /usr/share/colcon_cd/function/colcon_cd.sh
+source /usr/share/colcon_cd/function/colcon_cd-argcomplete.bash

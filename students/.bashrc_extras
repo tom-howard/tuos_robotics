@@ -1,4 +1,5 @@
 # ROS Robot Switching
+export TURTLEBOT3_MODEL=waffle
 source /opt/ros/humble/setup.bash
 source $HOME/tb3_ws/install/setup.bash
 export WAFFLE_NO=$(cat ~/.tuos/waffle_number 2>/dev/null)
