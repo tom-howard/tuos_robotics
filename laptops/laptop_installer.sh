@@ -31,7 +31,7 @@ fi
 echo -e "\n${YELLOW}[Set the target OS, ROS version and the name of catkin workspace]${NC}"
 name_os_version=${name_os_version:="jammy"}
 name_ros_version=${name_ros_version:="humble"}
-name_ros2_workspace=${name_ros2_workspace:="tb3_ws"}
+name_ros2_workspace=${name_ros2_workspace:="ros2_ws"}
 
 echo -e "\n${YELLOW}[Update & Upgrade]${NC}"
 sudo apt update -y
@@ -63,7 +63,6 @@ sleep 2
 # Add universe repo
 sudo apt install software-properties-common
 sudo add-apt-repository universe
-
 
 # Adding the ROS 2 GPG key
 sudo apt update && sudo apt install curl -y
@@ -98,26 +97,28 @@ source $HOME/.bashrc
 
 echo -e "\n${YELLOW}[Create and build the ROS2 workspace]${NC}"
 mkdir -p $HOME/$name_ros2_workspace/src
-cd $HOME/$name_ros2_workspace/src
+cd $HOME/$name_ros2_workspace
 colcon build --symlink-install
 
 source $HOME/.bashrc
 
 ################################# Part II. VS Code #################################
+cd $HOME
 
 if ask "[Install VS Code?]"; then
 
   sudo apt update -y
   sudo apt install -y software-properties-common apt-transport-https wget
-  # Import the Microsoft GPG key:
-  wget -q https://packages.microsoft.com/keys/microsoft.asc -O- | sudo apt-key add -
-  # Enable the Visual Studio Code repository:
-  sudo add-apt-repository "deb [arch=amd64] https://packages.microsoft.com/repos/vscode stable main"
-  # Install Visual Studio Code:
-  sudo apt install -y code
-  # Update everything for good measure:
-  sudo apt update -y
-  sudo apt upgrade -y
+  sudo apt-get install wget gpg
+  wget -qO- https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor > packages.microsoft.gpg
+  sudo install -D -o root -g root -m 644 packages.microsoft.gpg /etc/apt/keyrings/packages.microsoft.gpg
+  echo "deb [arch=amd64,arm64,armhf signed-by=/etc/apt/keyrings/packages.microsoft.gpg] https://packages.microsoft.com/repos/code stable main" |sudo tee /etc/apt/sources.list.d/vscode.list > /dev/null
+  rm -f packages.microsoft.gpg
+
+  sudo apt install -y apt-transport-https
+  sudo apt update
+  sudo apt install -y code # or code-insiders
+
 else
   echo -e "\n${YELLOW}[Skipping VS Code Install...]${NC}"
 fi

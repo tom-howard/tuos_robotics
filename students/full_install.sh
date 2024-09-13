@@ -88,7 +88,7 @@ source $HOME/.bashrc
 
 echo -e "\n${YELLOW}[Create and build the ROS2 workspace]${NC}"
 mkdir -p $HOME/$name_ros2_workspace/src
-cd $HOME/$name_ros2_workspace/src
+cd $HOME/$name_ros2_workspace
 colcon build --symlink-install
 
 source $HOME/.bashrc
