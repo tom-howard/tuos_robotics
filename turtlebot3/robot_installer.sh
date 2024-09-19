@@ -32,96 +32,89 @@ name_os_version=${name_os_version:="jammy"}
 name_ros_version=${name_ros_version:="humble"}
 name_ros2_workspace=${name_ros2_workspace:="tb3_ws"}
 
-# Disable wait for network during bootup:
-systemctl mask systemd-networkd-wait-online.service
+# # Disable wait for network during bootup:
+# systemctl mask systemd-networkd-wait-online.service
 
-# Set up a "robot" user
-username="robot"
-pass="panQJvEl/BD/g"
-sudo useradd -s /bin/bash -m -p "$pass" "$username"
+# # Set up a "robot" user
+# username="robot"
+# pass="panQJvEl/BD/g"
+# sudo useradd -s /bin/bash -m -p "$pass" "$username"
 
-echo -e "\n${YELLOW}[Update & Upgrade]${NC}"
+# echo -e "\n${YELLOW}[Update & Upgrade]${NC}"
+# sudo apt update && sudo apt upgrade -y
+
+# echo -e "\n${YELLOW}[Installing Misc Tools]${NC}"
+# sudo apt install -y chrony ntpdate curl build-essential net-tools
+
+# # update git:
+# sudo add-apt-repository ppa:git-core/ppa
+# sudo apt update -y
+# sudo apt install -y git
+
+# # Set locales
+# locale  # check for UTF-8
+# sudo apt update && sudo apt install locales
+# sudo locale-gen en_GB en_GB.UTF-8
+# sudo update-locale LC_ALL=en_GB.UTF-8 LANG=en_GB.UTF-8
+# locale  # verify settings
+
+# echo -e "\n${YELLOW}[NTP: update time]${NC}"
+# sudo ntpdate ntp.ubuntu.com
+# sleep 2
+
+# # Make poweroff and ntpdate NO PASSWORD-able
+# sudo wget -O /etc/sudoers.d/nopwds https://raw.githubusercontent.com/tom-howard/tuos_robotics/humble/turtlebot3/nopwds
+
+# echo "Basic system setup complete (CHECKPOINT 1)."
+# sleep 2
+
+### INSTALLING ROS ###
+
+# Add universe repo
+sudo apt install software-properties-common
+sudo add-apt-repository universe
+
+# Adding the ROS 2 GPG key
+sudo apt update && sudo apt install curl -y
+sudo curl -sSL https://raw.githubusercontent.com/ros/rosdistro/master/ros.key -o /usr/share/keyrings/ros-archive-keyring.gpg
+
+# Adding repo to sources list
+echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/ros-archive-keyring.gpg] http://packages.ros.org/ros2/ubuntu $(. /etc/os-release && echo $UBUNTU_CODENAME) main" | sudo tee /etc/apt/sources.list.d/ros2.list > /dev/null
+
 sudo apt update && sudo apt upgrade -y
 
-echo -e "\n${YELLOW}[Installing Misc Tools]${NC}"
-sudo apt install -y chrony ntpdate curl build-essential net-tools
+echo -e "\n${YELLOW}[Source .bashrc]${NC}"
+source $HOME/.bashrc
 
-# update git:
-sudo add-apt-repository ppa:git-core/ppa
-sudo apt update -y
-sudo apt install -y git
+echo -e "\n${YELLOW}[Install all the necessary ROS and TB3 packages]${NC}"
+sudo apt install -y ros-humble-ros-base \
+                    ros-dev-tools \
+                    python3-argcomplete \
+                    python3-rosdep \
+                    python3-colcon-common-extensions \
+                    libboost-system-dev \
+                    ros-humble-hls-lfcd-lds-driver \
+                    ros-humble-turtlebot3-msgs \
+                    ros-humble-dynamixel-sdk \
+                    libudev-dev \
+                    python3-pip
 
-# Set locales
-locale  # check for UTF-8
-sudo apt update && sudo apt install locales
-sudo locale-gen en_GB en_GB.UTF-8
-sudo update-locale LC_ALL=en_GB.UTF-8 LANG=en_GB.UTF-8
-locale  # verify settings
+pip install setuptools==58.2.0
 
-echo -e "\n${YELLOW}[NTP: update time]${NC}"
-sudo ntpdate ntp.ubuntu.com
+echo -e "\n${YELLOW}[Setting up the environment]"
+echo "source /opt/ros/$name_ros_version/setup.bash" >> $HOME/.bashrc
+source $HOME/.bashrc
+mkdir -p $HOME/$name_ros2_workspace/src && cd $HOME/$name_ros2_workspace/src
+git clone -b humble-devel https://github.com/ROBOTIS-GIT/turtlebot3.git
+cd $HOME/$name_ros2_workspace/src/turtlebot3
+rm -r turtlebot3_cartographer turtlebot3_navigation2
+cd $HOME/$name_ros2_workspace
+colcon build --symlink-install
+echo "source $HOME/$name_ros2_workspace/install/setup.bash" >> $HOME/.bashrc
+source $HOME/.bashrc
+
+echo "ROS installation complete (CHECKPOINT 2)."
 sleep 2
-
-# Make poweroff and ntpdate NO PASSWORD-able
-sudo wget -O /etc/sudoers.d/nopwds https://raw.githubusercontent.com/tom-howard/tuos_robotics/humble/turtlebot3/nopwds
-
-echo "Basic system setup complete."
-sleep 2
-
-# # Add universe repo
-# sudo apt install software-properties-common
-# sudo add-apt-repository universe
-
-# # Adding the ROS 2 GPG key
-# sudo apt update && sudo apt install curl -y
-# sudo curl -sSL https://raw.githubusercontent.com/ros/rosdistro/master/ros.key -o /usr/share/keyrings/ros-archive-keyring.gpg
-
-# # Adding repo to sources list
-# echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/ros-archive-keyring.gpg] http://packages.ros.org/ros2/ubuntu $(. /etc/os-release && echo $UBUNTU_CODENAME) main" | sudo tee /etc/apt/sources.list.d/ros2.list > /dev/null
-
-# sudo apt -y update
-# sudo apt -y upgrade
-
-# echo -e "\n${YELLOW}[Source .bashrc]${NC}"
-# source $HOME/.bashrc
-
-# echo -e "\n${YELLOW}[Install all the necessary ROS and TB3 packages]${NC}"
-# sudo apt install -y ros-humble-ros-base ros-dev-tools python3-rosdep python3-colcon-common-extensions 
-
-# sudo apt-get install python3-pip
-# pip install setuptools==58.2.0
-
-# echo -e "\n${YELLOW}[Setting up the environment]"
-# echo "source /opt/ros/$name_ros_version/setup.bash" >> $HOME/.bashrc
-# source $HOME/.bashrc
-
-# echo -e "\n${YELLOW}[Create and build the ROS2 workspace]${NC}"
-# mkdir -p $HOME/$name_ros2_workspace/src
-# cd $HOME/$name_ros2_workspace
-# colcon build --symlink-install
-
-# source $HOME/.bashrc
-
-# ################################# Part II. VS Code #################################
-# cd $HOME
-
-# if ask "[Install VS Code?]"; then
-
-#   sudo apt update -y
-#   sudo apt install -y software-properties-common apt-transport-https wget
-#   sudo apt-get install wget gpg
-#   wget -qO- https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor > packages.microsoft.gpg
-#   sudo install -D -o root -g root -m 644 packages.microsoft.gpg /etc/apt/keyrings/packages.microsoft.gpg
-#   echo "deb [arch=amd64,arm64,armhf signed-by=/etc/apt/keyrings/packages.microsoft.gpg] https://packages.microsoft.com/repos/code stable main" |sudo tee /etc/apt/sources.list.d/vscode.list > /dev/null
-#   rm -f packages.microsoft.gpg
-
-#   sudo apt install -y apt-transport-https
-#   sudo apt update
-#   sudo apt install -y code # or code-insiders
-
-# else
-#   echo -e "\n${YELLOW}[Skipping VS Code Install...]${NC}"
-# fi
 
 # ####################### Part IV. TUosimS Robotics scripts ########################
 # if ask "[Do you want to also set up TUoS scripts?]"; then
