@@ -70,51 +70,83 @@ name_ros2_workspace=${name_ros2_workspace:="tb3_ws"}
 
 ### INSTALLING ROS ###
 
-# Add universe repo
-sudo apt install software-properties-common
-sudo add-apt-repository universe
+# # Add universe repo
+# sudo apt install software-properties-common
+# sudo add-apt-repository universe
 
-# Adding the ROS 2 GPG key
-sudo apt update && sudo apt install curl -y
-sudo curl -sSL https://raw.githubusercontent.com/ros/rosdistro/master/ros.key -o /usr/share/keyrings/ros-archive-keyring.gpg
+# # Adding the ROS 2 GPG key
+# sudo apt update && sudo apt install curl -y
+# sudo curl -sSL https://raw.githubusercontent.com/ros/rosdistro/master/ros.key -o /usr/share/keyrings/ros-archive-keyring.gpg
 
-# Adding repo to sources list
-echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/ros-archive-keyring.gpg] http://packages.ros.org/ros2/ubuntu $(. /etc/os-release && echo $UBUNTU_CODENAME) main" | sudo tee /etc/apt/sources.list.d/ros2.list > /dev/null
+# # Adding repo to sources list
+# echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/ros-archive-keyring.gpg] http://packages.ros.org/ros2/ubuntu $(. /etc/os-release && echo $UBUNTU_CODENAME) main" | sudo tee /etc/apt/sources.list.d/ros2.list > /dev/null
 
-sudo apt update && sudo apt upgrade -y
+# sudo apt update && sudo apt upgrade -y
 
-echo -e "\n${YELLOW}[Source .bashrc]${NC}"
-source $HOME/.bashrc
+# echo -e "\n${YELLOW}[Source .bashrc]${NC}"
+# source $HOME/.bashrc
 
-echo -e "\n${YELLOW}[Install all the necessary ROS and TB3 packages]${NC}"
-sudo apt install -y ros-humble-ros-base \
-                    ros-dev-tools \
-                    python3-argcomplete \
-                    python3-rosdep \
-                    python3-colcon-common-extensions \
-                    libboost-system-dev \
-                    ros-humble-hls-lfcd-lds-driver \
-                    ros-humble-turtlebot3-msgs \
-                    ros-humble-dynamixel-sdk \
-                    libudev-dev \
-                    python3-pip
+# echo -e "\n${YELLOW}[Install all the necessary ROS and TB3 packages]${NC}"
+# sudo apt install -y ros-humble-ros-base \
+#                     ros-dev-tools \
+#                     python3-argcomplete \
+#                     python3-rosdep \
+#                     python3-colcon-common-extensions \
+#                     libboost-system-dev \
+#                     ros-humble-hls-lfcd-lds-driver \
+#                     ros-humble-turtlebot3-msgs \
+#                     ros-humble-dynamixel-sdk \
+#                     libudev-dev \
+#                     python3-pip
 
-pip install setuptools==58.2.0
+# pip install setuptools==58.2.0
 
-echo -e "\n${YELLOW}[Setting up the environment]"
-echo "source /opt/ros/$name_ros_version/setup.bash" >> $HOME/.bashrc
-source $HOME/.bashrc
-mkdir -p $HOME/$name_ros2_workspace/src && cd $HOME/$name_ros2_workspace/src
-git clone -b humble-devel https://github.com/ROBOTIS-GIT/turtlebot3.git
-cd $HOME/$name_ros2_workspace/src/turtlebot3
-rm -r turtlebot3_cartographer turtlebot3_navigation2
-cd $HOME/$name_ros2_workspace
-colcon build --symlink-install
-echo "source $HOME/$name_ros2_workspace/install/setup.bash" >> $HOME/.bashrc
-source $HOME/.bashrc
+# echo -e "\n${YELLOW}[Setting up the environment]${NC}"
+# echo "source /opt/ros/$name_ros_version/setup.bash" >> $HOME/.bashrc
+# source $HOME/.bashrc
+# mkdir -p $HOME/$name_ros2_workspace/src && cd $HOME/$name_ros2_workspace/src
+# git clone -b humble-devel https://github.com/ROBOTIS-GIT/turtlebot3.git
+# cd $HOME/$name_ros2_workspace/src/turtlebot3
+# rm -r turtlebot3_cartographer turtlebot3_navigation2
+# cd $HOME/$name_ros2_workspace
+# colcon build --symlink-install
+# echo "source $HOME/$name_ros2_workspace/install/local_setup.bash" >> $HOME/.bashrc
+# source $HOME/.bashrc
 
-echo "ROS installation complete (CHECKPOINT 2)."
+# echo "ROS installation complete (CHECKPOINT 2)."
+# sleep 2
+
+### OpenCR & other TB3 Configs ###
+
+sudo cp `ros2 pkg prefix turtlebot3_bringup`/share/turtlebot3_bringup/script/99-turtlebot3-cdc.rules /etc/udev/rules.d/
+sudo udevadm control --reload-rules
+sudo udevadm trigger
+
+echo 'export TURTLEBOT3_MODEL=waffle' >> ~/.bashrc
+echo 'export LDS_MODEL=LDS-01' >> ~/.bashrc
+
+mkdir -p ~/firmware/opencr/
+cd ~/firmware/opencr/
+wget https://github.com/ROBOTIS-GIT/OpenCR-Binaries/raw/master/turtlebot3/ROS2/latest/opencr_update.tar.bz2
+tar -xvf ./opencr_update.tar.bz2
+rm opencr_update.tar.bz2
+
+cd opencr_update/
+./update.sh /dev/ttyACM0 waffle.opencr
+
+echo "OpenCR configs complete (CHECKPOINT 3)."
 sleep 2
+
+### Intel RealSense ###
+
+mkdir -p ~/firmware/realsense/
+
+
+### Custom TUoS Scripts ###
+
+
+
+
 
 # ####################### Part IV. TUosimS Robotics scripts ########################
 # if ask "[Do you want to also set up TUoS scripts?]"; then
@@ -192,39 +224,7 @@ sleep 2
 #   colcon build --symlink-install
 # fi
 
-# ########################## Part VI. 'Student' profile ###########################
-# if ask "[Do you want to set up a 'student' profile?]"; then
-#   username="student"
-#   pass="panQJvEl/BD/g"
-#   sudo useradd -s /bin/bash -m -p "$pass" "$username"
-#   if [ $? -eq 0 ]; then
-#     echo -e "\n${YELLOW}[User 'student' has been added to system]${NC}"
-#     sudo adduser student sharegroup
 
-#     # Most of the commands above are now simply copied over
-#     # TODO: There must be a more clever way of doing this
-#     echo -e "\n${YELLOW}[Setting up the same environment for 'student' account]${NC}"
-#     wget -O /tmp/setup_student.sh https://raw.githubusercontent.com/tom-howard/tuos_robotics/humble/laptops/setup_student.sh
-#     chmod +x /tmp/setup_student.sh
-#     sudo -i -u student "/tmp/setup_student.sh"
-#   else
-#     echo -e "\n${RED}[Failed to add user 'student']${NC}"
-#   fi
-# fi
-
-
-# ############################## Part VII. DIA-LAB ###############################
-
-# if ask "[Do you want to connect this device to DIA-LAB now?]"; then
-#   SSID_CURRENT=$(iwgetid -r)
-#   sudo nmcli --ask dev wifi connect DIA-LAB
-#   echo -e "\n${YELLOW}Connected to: $(iwgetid -r)"
-#   echo -e "Connecting back to '$SSID_CURRENT' for the final part of this setup...${NC}"
-#   sudo nmcli dev wifi connect $SSID_CURRENT
-#   sleep 4
-# else
-#   echo -e "\n${YELLOW}[SKIPPED the DIA-LAB connection step]${NC}"
-# fi
 
 
 # ############################## Part VII. Clean up ###############################
