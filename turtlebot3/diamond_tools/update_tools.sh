@@ -19,7 +19,7 @@ chmod +x /tmp/profile_updates.sh
 
 # run as admin
 /tmp/profile_updates.sh
-diamond_tools catkin
+diamond_tools workspace
 
 # run as 'robot'
 sudo -i -u robot "/tmp/profile_updates.sh"
