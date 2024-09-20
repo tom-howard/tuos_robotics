@@ -169,7 +169,9 @@ scripts="diamond_tools wsl_ros waffle"
 sudo wget -O /usr/local/bin/diamond_tools https://raw.githubusercontent.com/tom-howard/tuos_robotics/humble/turtlebot3/diamond_tools/diamond_tools
 sudo wget -O /usr/local/bin/waffle https://raw.githubusercontent.com/tom-howard/tuos_robotics/humble/turtlebot3/waffle
 sudo wget -O /usr/local/bin/wsl_ros https://raw.githubusercontent.com/tom-howard/tuos_robotics/humble/turtlebot3/wsl_ros
+pushd /usr/local/bin/ 
 sudo chmod +x $scripts
+popd
 
 echo -e "\n${YELLOW}Setting up user scripts${NC}"
 
@@ -178,31 +180,16 @@ wget -O /tmp/profile_updates.sh https://raw.githubusercontent.com/tom-howard/tuo
 chmod +x /tmp/profile_updates.sh
 # run in current profile:
 /tmp/profile_updates.sh
+diamond_tools workspace
+
 # run as 'robot'
 sudo -i -u robot "/tmp/profile_updates.sh"
 
+echo -e "\n${YELLOW}[Clean-up]${NC}"
+sudo apt update -y
+sudo apt upgrade -y
+sudo apt autoremove -y
+sudo apt autoclean -y
 
-
-# ######################### Part V. Teaching materials ##########################
-# if ask "[Do you want to download the COM2009 teaching materials?]"; then
-#   cd $HOME/$name_ros2_workspace/src
-#   git clone https://github.com/tom-howard/COM2009
-#   cd $HOME/$name_ros2_workspace
-#   colcon build --symlink-install
-# fi
-
-
-
-
-# ############################## Part VII. Clean up ###############################
-# echo -e "\n${YELLOW}[Clean-up]${NC}"
-# sudo apt update -y
-# sudo apt upgrade -y
-# sudo apt autoremove -y
-# sudo apt autoclean -y
-
-# echo -e "\n${GREEN}[INITIAL INSTALL COMPLETE]: Next Steps:"
-# echo -e "   * Install VS Code Extensions (Python, Remote - SSH)"
-# echo -e "   * Set up the Student account (VS Code, auto login etc)"
-# echo -e "   * Reboot ASAP.${NC}"
-# exit 0
+echo "Final steps complete (CHECKPOINT 5)."
+sleep 2
