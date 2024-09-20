@@ -1,14 +1,12 @@
 #!/usr/bin/env bash
 
-rm -f ~/.bash_aliases ~/.bashrc
-wget -O ~/.bash_aliases https://raw.githubusercontent.com/tom-howard/tuos_robotics/humble/turtlebot3/.bash_aliases
-cp /etc/skel/.bashrc ~/
+mkdir -p $HOME/.tuos
 
-echo "" >> ~/.bashrc
-tmp_file=~/.bashrc_extras
-wget -O $tmp_file https://raw.githubusercontent.com/tom-howard/tuos_robotics/humble/turtlebot3/.bashrc_extras
-while IFS= read -r line; do
-  echo "$line" >> ~/.bashrc
-done < "$tmp_file"
-rm -f $tmp_file
-echo "" >> ~/.bashrc
+rm -f $HOME/.bash_aliases $HOME/.bashrc $HOME/.tuos/ros_setup.sh
+wget -O $HOME/.bash_aliases https://raw.githubusercontent.com/tom-howard/tuos_robotics/humble/turtlebot3/.bash_aliases
+wget -O $HOME/.tuos/ros_setup.sh https://raw.githubusercontent.com/tom-howard/tuos_robotics/humble/turtlebot3/ros_setup.sh
+cp /etc/skel/.bashrc $HOME/
+
+echo "" >> $HOME/.bashrc
+echo "source $HOME/.tuos/ros_setup.sh" >> $HOME/.bashrc
+echo "" >> $HOME/.bashrc
