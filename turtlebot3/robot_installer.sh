@@ -82,9 +82,9 @@ sleep 4
 
 ## INSTALLING ROS ###
 
-# Add universe repo
+# configure Ubuntu repositories to allow "main" "restricted" "universe" and "multiverse"
 sudo apt install software-properties-common
-sudo add-apt-repository universe
+sudo add-apt-repository main universe multiverse restricted
 
 # Adding the ROS 2 GPG key
 sudo apt update && sudo apt install curl -y
@@ -166,8 +166,6 @@ echo "Installing Realsense ROS Libraries"
 
 sleep 4
 
-# need to configure your Ubuntu repositories to allow "restricted," "universe," and "multiverse."
-# https://help.ubuntu.com/community/Repositories/CommandLine
 sudo apt install ros-humble-librealsense2*
 sudo apt install ros-humble-realsense2-*
 
@@ -189,7 +187,7 @@ pushd /usr/local/bin/
 sudo chmod +x $scripts
 popd
 
-echo -e "\n${YELLOW}Setting up user scripts${NC}"
+echo -e "\n${YELLOW}Setting up user profiles${NC}"
 
 mkdir -p $HOME/.tuos/diamond_tools/
 echo "[$(date +'%Y%m%d')_$(date +'%H%M%S')] 2024-09 ROS2 Humble ($(hostname))" > $HOME/.tuos/base_image
