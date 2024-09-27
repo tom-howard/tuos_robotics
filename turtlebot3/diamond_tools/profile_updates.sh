@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-mkdir -p $HOME/.tuos
+mkdir -p $HOME/.tuos/diamond_tools/
 
 rm -f $HOME/.bash_aliases $HOME/.bashrc $HOME/.tuos/ros_setup.sh
 wget -O $HOME/.bash_aliases https://raw.githubusercontent.com/tom-howard/tuos_robotics/humble/turtlebot3/.bash_aliases
