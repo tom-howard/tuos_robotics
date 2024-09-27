@@ -192,7 +192,7 @@ popd
 echo -e "\n${YELLOW}Setting up user scripts${NC}"
 
 mkdir -p $HOME/.tuos/diamond_tools/
-echo "[$(date +'%Y%m%d%H%M%S')] 2024-09 ROS2 Humble" > $HOME/.tuos/base_image
+echo "[$(date +'%Y%m%d')_$(date +'%H%M%S')] 2024-09 ROS2 Humble ($(hostname))" > $HOME/.tuos/base_image
 
 rm -f /tmp/profile_updates.sh
 wget -O /tmp/profile_updates.sh https://raw.githubusercontent.com/tom-howard/tuos_robotics/humble/turtlebot3/diamond_tools/profile_updates.sh
