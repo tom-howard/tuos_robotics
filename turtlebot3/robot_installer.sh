@@ -30,21 +30,32 @@ fi
 echo -e "\n${YELLOW}[Set the target OS, ROS version and the name of catkin workspace]${NC}"
 name_os_version=${name_os_version:="jammy"}
 name_ros_version=${name_ros_version:="humble"}
-name_ros2_workspace=${name_ros2_workspace:="tb3_ws"}
+name_ros2_workspace=${name_ros2_workspace:="/home/ros/tb3_ws"}
 
 # Disable wait for network during bootup:
 systemctl mask systemd-networkd-wait-online.service
 
-# Set up a "robot" user
-username="robot"
-pass="panQJvEl/BD/g"
-sudo useradd -s /bin/bash -m -p "$pass" "$username"
+# Setup additional users
+sudo useradd -s /bin/bash -m -p panQJvEl/BD/g robot
+sudo useradd -M fastdds
+sudo passwd fastdds
+
+# Create a new dir in /home/
+sudo mkdir -p /home/ros/
+# Create a new group called rosgrp and add users to it:
+sudo addgroup rosgrp
+sudo adduser waffle rosgrp
+sudo adduser robot rosgrp
+# Change ownership of /home/ros/ to waffle and change its group to rosgrp:
+sudo chown waffle:rosgrp /home/ros/
+
+sleep 4
 
 echo -e "\n${YELLOW}[Update & Upgrade]${NC}"
 sudo apt update && sudo apt upgrade -y
 
 echo -e "\n${YELLOW}[Installing Misc Tools]${NC}"
-sudo apt install -y chrony ntpdate curl build-essential net-tools
+sudo apt install -y chrony ntpdate curl build-essential net-tools unzip
 
 # update git:
 sudo add-apt-repository ppa:git-core/ppa
@@ -61,13 +72,13 @@ locale  # verify settings
 echo -e "\n${YELLOW}[Update system time]${NC}"
 timedatectl set-timezone Europe/London
 sudo ntpdate ntp.ubuntu.com
-sleep 2
+sleep 4
 
 # Make poweroff and ntpdate NO PASSWORD-able
 sudo wget -O /etc/sudoers.d/nopwds https://raw.githubusercontent.com/tom-howard/tuos_robotics/humble/turtlebot3/nopwds
 
 echo "Basic system setup complete (CHECKPOINT 1)."
-sleep 2
+sleep 4
 
 ## INSTALLING ROS ###
 
@@ -105,17 +116,18 @@ pip install setuptools==58.2.0
 echo -e "\n${YELLOW}[Setting up the environment]${NC}"
 echo "source /opt/ros/$name_ros_version/setup.bash" >> $HOME/.bashrc
 source $HOME/.bashrc
-mkdir -p $HOME/$name_ros2_workspace/src && cd $HOME/$name_ros2_workspace/src
+# Make a workspace:
+mkdir -p $name_ros2_workspace/src && cd $name_ros2_workspace/src
 git clone -b humble-devel https://github.com/ROBOTIS-GIT/turtlebot3.git
-cd $HOME/$name_ros2_workspace/src/turtlebot3
+cd $name_ros2_workspace/src/turtlebot3
 rm -r turtlebot3_cartographer turtlebot3_navigation2
-cd $HOME/$name_ros2_workspace
+cd $name_ros2_workspace
 colcon build --symlink-install
-echo "source $HOME/$name_ros2_workspace/install/local_setup.bash" >> $HOME/.bashrc
+echo "source $name_ros2_workspace/install/local_setup.bash" >> $HOME/.bashrc
 source $HOME/.bashrc
 
 echo "ROS installation complete (CHECKPOINT 2)."
-sleep 2
+sleep 4
 
 ### OpenCR & other TB3 Configs ###
 
@@ -123,8 +135,8 @@ sudo cp `ros2 pkg prefix turtlebot3_bringup`/share/turtlebot3_bringup/script/99-
 sudo udevadm control --reload-rules
 sudo udevadm trigger
 
-echo 'export TURTLEBOT3_MODEL=waffle' >> ~/.bashrc
-echo 'export LDS_MODEL=LDS-01' >> ~/.bashrc
+echo 'export TURTLEBOT3_MODEL=waffle' >> $HOME/.bashrc
+echo 'export LDS_MODEL=LDS-01' >> $HOME/.bashrc
 
 mkdir -p ~/firmware/opencr/
 cd ~/firmware/opencr/
@@ -136,19 +148,23 @@ cd opencr_update/
 ./update.sh /dev/ttyACM0 waffle.opencr
 
 echo "OpenCR configs complete (CHECKPOINT 3)."
-sleep 2
+sleep 4
 
 ### Intel RealSense ###
 
-mkdir -p ~/firmware/realsense/
-echo "### Add latest Intel RealSense D435 Firmware Manually ###"
-echo "Obtain firmware from here:"
-echo "    https://www.intel.com/content/www/us/en/download/"
-echo "    19242/firmware-for-intel-realsense-d400-product-family.html"
-echo ""
-echo "Save 'Signed_Image_XXX.bin' to:"
-echo "    $HOME/firmware/realsense/"
-sleep 5
+mkdir -p $HOME/firmware/realsense/
+cd $HOME/firmware/realsense/
+echo "### Downloading Intel RealSense D435 Firmware (Version 5_16_0_1) ###"
+wget https://downloadmirror.intel.com/821320/d400_series_fw_5_16_0_1.zip
+unzip d400_series_fw_5_16_0_1.zip
+rm d400_series_fw_5_16_0_1.zip
+SIGNED_IMAGE="Signed_Image_UVC_5_16_0_1"
+mv $SIGNED_IMAGE/$SIGNED_IMAGE.bin ./
+rm -r $SIGNED_IMAGE
+
+echo "Installing Realsense ROS Libraries"
+
+sleep 4
 
 # need to configure your Ubuntu repositories to allow "restricted," "universe," and "multiverse."
 # https://help.ubuntu.com/community/Repositories/CommandLine
@@ -156,7 +172,7 @@ sudo apt install ros-humble-librealsense2*
 sudo apt install ros-humble-realsense2-*
 
 echo "RealSense configs complete (CHECKPOINT 4)."
-sleep 2
+sleep 4
 
 ### Custom TUoS Scripts ###
 
@@ -175,6 +191,9 @@ popd
 
 echo -e "\n${YELLOW}Setting up user scripts${NC}"
 
+mkdir -p $HOME/.tuos/diamond_tools/
+echo "[$(date +'%Y%m%d%H%M%S')] 2024-09 ROS2 Humble" > $HOME/.tuos/base_image
+
 rm -f /tmp/profile_updates.sh
 wget -O /tmp/profile_updates.sh https://raw.githubusercontent.com/tom-howard/tuos_robotics/humble/turtlebot3/diamond_tools/profile_updates.sh
 chmod +x /tmp/profile_updates.sh
@@ -192,4 +211,4 @@ sudo apt autoremove -y
 sudo apt autoclean -y
 
 echo "Final steps complete (CHECKPOINT 5)."
-sleep 2
+sleep 4
