@@ -4,6 +4,6 @@ LAPTOP_NO=$1
 
 echo "Pairing with laptop: dia-laptop$1 (the rosmaster)..."
 
-echo "dia-laptop$1" > ~/.tb3_tools/dia_laptop
+echo "dia-laptop$1" > ~/.tuos/dia_laptop
 
 echo "Done. Re-source the .bashrc for the changes to take effect."

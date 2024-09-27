@@ -7,7 +7,7 @@
 waffle_id=$(hostname)
 laptop_id=$1
 
-ln=~/.tb3_tools/dia_laptop
+ln=~/.tuos/dia_laptop
 touch $ln
 if grep -qi "$laptop_id" $ln; then
     # robot-side pairing looks OK...

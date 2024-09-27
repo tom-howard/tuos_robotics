@@ -3,3 +3,5 @@ alias tb3_teleop="ros2 run turtlebot3_teleop teleop_keyboard"
 
 alias src="echo 'Sourcing .bashrc...' && source ~/.bashrc"
 alias off="echo 'Powering off the robot...' && sudo poweroff"
+
+alias rsd="ros2 daemon stop; ros2 daemon start;"

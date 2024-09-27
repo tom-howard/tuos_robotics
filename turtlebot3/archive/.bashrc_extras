@@ -1,4 +1,4 @@
-export PATH=$PATH:/home/robot/.tb3_tools/
+export PATH=$PATH:/home/robot/.tuos/
 
 source /opt/ros/noetic/setup.bash
 source ~/catkin_ws/devel/setup.bash
