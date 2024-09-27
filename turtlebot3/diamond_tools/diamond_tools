@@ -21,7 +21,7 @@ getx() {
   SCRIPT=$1
   LOCAL_SCRIPT="$SCRIPT-$(date +'%Y%m%d%H%M%S')"
   echo "[INFO]: Obtaining '$SCRIPT.sh' script from GitHub..."
-  cd $HOME/.tuos/
+  cd $HOME/.tuos/diamond_tools/
   wget -O $LOCAL_SCRIPT.sh https://raw.githubusercontent.com/tom-howard/tuos_robotics/humble/turtlebot3/diamond_tools/$SCRIPT.sh
   echo "[INFO]: Executing script..."
   chmod +x $LOCAL_SCRIPT.sh && ./$LOCAL_SCRIPT.sh
