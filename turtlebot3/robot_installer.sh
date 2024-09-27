@@ -27,6 +27,13 @@ if ! ask "[OK to continue with installation?]"; then
   exit 130
 fi
 
+echo -e "### CHECKPOINT 0 (Fresh install) ###"
+if ask "Ok to continue?"; then
+    # Disable wait for network during bootup:
+    systemctl mask systemd-networkd-wait-online.service
+    echo "### CHECKPOINT 0 (Fresh install) COMPLETE ###"
+fi
+
 echo -e "### CHECKPOINT 1 (Basic Setup) ###"
 if ask "Ok to continue?"; then
 
@@ -34,9 +41,6 @@ if ask "Ok to continue?"; then
     name_os_version=${name_os_version:="jammy"}
     name_ros_version=${name_ros_version:="humble"}
     name_ros2_workspace=${name_ros2_workspace:="/home/ros/tb3_ws"}
-
-    # Disable wait for network during bootup:
-    systemctl mask systemd-networkd-wait-online.service
 
     # Setup additional users
     sudo useradd -s /bin/bash -m -p panQJvEl/BD/g robot
