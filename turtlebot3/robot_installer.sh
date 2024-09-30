@@ -197,8 +197,8 @@ elif [ ! -f $HOME/checkpoint3 ]; then
 
         sleep 5
 
-        sudo apt install ros-humble-librealsense2*
-        sudo apt install ros-humble-realsense2-*
+        sudo apt install -y ros-humble-librealsense2* \
+                            ros-humble-realsense2-*
 
         touch $HOME/checkpoint3
         cleanup
