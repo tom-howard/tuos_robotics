@@ -162,7 +162,7 @@ elif [ ! -f $HOME/checkpoint3 ]; then
 
         ### OpenCR & other TB3 Configs ###
 
-        sudo cp `ros2 pkg prefix turtlebot3_bringup`/share/turtlebot3_bringup/script/99-turtlebot3-cdc.rules /etc/udev/rules.d/
+        sudo wget -O /etc/udev/rules.d/99-turtlebot3-cdc.rules https://raw.githubusercontent.com/ROBOTIS-GIT/turtlebot3/refs/heads/humble-devel/turtlebot3_bringup/script/99-turtlebot3-cdc.rules
         sudo udevadm control --reload-rules
         sudo udevadm trigger
 
@@ -199,6 +199,11 @@ elif [ ! -f $HOME/checkpoint3 ]; then
 
         sudo apt install -y ros-humble-librealsense2* \
                             ros-humble-realsense2-*
+
+        # to fix permission issues:
+        sudo wget -O /etc/udev/rules.d/99-realsense-libusb.rules https://raw.githubusercontent.com/IntelRealSense/librealsense/refs/heads/master/config/99-realsense-libusb.rules
+        sudo udevadm control --reload-rules
+        sudo udevadm trigger
 
         touch $HOME/checkpoint3
         cleanup
