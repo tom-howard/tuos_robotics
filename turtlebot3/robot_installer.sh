@@ -151,32 +151,21 @@ elif [ ! -f $HOME/checkpoint3 ]; then
         echo "source /opt/ros/$name_ros_version/setup.bash" >> $HOME/.bashrc
         source $HOME/.bashrc
         # Make a workspace:
-        mkdir -p $name_ros2_workspace/src && cd $name_ros2_workspace/src
-        git clone -b humble-devel https://github.com/ROBOTIS-GIT/turtlebot3.git
-        cd $name_ros2_workspace/src/turtlebot3
-        rm -r turtlebot3_cartographer turtlebot3_navigation2
+        mkdir -p $name_ros2_workspace/src 
         cd $name_ros2_workspace
-        colcon build --symlink-install
-        echo "source $name_ros2_workspace/install/local_setup.bash" >> $HOME/.bashrc
-        source $HOME/.bashrc
-
+        colcon build
+        
         ### OpenCR & other TB3 Configs ###
 
         sudo wget -O /etc/udev/rules.d/99-turtlebot3-cdc.rules https://raw.githubusercontent.com/ROBOTIS-GIT/turtlebot3/refs/heads/humble-devel/turtlebot3_bringup/script/99-turtlebot3-cdc.rules
         sudo udevadm control --reload-rules
         sudo udevadm trigger
 
-        echo 'export TURTLEBOT3_MODEL=waffle' >> $HOME/.bashrc
-        echo 'export LDS_MODEL=LDS-01' >> $HOME/.bashrc
-
         mkdir -p ~/firmware/opencr/
         cd ~/firmware/opencr/
         wget https://github.com/ROBOTIS-GIT/OpenCR-Binaries/raw/master/turtlebot3/ROS2/latest/opencr_update.tar.bz2
         tar -xvf ./opencr_update.tar.bz2
         rm opencr_update.tar.bz2
-
-        cd opencr_update/
-        ./update.sh /dev/ttyACM0 waffle.opencr
 
         echo "OpenCR configs complete."
         sleep 5
@@ -194,8 +183,6 @@ elif [ ! -f $HOME/checkpoint3 ]; then
         rm -r $SIGNED_IMAGE
 
         echo "Installing Realsense ROS Libraries"
-
-        sleep 5
 
         sudo apt install -y ros-humble-librealsense2* \
                             ros-humble-realsense2-*
