@@ -54,7 +54,9 @@ elif [ ! -f $HOME/checkpoint1 ]; then
         name_ros2_workspace=${name_ros2_workspace:="/home/ros/tb3_ws"}
 
         # Setup additional users
+        echo -e "\n${YELLOW}Creating user 'robot'${NC}"
         sudo useradd -s /bin/bash -m -p panQJvEl/BD/g robot
+        echo -e "\n${YELLOW}Creating user 'fastdds'${NC}"
         sudo useradd -M fastdds
         sudo passwd fastdds
 
