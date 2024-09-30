@@ -31,6 +31,10 @@ cleanup() {
 
 echo -e "${YELLOW}[Note] Target OS version >>> Ubuntu 22.04.x (Jammy Jellyfish)${NC}"
 echo -e "${YELLOW}[Note] Target ROS version >>> ROS2 Humble Hawksbill${NC}"
+echo -e "\n${YELLOW}[Set the target OS, ROS version and the name of catkin workspace]${NC}"
+name_os_version=${name_os_version:="jammy"}
+name_ros_version=${name_ros_version:="humble"}
+name_ros2_workspace=${name_ros2_workspace:="/home/ros/tb3_ws"}
 
 if ! ask "[OK to continue with installation?]"; then
   echo -e "${YELLOW}Exiting.${NC}"
@@ -48,10 +52,6 @@ if [ ! -f $HOME/checkpoint0 ]; then
 elif [ ! -f $HOME/checkpoint1 ]; then
     echo -e "### CHECKPOINT 1 (Basic Setup) ###"
     if ask "Ok to continue?"; then
-        echo -e "\n${YELLOW}[Set the target OS, ROS version and the name of catkin workspace]${NC}"
-        name_os_version=${name_os_version:="jammy"}
-        name_ros_version=${name_ros_version:="humble"}
-        name_ros2_workspace=${name_ros2_workspace:="/home/ros/tb3_ws"}
 
         # Setup additional users
         echo -e "\n${YELLOW}Creating user 'robot'${NC}"
