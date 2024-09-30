@@ -138,7 +138,16 @@ elif [ ! -f $HOME/checkpoint2 ]; then
 
         pip install setuptools==58.2.0
 
-        echo -e "\n${YELLOW}[Setting up the environment]${NC}"
+        touch $HOME/checkpoint2
+        cleanup
+
+        echo "### CHECKPOINT 2 (Installing ROS) COMPLETE ###"
+    fi
+elif [ ! -f $HOME/checkpoint3 ]; then
+    echo -e "### CHECKPOINT 3 (Configuring Devices) ###" 
+    if ask "Ok to continue?"; then
+
+        echo -e "\n${YELLOW}[Setting up the ROS workspace ($name_ros2_workspace)]${NC}"
         echo "source /opt/ros/$name_ros_version/setup.bash" >> $HOME/.bashrc
         source $HOME/.bashrc
         # Make a workspace:
@@ -150,15 +159,6 @@ elif [ ! -f $HOME/checkpoint2 ]; then
         colcon build --symlink-install
         echo "source $name_ros2_workspace/install/local_setup.bash" >> $HOME/.bashrc
         source $HOME/.bashrc
-
-        touch $HOME/checkpoint2
-        cleanup
-
-        echo "### CHECKPOINT 2 (Installing ROS) COMPLETE ###"
-    fi
-elif [ ! -f $HOME/checkpoint3 ]; then
-    echo -e "### CHECKPOINT 3 (Configuring Devices) ###" 
-    if ask "Ok to continue?"; then
 
         ### OpenCR & other TB3 Configs ###
 
