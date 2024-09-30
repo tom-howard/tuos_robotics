@@ -161,8 +161,7 @@ elif [ ! -f $HOME/checkpoint3 ]; then
         sudo udevadm control --reload-rules
         sudo udevadm trigger
 
-        mkdir -p ~/firmware/opencr/
-        cd ~/firmware/opencr/
+        mkdir -p ~/firmware/ && cd ~/firmware/
         wget https://github.com/ROBOTIS-GIT/OpenCR-Binaries/raw/master/turtlebot3/ROS2/latest/opencr_update.tar.bz2
         tar -xvf ./opencr_update.tar.bz2
         rm opencr_update.tar.bz2

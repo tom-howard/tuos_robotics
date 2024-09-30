@@ -26,7 +26,7 @@ if ask "[INPUT] Preparing to configure for robot: dia-waffle$WAFFLE_NO. IS THIS 
     sudo hostnamectl set-hostname dia-waffle$WAFFLE_NO
     sudo sed -i 's/'$OLD_HOST'/dia-waffle'$WAFFLE_NO'/g' /etc/hosts
     if ask "[INPUT] Do you want to update the OpenCR board firmware?"; then
-        cd $HOME/firmware/opencr/opencr_update/
+        cd $HOME/firmware/opencr_update/
         ./update.sh /dev/ttyACM0 waffle.opencr
         cd ~
         echo "[INFO] OpenCR firmware *should* now be updated!"
