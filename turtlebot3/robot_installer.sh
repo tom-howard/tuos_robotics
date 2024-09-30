@@ -237,10 +237,9 @@ else
         sudo -i -u robot "/tmp/profile_updates.sh"
 
         rm -f $HOME/checkpoint*
-        rm -f $HOME/robot_installer.sh
 
         cleanup
-        
+
         echo "### CHECKPOINT 4 (Setting up TUoS Scripts) COMPLETE ###"
     fi
 fi
