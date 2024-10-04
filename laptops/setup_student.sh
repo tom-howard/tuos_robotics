@@ -3,8 +3,8 @@
 GRN='\033[0;32m'
 NC='\033[0m'
 
-name_ros_version=$1
-name_ros2_workspace=$2
+name_ros_version="humble"
+name_ros2_workspace="ros2_ws"
 
 echo -e "\n${GRN}[Setting up the environment]"
 echo "source /opt/ros/$name_ros_version/setup.bash" >> $HOME/.bashrc
