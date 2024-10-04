@@ -70,7 +70,7 @@ if [ ! -f $HOME/checkpoint1 ]; then
                             software-properties-common \
                             apt-transport-https \
                             wget \
-                            gpg
+                            gpg \
 
         echo -e "\n${YELLOW}[Installing VS Code]${NC}"
         wget -qO- https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor > packages.microsoft.gpg
@@ -120,6 +120,7 @@ if [ ! -f $HOME/checkpoint1 ]; then
 elif [ ! -f $HOME/checkpoint2 ]; then
     echo -e "### CHECKPOINT 2 (Installing ROS) ###" 
     if ask "Ok to continue?"; then
+        sudo apt install -y tree
         ## INSTALLING ROS ###
         # Add universe repo
         sudo add-apt-repository universe
