@@ -36,7 +36,7 @@ case $COMMAND in
   setup)
     sudo_check
     if [[ $# -eq 1 ]]; then
-      SCRIPT=laptop_setup.sh
+      SCRIPT=laptop_setup
     else
       SCRIPT=$2
     fi
@@ -44,10 +44,10 @@ case $COMMAND in
     ;;
   update)
     sudo_check
-    getx update_tools.sh
+    getx update_tools
     ;;
   workspace)
-    getx ros_ws.sh
+    getx ros_ws
     ;;
   *)
     echo "Not a valid input."
