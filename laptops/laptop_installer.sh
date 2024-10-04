@@ -216,7 +216,7 @@ else
         echo "[$(date +'%Y%m%d')_$(date +'%H%M%S')] 2024-09 ROS2 Humble ($(hostname))" > $HOME/.tuos/base_image
 
         rm -f /tmp/profile_updates.sh
-        wget -O /tmp/profile_updates.sh https://raw.githubusercontent.com/tom-howard/tuos_robotics/humble/turtlebot3/diamond_tools/profile_updates.sh
+        wget -O /tmp/profile_updates.sh https://raw.githubusercontent.com/tom-howard/tuos_robotics/humble/laptop/diamond_tools/profile_updates.sh
         chmod +x /tmp/profile_updates.sh
         # run as current user:
         /tmp/profile_updates.sh
