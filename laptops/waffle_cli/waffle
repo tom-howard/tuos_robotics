@@ -197,7 +197,6 @@ else
     exit 2
 fi
 
-echo "turtlebot" > ~/.tuos/current_robot # set the laptop to 'waffle mode'
 echo "robot" > ~/.tuos/robot_mode # set the laptop to 'real-robot mode' (as opposed to 'simulation mode')
 
 case $COMMAND in 

@@ -12,7 +12,6 @@ waffle_id=$(hostname)
 laptop_id=$1
 
 echo -e "${GREEN}[$waffle_id]${NC} Pairing Robot to ${CYAN}dia-laptop$laptop_id${NC}..."
- 
 
 touch ~/.tuos/dia_laptop
 echo "$laptop_id" > ~/.tuos/dia_laptop
