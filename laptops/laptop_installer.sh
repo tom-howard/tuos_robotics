@@ -169,12 +169,6 @@ else
 
         echo -e "\n${YELLOW}[Setting up the environment]"
         echo "source /opt/ros/$name_ros_version/setup.bash" >> $HOME/.bashrc
-        source $HOME/.bashrc
-
-        echo -e "\n${YELLOW}[Create and build the ROS2 workspace]${NC}"
-        mkdir -p $HOME/$name_ros2_workspace/src
-        cd $HOME/$name_ros2_workspace
-        colcon build --symlink-install
 
         source $HOME/.bashrc
 
@@ -198,12 +192,7 @@ else
         sudo wget -O /usr/local/bin/robot_pair_check.sh https://raw.githubusercontent.com/tom-howard/tuos_robotics/humble/laptops/waffle_cli/robot_pair_check.sh
         sudo wget -O /usr/local/bin/robot_pairing.sh https://raw.githubusercontent.com/tom-howard/tuos_robotics/humble/laptops/waffle_cli/robot_pairing.sh
         sudo wget -O /usr/local/bin/robot_sync.sh https://raw.githubusercontent.com/tom-howard/tuos_robotics/humble/laptops/waffle_cli/robot_sync.sh
-
-        echo -e "\n${YELLOW}[Setting up ~/.tuos scripts]${NC}"
-        mkdir -p $HOME/.tuos
-        cd $HOME/.tuos
-        wget -O $HOME/.tuos/waffle_setup.sh https://raw.githubusercontent.com/tom-howard/tuos_robotics/humble/laptops/waffle_setup.sh
-
+        
         echo -e "\n${YELLOW}[Setting device numbers]${NC}"
         cd /home/laptop
         sudo touch laptop_number waffle_number
@@ -221,8 +210,8 @@ else
         sudo chown $USER:laptopgrp /tmp/profile_updates.sh
         # run as current user:
         /tmp/profile_updates.sh
-        source $HOME/.bashrc
         diamond_tools workspace
+        source $HOME/.bashrc
 
         # setting up 'student' profile
         echo -e "\n${YELLOW}[Setting up the same environment for 'student' account]${NC}"
