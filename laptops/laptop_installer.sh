@@ -218,6 +218,7 @@ else
         rm -f /tmp/profile_updates.sh
         wget -O /tmp/profile_updates.sh https://raw.githubusercontent.com/tom-howard/tuos_robotics/humble/laptops/diamond_tools/profile_updates.sh
         chmod +x /tmp/profile_updates.sh
+        sudo chown $USER:laptopgrp /tmp/profile_updates.sh
         # run as current user:
         /tmp/profile_updates.sh
         source $HOME/.bashrc
@@ -227,7 +228,8 @@ else
         echo -e "\n${YELLOW}[Setting up the same environment for 'student' account]${NC}"
         wget -O /tmp/setup_student.sh https://raw.githubusercontent.com/tom-howard/tuos_robotics/humble/laptops/setup_student.sh
         chmod +x /tmp/setup_student.sh
-        sudo -i -u student "/tmp/setup_student.sh $name_ros_version $name_ros2_workspace"
+        sudo chown $USER:laptopgrp /tmp/setup_student.sh
+        sudo -i -u student "/tmp/setup_student.sh"
 
         rm -f $HOME/checkpoint*
 
