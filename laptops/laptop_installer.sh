@@ -70,7 +70,7 @@ if [ ! -f $HOME/checkpoint1 ]; then
                             software-properties-common \
                             apt-transport-https \
                             wget \
-                            gpg \
+                            gpg
 
         echo -e "\n${YELLOW}[Installing VS Code]${NC}"
         wget -qO- https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor > packages.microsoft.gpg
