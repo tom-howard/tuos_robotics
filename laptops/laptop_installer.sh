@@ -162,7 +162,7 @@ elif [ ! -f $HOME/checkpoint2 ]; then
 
         echo "### CHECKPOINT 2 (Installing ROS) COMPLETE ###"
     fi
-else [ ! -f $HOME/checkpoint3 ]; then
+else
     echo -e "### CHECKPOINT 3 (Setting up TUoS Scripts) ###" 
     if ask "Ok to continue?"; then
 
