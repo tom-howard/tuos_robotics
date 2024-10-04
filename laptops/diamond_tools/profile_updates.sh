@@ -1,16 +1,12 @@
 #!/usr/bin/env bash
 
-cd ~
-rm -f ~/.bash_aliases ~/.bashrc
-wget -O ~/.bash_aliases https://raw.githubusercontent.com/tom-howard/tuos_robotics/humble/laptops/.bash_aliases
-cp /etc/skel/.bashrc ~/
+mkdir -p $HOME/.tuos/diamond_tools/
 
-wget -O /tmp/.bashrc_extras https://raw.githubusercontent.com/tom-howard/tuos_robotics/humble/laptops/.bashrc_extras
-tmp_file=/tmp/.bashrc_extras
-while IFS= read -r line; do
-  echo "$line" >> ~/.bashrc
-done < "$tmp_file"
+rm -f $HOME/.bash_aliases $HOME/.bashrc $HOME/.tuos/waffle_setup.sh
+wget -O $HOME/.bash_aliases https://raw.githubusercontent.com/tom-howard/tuos_robotics/humble/turtlebot3/.bash_aliases
+wget -O $HOME/.tuos/waffle_setup.sh https://raw.githubusercontent.com/tom-howard/tuos_robotics/humble/laptops/waffle_setup.sh
+cp /etc/skel/.bashrc $HOME/
 
-cd ~/.tuos
-rm -f bashrc_turtlebot3
-wget -O ~/.tuos/bashrc_turtlebot3 https://raw.githubusercontent.com/tom-howard/tuos_robotics/humble/laptops/bashrc_turtlebot3
+echo "" >> $HOME/.bashrc
+echo "source $HOME/.tuos/waffle_setup.sh" >> $HOME/.bashrc
+echo "" >> $HOME/.bashrc

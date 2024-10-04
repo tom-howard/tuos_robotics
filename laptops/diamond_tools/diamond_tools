@@ -12,12 +12,12 @@ sudo_check() {
 
 getx() {
   SCRIPT=$1
-  echo "[INFO]: Obtaining '$SCRIPT' script from GitHub..."
-  cd ~/.tuos/
-  rm -f $SCRIPT
-  wget https://raw.githubusercontent.com/tom-howard/tuos_robotics/humble/laptops/diamond_tools/$SCRIPT
+  LOCAL_SCRIPT="$SCRIPT-$(date +'%Y%m%d%H%M%S')"
+  echo "[INFO]: Obtaining '$SCRIPT.sh' script from GitHub..."
+  cd $HOME/.tuos/diamond_tools/
+  wget -O $LOCAL_SCRIPT.sh https://raw.githubusercontent.com/tom-howard/tuos_robotics/humble/laptops/diamond_tools/$SCRIPT.sh
   echo "[INFO]: Executing script..."
-  chmod +x $SCRIPT && ./$SCRIPT
+  chmod +x $LOCAL_SCRIPT.sh && ./$LOCAL_SCRIPT.sh
 }
 
 if [[ $# -eq 0 ]]; then
@@ -46,8 +46,8 @@ case $COMMAND in
     sudo_check
     getx update_tools.sh
     ;;
-  catkin)
-    getx catkin_refresh.sh
+  workspace)
+    getx ros_ws.sh
     ;;
   *)
     echo "Not a valid input."
