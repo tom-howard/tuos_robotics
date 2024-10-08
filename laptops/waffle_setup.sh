@@ -40,3 +40,4 @@ export ROS_SUPER_CLIENT=$SUPER_CLIENT
 source /usr/share/colcon_cd/function/colcon_cd.sh
 export _colcon_cd_root=/opt/ros/humble/
 source /usr/share/colcon_cd/function/colcon_cd-argcomplete.bash
+source /usr/share/colcon_argcomplete/hook/colcon-argcomplete.bash

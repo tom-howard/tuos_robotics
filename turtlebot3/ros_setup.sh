@@ -11,5 +11,6 @@ export ROS_DOMAIN_ID=$WAFFLE_NO
 source /usr/share/colcon_cd/function/colcon_cd.sh
 export _colcon_cd_root=/opt/ros/humble/
 source /usr/share/colcon_cd/function/colcon_cd-argcomplete.bash
+source /usr/share/colcon_argcomplete/hook/colcon-argcomplete.bash
 
 export ROS_DISCOVERY_SERVER=127.0.0.1:11811
