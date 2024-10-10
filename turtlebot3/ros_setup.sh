@@ -5,7 +5,11 @@ source /home/ros/tb3_ws/install/local_setup.bash
 
 export TURTLEBOT3_MODEL=waffle
 export LDS_MODEL=LDS-01
-export WAFFLE_NO=$(cat ~/.tuos/waffle_number 2>/dev/null)
+if [ ! -f /home/ros/waffle_number ]; then
+    # Hostname is 'dia-waffleX', so save X (a unique number) to file:
+    echo "$(hostname | tr -d -c 0-9)" > /home/ros/waffle_number 
+fi
+export WAFFLE_NO=$(cat /home/ros/waffle_number)
 export ROS_DOMAIN_ID=$WAFFLE_NO
 
 source /usr/share/colcon_cd/function/colcon_cd.sh
