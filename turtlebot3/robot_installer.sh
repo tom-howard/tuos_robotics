@@ -138,6 +138,8 @@ elif [ ! -f $HOME/checkpoint2 ]; then
 
         pip install setuptools==58.2.0
 
+        sudo rosdep init; rosdep update
+
         touch $HOME/checkpoint2
         cleanup
 
@@ -203,7 +205,7 @@ else
 
         echo -e "\n${YELLOW}[Setting up fastdds Service]${NC}"
         sudo wget -O /etc/systemd/system/fastdds.service https://raw.githubusercontent.com/tom-howard/tuos_robotics/humble/turtlebot3/startup_service/fastdds.service
-        sudo systemctl enable fastdds.service
+        # sudo systemctl enable fastdds.service
 
         echo -e "\n${YELLOW}[Setting up /usr/local/bin/ scripts]${NC}"
         scripts="diamond_tools wsl_ros waffle"

@@ -158,6 +158,8 @@ elif [ ! -f $HOME/checkpoint2 ]; then
 
         pip install setuptools==58.2.0
 
+        sudo rosdep init; rosdep update
+
         touch $HOME/checkpoint2
         cleanup
 

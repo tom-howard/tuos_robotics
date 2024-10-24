@@ -32,10 +32,15 @@ else
 fi
 
 # Export the updated variables for ROS settings
-export ROS_DISCOVERY_SERVER=$RDS
-export ROS_LOCALHOST_ONLY=$LHOST_ONLY
+# export ROS_DISCOVERY_SERVER=$RDS
+# export ROS_LOCALHOST_ONLY=$LHOST_ONLY
 export ROS_HOSTNAME=$(hostname)
-export ROS_SUPER_CLIENT=$SUPER_CLIENT
+# export ROS_SUPER_CLIENT=$SUPER_CLIENT
+
+# Mods for Zenoh
+export PATH=$PATH:$HOME/dds_ws/src/zenoh-plugin-ros2dds/target/release
+export ROS_LOCALHOST_ONLY=1
+export RMW_IMPLEMENTATION=rmw_cyclonedds_cpp
 
 source /usr/share/colcon_cd/function/colcon_cd.sh
 export _colcon_cd_root=/opt/ros/humble/
