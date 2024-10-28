@@ -13,9 +13,9 @@ sudo apt update && sudo apt upgrade -y
 echo "Installing Zenoh related components..."
 sleep 4
 
-sudo apt install ros-$ROS_VER-rmw-cyclonedds-cpp \
-                 llvm-dev \
-                 libclang-dev
+sudo apt install -y ros-$ROS_VER-rmw-cyclonedds-cpp \
+                    llvm-dev \
+                    libclang-dev
 
 DDS_WS="$HOME/dds_ws"
 
@@ -45,7 +45,7 @@ sudo wget -qO /usr/local/bin/pair_with_waffle https://raw.githubusercontent.com/
 sudo wget -qO /usr/local/bin/waffle https://raw.githubusercontent.com/tom-howard/tuos_robotics/humble/laptops/waffle_cli/waffle
 sudo wget -qO /usr/local/bin/wsl_ros https://raw.githubusercontent.com/tom-howard/tuos_robotics/humble/laptops/wsl_ros
 
-sudo chmod +x diamond_tools robot_switch robot_mode pair_with_miro pair_with_waffle waffle wsl_ros
+sudo chmod +x diamond_tools robot_mode pair_with_waffle waffle wsl_ros
 
 sudo rm -f robot_pair_check.sh robot_pairing.sh robot_sync.sh
 sudo wget -qO /usr/local/bin/robot_pair_check.sh https://raw.githubusercontent.com/tom-howard/tuos_robotics/humble/laptops/waffle_cli/robot_pair_check.sh
