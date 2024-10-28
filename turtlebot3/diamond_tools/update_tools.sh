@@ -14,9 +14,9 @@ sudo apt update && sudo apt upgrade -y
 echo "Installing Zenoh related components..."
 sleep 4
 
-sudo apt install ros-$ROS_VER-rmw-cyclonedds-cpp \
-                 llvm-dev \
-                 libclang-dev
+sudo apt install -y ros-$ROS_VER-rmw-cyclonedds-cpp \
+                    llvm-dev \
+                    libclang-dev
 
 cd $ROS2_WS/src/
 git clone https://github.com/eclipse-zenoh/zenoh-plugin-ros2dds.git
