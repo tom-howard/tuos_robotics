@@ -1,9 +1,14 @@
 #!/usr/bin/env bash
 
+echo "Updating system..."
+sleep 4
+
 ROS_VER="humble"
 
 # sudo apt update && sudo apt upgrade -y
 echo "$(hostname | tr -d -c 0-9)" > /home/ros/waffle_number
+
+sudo apt update && sudo apt upgrade -y
 
 echo "Installing Zenoh related components..."
 sleep 4
