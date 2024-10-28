@@ -38,7 +38,6 @@ export ROS_HOSTNAME=$(hostname)
 # export ROS_SUPER_CLIENT=$SUPER_CLIENT
 
 # Mods for Zenoh
-export PATH=$PATH:$HOME/dds_ws/src/zenoh-plugin-ros2dds/target/release
 export ROS_LOCALHOST_ONLY=1
 export RMW_IMPLEMENTATION=rmw_cyclonedds_cpp
 

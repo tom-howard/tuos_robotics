@@ -22,6 +22,7 @@ rosdep install --from-paths . --ignore-src -r -y
 cd $ROS2_WS/src/zenoh-plugin-ros2dds
 # this bit takes a while...
 cargo build --release
+sudo install $ROS2_WS/src/zenoh-plugin-ros2dds/target/release/zenoh-bridge-ros2dds /usr/local/bin/
 
 echo "Finished installing Zenoh and dependencies."
 sleep 4

@@ -17,6 +17,5 @@ source /usr/share/colcon_argcomplete/hook/colcon-argcomplete.bash
 
 # Zenoh related mods:
 # export ROS_DISCOVERY_SERVER=127.0.0.1:11811
-export PATH=$PATH:$ROS2_WS/src/zenoh-plugin-ros2dds/target/release
 export ROS_LOCALHOST_ONLY=1
 export RMW_IMPLEMENTATION=rmw_cyclonedds_cpp
