@@ -1,6 +1,9 @@
 alias tb3_bringup="ros2 launch tuos_tb3_tools ros.launch.py"
 alias tb3_teleop="ros2 run turtlebot3_teleop teleop_keyboard"
 
+alias bringup_robot="ros2 launch turtlebot3_bringup robot.launch.py"
+alias bringup_camera="ros2 launch realsense2_camera rs_launch.py rgb_camera.color_profile:='848x480x15' color_qos:=SENSOR_DATA enable_depth:=false"
+
 alias src="echo 'Sourcing .bashrc...' && source ~/.bashrc"
 alias off="echo 'Powering off the robot...' && sudo poweroff"
 
