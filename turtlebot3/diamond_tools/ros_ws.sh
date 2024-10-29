@@ -4,10 +4,6 @@ ROS2_WS="/home/ros/tb3_ws"
 
 rm -rf $ROS2_WS
 
-export CMAKE_PREFIX_PATH=
-export AMENT_PREFIX_PATH=
-export COLCON_PREFIX_PATH=
-
 # Make a new workspace:
 mkdir -p $ROS2_WS/src
 
