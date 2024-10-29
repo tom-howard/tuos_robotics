@@ -19,4 +19,4 @@ git clone -b humble https://github.com/tom-howard/tuos_ros.git
 cd $ROS2_WS/src/tuos_ros/
 rm -rf tuos_examples/ com2009_simulations/ tuos_simulations/
 
-cd $ROS2_WS/ && colcon build --symlink-install
+cd $ROS2_WS/ && colcon --log-level ERROR build --symlink-install

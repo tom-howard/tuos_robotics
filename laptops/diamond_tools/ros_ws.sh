@@ -11,4 +11,4 @@ mkdir -p $ROS2_WS/src
 cd $ROS2_WS/src/
 git clone -b humble https://github.com/tom-howard/tuos_ros.git
 
-cd $ROS2_WS/ && colcon build --symlink-install
+cd $ROS2_WS/ && colcon --log-level ERROR build --symlink-install
