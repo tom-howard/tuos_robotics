@@ -19,11 +19,15 @@ sudo apt install -y ros-$ROS_VER-rmw-cyclonedds-cpp \
                     libclang-dev
 
 cd $ROS2_WS/src/
+rm -rf zenoh-plugin-ros2dds
 git clone https://github.com/eclipse-zenoh/zenoh-plugin-ros2dds.git
 cd $ROS2_WS
+
+sudo rm -f /etc/ros/rosdep/sources.list.d/20-default.list
 sudo rosdep init; rosdep update
 # use `rosdep` to install dependencies
 rosdep install --from-paths . --ignore-src -r -y
+
 cd $ROS2_WS/src/zenoh-plugin-ros2dds
 # this bit takes a while...
 cargo build --release
