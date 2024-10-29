@@ -5,8 +5,8 @@ sleep 4
 
 ROS_VER="humble"
 
-# sudo apt update && sudo apt upgrade -y
-echo "$(hostname | tr -d -c 0-9)" > /home/ros/waffle_number
+echo "$(hostname | tr -d -c 0-9)" > /home/laptop/laptop_number
+cp /home/laptop/laptop_number /home/laptop/waffle_number
 
 sudo apt update && sudo apt upgrade -y
 
@@ -21,11 +21,15 @@ DDS_WS="$HOME/dds_ws"
 
 mkdir -p $DDS_WS/src/
 cd $DDS_WS/src/
+rm -rf zenoh-plugin-ros2dds
 git clone https://github.com/eclipse-zenoh/zenoh-plugin-ros2dds.git
 cd $DDS_WS
+
+sudo rm -f /etc/ros/rosdep/sources.list.d/20-default.list
 sudo rosdep init; rosdep update
 # use `rosdep` to install dependencies
 rosdep install --from-paths . --ignore-src -r -y
+
 cd $DDS_WS/src/zenoh-plugin-ros2dds
 # this bit takes a while...
 cargo build --release
