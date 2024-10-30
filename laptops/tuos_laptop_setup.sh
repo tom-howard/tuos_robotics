@@ -40,6 +40,7 @@ export ROS_HOSTNAME=$(hostname)
 # Mods for Zenoh
 export ROS_LOCALHOST_ONLY=1
 export RMW_IMPLEMENTATION=rmw_cyclonedds_cpp
+export ROS_DOMAIN_ID=$WAFFLE_NO
 
 source /usr/share/colcon_cd/function/colcon_cd.sh
 export _colcon_cd_root=/opt/ros/humble/
