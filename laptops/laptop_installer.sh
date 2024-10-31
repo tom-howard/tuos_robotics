@@ -56,6 +56,11 @@ if [ ! -f $HOME/checkpoint1 ]; then
         sudo adduser student laptopgrp
         sudo chown $USER:laptopgrp /home/laptop
 
+        mkdir -p /home/laptop/repos/
+        cd /home/laptop/repos/
+        git clone -b humble https://github.com/tom-howard/tuos_robotics.git
+        cd ~
+
         echo -e "\n${YELLOW}[Update & Upgrade]${NC}"
         sudo apt update && sudo apt upgrade -y
 
@@ -70,7 +75,11 @@ if [ ! -f $HOME/checkpoint1 ]; then
                             software-properties-common \
                             apt-transport-https \
                             wget \
-                            gpg
+                            gpg \
+                            tmux \
+                            tree \
+                            llvm-dev \
+                            libclang-dev
 
         echo -e "\n${YELLOW}[Installing VS Code]${NC}"
         wget -qO- https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor > packages.microsoft.gpg
@@ -103,7 +112,7 @@ if [ ! -f $HOME/checkpoint1 ]; then
         sleep 2
 
         # set selected sudo commands to require no password input
-        sudo wget -O /etc/sudoers.d/nopwds https://raw.githubusercontent.com/tom-howard/tuos_robotics/humble/laptops/nopwds
+        sudo cp /home/laptop/repos/tuos_robotics/laptops/nopwds /etc/sudoers.d/
 
         echo -e "\n${YELLOW}[Connecting to DIA-LAB]${NC}"
         SSID_CURRENT=$(iwgetid -r)
@@ -120,7 +129,6 @@ if [ ! -f $HOME/checkpoint1 ]; then
 elif [ ! -f $HOME/checkpoint2 ]; then
     echo -e "### CHECKPOINT 2 (Installing ROS) ###" 
     if ask "Ok to continue?"; then
-        sudo apt install -y tree
         ## INSTALLING ROS ###
         # Add universe repo
         sudo add-apt-repository universe
@@ -154,7 +162,8 @@ elif [ ! -f $HOME/checkpoint2 ]; then
                             ffmpeg \
                             python3-pip \
                             python3-numpy \
-                            python3-scipy
+                            python3-scipy \
+                            ros-humble-rmw-cyclonedds-cpp
 
         pip install setuptools==58.2.0
 
@@ -175,16 +184,11 @@ else
         source $HOME/.bashrc
 
         echo -e "\n${YELLOW}[Installing TUoS Scripts]${NC}"
-        echo "Connecting to DIA-LAB..."
-        nmcli c up DIA-LAB
-        sleep 4
-        # get the last part of the IP address:
-        LAPTOP_NO=$(ip -o addr show dev "wlo1" | awk '$3 == "inet" {print $4}' | sed -r 's!/.*!!; s!.*\.!!')
-
-        echo "Connecting to eduroam..."
-        nmcli c up eduroam
-        sleep 4
         
+        LAPTOP_NO=$(hostname | tr -d -c 0-9)
+        echo "configuring for dia-laptop$LAPTOP_NO..."
+        sleep 4
+
         echo -e "\n${YELLOW}[Setting up /usr/local/bin/ scripts]${NC}"
         sudo wget -O /usr/local/bin/robot_mode https://raw.githubusercontent.com/tom-howard/tuos_robotics/humble/laptops/robot_mode
         sudo wget -O /usr/local/bin/waffle https://raw.githubusercontent.com/tom-howard/tuos_robotics/humble/laptops/waffle_cli/waffle
@@ -234,3 +238,6 @@ else
 
     fi
 fi
+
+## TODO:
+# Install TMUX
