@@ -268,6 +268,3 @@ else
 
     fi
 fi
-
-## TODO:
-# Install TMUX
