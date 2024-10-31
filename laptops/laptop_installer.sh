@@ -145,29 +145,47 @@ elif [ ! -f $HOME/checkpoint2 ]; then
         source $HOME/.bashrc
 
         echo -e "\n${YELLOW}[Install all the necessary ROS and TB3 packages]${NC}"
-        sudo apt install -y ros-humble-desktop \
+        sudo apt install -y ros-$ROS_VER-desktop \
                             ros-dev-tools \
-                            ros-humble-gazebo-* \
-                            ros-humble-cartographer \
-                            ros-humble-cartographer-ros \
-                            ros-humble-navigation2 \
-                            ros-humble-nav2-bringup \
-                            ros-humble-turtlebot3 \
-                            ros-humble-turtlebot3-msgs \
-                            ros-humble-turtlebot3-simulations \
-                            ros-humble-turtlebot3-gazebo \
+                            ros-$ROS_VER-gazebo-* \
+                            ros-$ROS_VER-cartographer \
+                            ros-$ROS_VER-cartographer-ros \
+                            ros-$ROS_VER-navigation2 \
+                            ros-$ROS_VER-nav2-bringup \
+                            ros-$ROS_VER-turtlebot3 \
+                            ros-$ROS_VER-turtlebot3-msgs \
+                            ros-$ROS_VER-turtlebot3-simulations \
+                            ros-$ROS_VER-turtlebot3-gazebo \
                             python3-rosdep \
                             python3-colcon-common-extensions \
-                            ros-humble-rqt* \
+                            ros-$ROS_VER-rqt* \
                             ffmpeg \
                             python3-pip \
                             python3-numpy \
                             python3-scipy \
-                            ros-humble-rmw-cyclonedds-cpp
+                            ros-$ROS_VER-rmw-cyclonedds-cpp
 
         pip install setuptools==58.2.0
 
+        echo "Installing Zenoh..."
+        sleep 4
+
+        DDS_WS="/home/laptop/dds_ws"
+        mkdir -p $DDS_WS/src/
+        cd $DDS_WS/src/
+        git clone https://github.com/eclipse-zenoh/zenoh-plugin-ros2dds.git
+        cd $DDS_WS
+
         sudo rosdep init; rosdep update
+        echo "using 'rosdep' to install dependencies..."
+        sleep 4
+        rosdep install --from-paths . --ignore-src -r -y
+
+        cd $DDS_WS/src/zenoh-plugin-ros2dds
+        echo "Building zenoh plugin with cargo..."
+        sleep 4
+        cargo build --release
+        sudo install $DDS_WS/src/zenoh-plugin-ros2dds/target/release/zenoh-bridge-ros2dds /usr/local/bin/
 
         touch $HOME/checkpoint2
         cleanup
