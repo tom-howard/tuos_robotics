@@ -33,7 +33,7 @@ OS_VER=${OS_VER:="jammy"}
 ROS_VER=${ROS_VER:="humble"}
 ROS_WS=${ROS_WS:="ros2_ws"}
 echo -e "${YELLOW}Target OS version >>> '$OS_VER'${NC}"
-echo -e "${YELLOW}Target ROS version >>> ROS2 '$ROS_VER'${NC}"
+echo -e "\n${YELLOW}Target ROS version >>> ROS2 '$ROS_VER'${NC}"
 echo -e "\n${YELLOW}Workspace Name >>> '$ROS_WS'${NC}"
 
 if ! ask "[OK to continue with installation?]"; then
