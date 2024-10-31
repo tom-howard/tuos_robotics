@@ -217,10 +217,12 @@ else
         echo -e "\n${YELLOW}[Setting up /usr/local/bin/ scripts]${NC}"
         cd $SHARE_DIR/repos/tuos_robotics/laptops/
         sudo install robot_mode /usr/local/bin/
-        sudo install ./waffle_cli/waffle /usr/local/bin/
-        sudo install ./diamond_tools/diamond_tools /usr/local/bin/
         
-        cd $SHARE_DIR/repos/tuos_robotics/laptops/waffle_cli
+        cd $SHARE_DIR/repos/tuos_robotics/laptops/diamond_tools/
+        sudo install diamond_tools /usr/local/bin/
+        
+        cd $SHARE_DIR/repos/tuos_robotics/laptops/waffle_cli/
+        sudo install waffle /usr/local/bin/
         sudo cp robot_pair_check.sh /usr/local/bin/
         sudo cp robot_pairing.sh /usr/local/bin/
         sudo cp robot_sync.sh /usr/local/bin/
@@ -243,8 +245,8 @@ else
         sudo chown $USER:laptopgrp /tmp/profile_updates.sh
         # run as current user:
         /tmp/profile_updates.sh
-        diamond_tools workspace
         source $HOME/.bashrc
+        diamond_tools workspace
 
         # setting up 'student' profile
         echo -e "\n${YELLOW}[Setting up the same environment for 'student' account]${NC}"
