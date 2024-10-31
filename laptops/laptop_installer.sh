@@ -29,12 +29,12 @@ cleanup() {
     echo "Cleanup Done."
 }
 
-echo -e "${YELLOW}[Note] Target OS version >>> Ubuntu 22.04.x (Jammy Jellyfish)${NC}"
-echo -e "${YELLOW}[Note] Target ROS version >>> ROS2 Humble Hawksbill${NC}"
-echo -e "\n${YELLOW}[Set the target OS, ROS version and the name of catkin workspace]${NC}"
-name_os_version=${name_os_version:="jammy"}
-name_ros_version=${name_ros_version:="humble"}
-name_ros2_workspace=${name_ros2_workspace:="ros2_ws"}
+OS_VER=${OS_VER:="jammy"}
+ROS_VER=${ROS_VER:="humble"}
+ROS_WS=${ROS_WS:="ros2_ws"}
+echo -e "${YELLOW}Target OS version >>> '$OS_VER'${NC}"
+echo -e "${YELLOW}Target ROS version >>> ROS2 '$ROS_VER'${NC}"
+echo -e "\n${YELLOW}Workspace Name >>> '$ROS_WS'${NC}"
 
 if ! ask "[OK to continue with installation?]"; then
   echo -e "${YELLOW}Exiting.${NC}"
@@ -55,11 +55,6 @@ if [ ! -f $HOME/checkpoint1 ]; then
         sudo adduser "$USER" laptopgrp
         sudo adduser student laptopgrp
         sudo chown $USER:laptopgrp /home/laptop
-
-        mkdir -p /home/laptop/repos/
-        cd /home/laptop/repos/
-        git clone -b humble https://github.com/tom-howard/tuos_robotics.git
-        cd ~
 
         echo -e "\n${YELLOW}[Update & Upgrade]${NC}"
         sudo apt update && sudo apt upgrade -y
@@ -110,6 +105,11 @@ if [ ! -f $HOME/checkpoint1 ]; then
         echo -e "\n${YELLOW}[NTP: update time]${NC}"
         sudo ntpdate ntp.ubuntu.com
         sleep 2
+
+        mkdir -p /home/laptop/repos/
+        cd /home/laptop/repos/
+        git clone -b humble https://github.com/tom-howard/tuos_robotics.git
+        cd ~
 
         # set selected sudo commands to require no password input
         sudo cp /home/laptop/repos/tuos_robotics/laptops/nopwds /etc/sudoers.d/
@@ -179,7 +179,7 @@ else
     if ask "Ok to continue?"; then
 
         echo -e "\n${YELLOW}[Setting up the environment]"
-        echo "source /opt/ros/$name_ros_version/setup.bash" >> $HOME/.bashrc
+        echo "source /opt/ros/$ROS_VER/setup.bash" >> $HOME/.bashrc
 
         source $HOME/.bashrc
 
