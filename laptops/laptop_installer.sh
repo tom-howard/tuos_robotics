@@ -36,6 +36,8 @@ echo -e "${YELLOW}Target OS version >>> '$OS_VER'${NC}"
 echo -e "\n${YELLOW}Target ROS version >>> ROS2 '$ROS_VER'${NC}"
 echo -e "\n${YELLOW}Workspace Name >>> '$ROS_WS'${NC}"
 
+SHARE_DIR="/home/laptop"
+
 if ! ask "[OK to continue with installation?]"; then
   echo -e "${YELLOW}Exiting.${NC}"
   exit 130
@@ -50,11 +52,11 @@ if [ ! -f $HOME/checkpoint1 ]; then
         sudo useradd -s /bin/bash -m -p "$pass" "$username"
         
         echo -e "\n${YELLOW}[Setting up a shared space]${NC}"
-        sudo mkdir -p /home/laptop/
+        sudo mkdir -p $SHARE_DIR/
         sudo addgroup laptopgrp
         sudo adduser "$USER" laptopgrp
         sudo adduser student laptopgrp
-        sudo chown $USER:laptopgrp /home/laptop
+        sudo chown $USER:laptopgrp $SHARE_DIR
 
         echo -e "\n${YELLOW}[Update & Upgrade]${NC}"
         sudo apt update && sudo apt upgrade -y
@@ -106,13 +108,13 @@ if [ ! -f $HOME/checkpoint1 ]; then
         sudo ntpdate ntp.ubuntu.com
         sleep 2
 
-        mkdir -p /home/laptop/repos/
-        cd /home/laptop/repos/
+        mkdir -p $SHARE_DIR/repos/
+        cd $SHARE_DIR/repos/
         git clone -b humble https://github.com/tom-howard/tuos_robotics.git
         cd ~
 
         # set selected sudo commands to require no password input
-        sudo cp /home/laptop/repos/tuos_robotics/laptops/nopwds /etc/sudoers.d/
+        sudo cp $SHARE_DIR/repos/tuos_robotics/laptops/nopwds /etc/sudoers.d/
 
         echo -e "\n${YELLOW}[Connecting to DIA-LAB]${NC}"
         SSID_CURRENT=$(iwgetid -r)
@@ -172,7 +174,7 @@ elif [ ! -f $HOME/checkpoint2 ]; then
         echo "Installing Zenoh..."
         sleep 4
 
-        DDS_WS="/home/laptop/dds_ws"
+        DDS_WS="$SHARE_DIR/dds_ws"
         mkdir -p $DDS_WS/src/
         cd $DDS_WS/src/
         git clone https://github.com/eclipse-zenoh/zenoh-plugin-ros2dds.git
@@ -205,24 +207,27 @@ else
 
         echo -e "\n${YELLOW}[Installing TUoS Scripts]${NC}"
         
+        cd $SHARE_DIR/repos
+        git clone -b humble https://github.com/tom-howard/tuos_ros.git
+
         LAPTOP_NO=$(hostname | tr -d -c 0-9)
         echo "configuring for dia-laptop$LAPTOP_NO..."
         sleep 4
 
         echo -e "\n${YELLOW}[Setting up /usr/local/bin/ scripts]${NC}"
-        cd /home/laptop/repos/tuos_robotics/laptops/
+        cd $SHARE_DIR/repos/tuos_robotics/laptops/
         sudo install robot_mode /usr/local/bin/
         sudo install ./waffle_cli/waffle /usr/local/bin/
         sudo install ./diamond_tools/diamond_tools /usr/local/bin/
         
-        cd /home/laptop/repos/tuos_robotics/laptops/waffle_cli
+        cd $SHARE_DIR/repos/tuos_robotics/laptops/waffle_cli
         sudo cp robot_pair_check.sh /usr/local/bin/
         sudo cp robot_pairing.sh /usr/local/bin/
         sudo cp robot_sync.sh /usr/local/bin/
         
         echo -e "\n${YELLOW}[Setting device numbers]${NC}"
-        cd /home/laptop
-        sudo touch laptop_number waffle_number
+        cd $SHARE_DIR
+        touch laptop_number waffle_number
         echo "$LAPTOP_NO" > laptop_number
         echo "$LAPTOP_NO" > waffle_number
 
@@ -230,8 +235,8 @@ else
 
         mkdir -p $HOME/.tuos/diamond_tools/
         echo "[$(date +'%Y%m%d')_$(date +'%H%M%S')] 2024-09 ROS2 Humble ($(hostname))" > $HOME/.tuos/base_image
-        
-        cd /home/laptop/repos/tuos_robotics/laptops/diamond_tools/
+
+        cd $SHARE_DIR/repos/tuos_robotics/laptops/diamond_tools/
         cp profile_updates.sh /tmp/ 
         cd ~
         chmod +x /tmp/profile_updates.sh
@@ -243,7 +248,7 @@ else
 
         # setting up 'student' profile
         echo -e "\n${YELLOW}[Setting up the same environment for 'student' account]${NC}"
-        cp /home/laptop/repos/tuos_robotics/laptops/setup_student.sh /tmp/
+        cp $SHARE_DIR/repos/tuos_robotics/laptops/setup_student.sh /tmp/
         chmod +x /tmp/setup_student.sh
         sudo chown $USER:laptopgrp /tmp/setup_student.sh
         sudo -i -u student "/tmp/setup_student.sh"
