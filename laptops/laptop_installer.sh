@@ -232,6 +232,7 @@ else
         touch laptop_number waffle_number
         echo "$LAPTOP_NO" > laptop_number
         echo "$LAPTOP_NO" > waffle_number
+        chown $USER:laptopgrp laptop_number waffle_number
 
         echo -e "\n${YELLOW}Setting up user profiles${NC}"
 
@@ -242,7 +243,7 @@ else
         cp profile_updates.sh /tmp/ 
         cd ~
         chmod +x /tmp/profile_updates.sh
-        sudo chown $USER:laptopgrp /tmp/profile_updates.sh
+        chown $USER:laptopgrp /tmp/profile_updates.sh
         # run as current user:
         /tmp/profile_updates.sh
         source $HOME/.bashrc
@@ -252,7 +253,7 @@ else
         echo -e "\n${YELLOW}[Setting up the same environment for 'student' account]${NC}"
         cp $SHARE_DIR/repos/tuos_robotics/laptops/setup_student.sh /tmp/
         chmod +x /tmp/setup_student.sh
-        sudo chown $USER:laptopgrp /tmp/setup_student.sh
+        chown $USER:laptopgrp /tmp/setup_student.sh
         sudo -i -u student "/tmp/setup_student.sh"
 
         rm -f $HOME/checkpoint*
