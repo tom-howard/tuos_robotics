@@ -167,6 +167,8 @@ elif [ ! -f $HOME/checkpoint2 ]; then
 
         pip install setuptools==58.2.0
 
+        source /opt/ros/$ROS_VER/setup.bash
+
         echo "Installing Zenoh..."
         sleep 4
 
@@ -208,14 +210,15 @@ else
         sleep 4
 
         echo -e "\n${YELLOW}[Setting up /usr/local/bin/ scripts]${NC}"
-        sudo wget -O /usr/local/bin/robot_mode https://raw.githubusercontent.com/tom-howard/tuos_robotics/humble/laptops/robot_mode
-        sudo wget -O /usr/local/bin/waffle https://raw.githubusercontent.com/tom-howard/tuos_robotics/humble/laptops/waffle_cli/waffle
-        sudo wget -O /usr/local/bin/diamond_tools https://raw.githubusercontent.com/tom-howard/tuos_robotics/humble/laptops/diamond_tools/diamond_tools
-        sudo chmod +x /usr/local/bin/*
-
-        sudo wget -O /usr/local/bin/robot_pair_check.sh https://raw.githubusercontent.com/tom-howard/tuos_robotics/humble/laptops/waffle_cli/robot_pair_check.sh
-        sudo wget -O /usr/local/bin/robot_pairing.sh https://raw.githubusercontent.com/tom-howard/tuos_robotics/humble/laptops/waffle_cli/robot_pairing.sh
-        sudo wget -O /usr/local/bin/robot_sync.sh https://raw.githubusercontent.com/tom-howard/tuos_robotics/humble/laptops/waffle_cli/robot_sync.sh
+        cd /home/laptop/repos/tuos_robotics/laptops/
+        sudo install robot_mode /usr/local/bin/
+        sudo install ./waffle_cli/waffle /usr/local/bin/
+        sudo install ./diamond_tools/diamond_tools /usr/local/bin/
+        
+        cd /home/laptop/repos/tuos_robotics/laptops/waffle_cli
+        sudo cp robot_pair_check.sh /usr/local/bin/
+        sudo cp robot_pairing.sh /usr/local/bin/
+        sudo cp robot_sync.sh /usr/local/bin/
         
         echo -e "\n${YELLOW}[Setting device numbers]${NC}"
         cd /home/laptop
@@ -227,9 +230,10 @@ else
 
         mkdir -p $HOME/.tuos/diamond_tools/
         echo "[$(date +'%Y%m%d')_$(date +'%H%M%S')] 2024-09 ROS2 Humble ($(hostname))" > $HOME/.tuos/base_image
-
-        rm -f /tmp/profile_updates.sh
-        wget -O /tmp/profile_updates.sh https://raw.githubusercontent.com/tom-howard/tuos_robotics/humble/laptops/diamond_tools/profile_updates.sh
+        
+        cd /home/laptop/repos/tuos_robotics/laptops/diamond_tools/
+        cp profile_updates.sh /tmp/ 
+        cd ~
         chmod +x /tmp/profile_updates.sh
         sudo chown $USER:laptopgrp /tmp/profile_updates.sh
         # run as current user:
@@ -239,7 +243,7 @@ else
 
         # setting up 'student' profile
         echo -e "\n${YELLOW}[Setting up the same environment for 'student' account]${NC}"
-        wget -O /tmp/setup_student.sh https://raw.githubusercontent.com/tom-howard/tuos_robotics/humble/laptops/setup_student.sh
+        cp /home/laptop/repos/tuos_robotics/laptops/setup_student.sh /tmp/
         chmod +x /tmp/setup_student.sh
         sudo chown $USER:laptopgrp /tmp/setup_student.sh
         sudo -i -u student "/tmp/setup_student.sh"
