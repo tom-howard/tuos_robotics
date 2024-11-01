@@ -1,0 +1,16 @@
+[Unit]
+Description=Zenoh DDS Service
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+ExecStartPre=/bin/sleep 7
+ExecStart=/bin/bash -c '/usr/local/bin/zenoh-bridge-ros2dds'
+Restart=always
+User=xdds
+Group=xdds
+WorkingDirectory=/opt/ros/humble
+
+[Install]
+WantedBy=multi-user.target
+

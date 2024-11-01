@@ -33,7 +33,6 @@ fi
 
 # Export the updated variables for ROS settings
 # export ROS_DISCOVERY_SERVER=$RDS
-# export ROS_LOCALHOST_ONLY=$LHOST_ONLY
 export ROS_HOSTNAME=$(hostname)
 # export ROS_SUPER_CLIENT=$SUPER_CLIENT
 

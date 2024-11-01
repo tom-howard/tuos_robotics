@@ -29,12 +29,14 @@ cleanup() {
     echo "Cleanup Done."
 }
 
-echo -e "${YELLOW}[Note] Target OS version >>> Ubuntu 22.04.x (Jammy Jellyfish)${NC}"
-echo -e "${YELLOW}[Note] Target ROS version >>> ROS2 Humble Hawksbill${NC}"
-echo -e "\n${YELLOW}[Set the target OS, ROS version and the name of catkin workspace]${NC}"
-name_os_version=${name_os_version:="jammy"}
-name_ros_version=${name_ros_version:="humble"}
-name_ros2_workspace=${name_ros2_workspace:="/home/ros/tb3_ws"}
+OS_VER=${OS_VER:="jammy"}
+ROS_VER=${ROS_VER:="humble"}
+ROS_WS=${ROS_WS:="tb3_ws"}
+echo -e "${YELLOW}Target OS version >>> '$OS_VER'${NC}"
+echo -e "\n${YELLOW}Target ROS version >>> ROS2 '$ROS_VER'${NC}"
+echo -e "\n${YELLOW}Workspace Name >>> '$ROS_WS'${NC}"
+
+SHARE_DIR="/home/ros"
 
 if ! ask "[OK to continue with installation?]"; then
   echo -e "${YELLOW}Exiting.${NC}"
@@ -56,18 +58,18 @@ elif [ ! -f $HOME/checkpoint1 ]; then
         # Setup additional users
         echo -e "\n${YELLOW}Creating user 'robot'${NC}"
         sudo useradd -s /bin/bash -m -p panQJvEl/BD/g robot
-        echo -e "\n${YELLOW}Creating user 'fastdds'${NC}"
-        sudo useradd -M fastdds
-        sudo passwd fastdds
+        echo -e "\n${YELLOW}Creating user 'xdds'${NC}"
+        sudo useradd -M xdds
+        sudo passwd xdds
 
         # Create a new dir in /home/
-        sudo mkdir -p /home/ros/
+        sudo mkdir -p $SHARE_DIR/
         # Create a new group called rosgrp and add users to it:
         sudo addgroup rosgrp
-        sudo adduser waffle rosgrp
+        sudo adduser "$USER" rosgrp
         sudo adduser robot rosgrp
-        # Change ownership of /home/ros/ to waffle and change its group to rosgrp:
-        sudo chown waffle:rosgrp /home/ros/
+        # Change ownership of SHARE_DIR and change its group to rosgrp:
+        sudo chown $USER:rosgrp $SHARE_DIR
 
         sleep 5
 
@@ -75,9 +77,19 @@ elif [ ! -f $HOME/checkpoint1 ]; then
         sudo apt update && sudo apt upgrade -y
 
         echo -e "\n${YELLOW}[Installing Misc Tools]${NC}"
-        sudo apt install -y chrony ntpdate curl build-essential net-tools unzip
+        sudo apt install -y chrony \
+                            ntpdate \
+                            curl \
+                            build-essential \
+                            software-properties-common \
+                            net-tools \
+                            unzip \
+                            tree \
+                            llvm-dev \
+                            libclang-dev
 
         # update git:
+        echo -e "\n${YELLOW}[Updating Git]${NC}"
         sudo add-apt-repository ppa:git-core/ppa
         sudo apt update -y
         sudo apt install -y git
@@ -94,8 +106,13 @@ elif [ ! -f $HOME/checkpoint1 ]; then
         sudo ntpdate ntp.ubuntu.com
         sleep 5
 
+        mkdir -p $SHARE_DIR/repos/
+        cd $SHARE_DIR/repos/
+        git clone -b humble https://github.com/tom-howard/tuos_robotics.git
+        cd $HOME
+
         # Make poweroff and ntpdate NO PASSWORD-able
-        sudo wget -O /etc/sudoers.d/nopwds https://raw.githubusercontent.com/tom-howard/tuos_robotics/humble/turtlebot3/nopwds
+        sudo cp $SHARE_DIR/repos/tuos_robotics/turtlebot3/nopwds /etc/sudoers.d/
 
         touch $HOME/checkpoint1
         cleanup
@@ -108,7 +125,6 @@ elif [ ! -f $HOME/checkpoint2 ]; then
         ## INSTALLING ROS ###
 
         # configure Ubuntu repositories to allow "main" "restricted" "universe" and "multiverse"
-        sudo apt install software-properties-common
         sudo add-apt-repository main universe multiverse restricted
 
         # Adding the ROS 2 GPG key
@@ -124,21 +140,42 @@ elif [ ! -f $HOME/checkpoint2 ]; then
         source $HOME/.bashrc
 
         echo -e "\n${YELLOW}[Install all the necessary ROS and TB3 packages]${NC}"
-        sudo apt install -y ros-humble-ros-base \
+        sudo apt install -y ros-$ROS_VER-ros-base \
                             ros-dev-tools \
                             python3-argcomplete \
                             python3-rosdep \
                             python3-colcon-common-extensions \
                             libboost-system-dev \
-                            ros-humble-hls-lfcd-lds-driver \
-                            ros-humble-turtlebot3-msgs \
-                            ros-humble-dynamixel-sdk \
+                            ros-$ROS_VER-hls-lfcd-lds-driver \
+                            ros-$ROS_VER-turtlebot3-msgs \
+                            ros-$ROS_VER-dynamixel-sdk \
                             libudev-dev \
-                            python3-pip
+                            python3-pip \
+                            ros-$ROS_VER-rmw-cyclonedds-cpp
 
         pip install setuptools==58.2.0
 
+        source /opt/ros/$ROS_VER/setup.bash
+
+        echo "Installing Zenoh..."
+        sleep 4
+
+        DDS_WS="$SHARE_DIR/dds_ws"
+        mkdir -p $DDS_WS/src/
+        cd $DDS_WS/src/
+        git clone https://github.com/eclipse-zenoh/zenoh-plugin-ros2dds.git
+        cd $DDS_WS
+
         sudo rosdep init; rosdep update
+        echo "using 'rosdep' to install dependencies..."
+        sleep 4
+        rosdep install --from-paths . --ignore-src -r -y
+
+        cd $DDS_WS/src/zenoh-plugin-ros2dds
+        echo "Building zenoh plugin with cargo..."
+        sleep 4
+        cargo build --release
+        sudo install $DDS_WS/src/zenoh-plugin-ros2dds/target/release/zenoh-bridge-ros2dds /usr/local/bin/
 
         touch $HOME/checkpoint2
         cleanup
@@ -149,21 +186,22 @@ elif [ ! -f $HOME/checkpoint3 ]; then
     echo -e "### CHECKPOINT 3 (Configuring Devices) ###" 
     if ask "Ok to continue?"; then
 
-        echo -e "\n${YELLOW}[Setting up the ROS workspace ($name_ros2_workspace)]${NC}"
-        echo "source /opt/ros/$name_ros_version/setup.bash" >> $HOME/.bashrc
+        echo -e "\n${YELLOW}[Setting up the ROS workspace ($ROS_WS)]${NC}"
+        echo "source /opt/ros/$ROS_VER/setup.bash" >> $HOME/.bashrc
         source $HOME/.bashrc
+        
         # Make a workspace:
-        mkdir -p $name_ros2_workspace/src 
-        cd $name_ros2_workspace
+        mkdir -p $SHARE_DIR/$ROS_WS/src 
+        cd $SHARE_DIR/$ROS_WS
         colcon build
         
         ### OpenCR & other TB3 Configs ###
 
-        sudo wget -O /etc/udev/rules.d/99-turtlebot3-cdc.rules https://raw.githubusercontent.com/ROBOTIS-GIT/turtlebot3/refs/heads/humble-devel/turtlebot3_bringup/script/99-turtlebot3-cdc.rules
+        sudo wget -O /etc/udev/rules.d/98-turtlebot3-cdc.rules https://raw.githubusercontent.com/ROBOTIS-GIT/turtlebot3/refs/heads/humble-devel/turtlebot3_bringup/script/99-turtlebot3-cdc.rules
         sudo udevadm control --reload-rules
         sudo udevadm trigger
 
-        mkdir -p ~/firmware/ && cd ~/firmware/
+        mkdir -p $HOME/firmware/ && cd $HOME/firmware/
         wget https://github.com/ROBOTIS-GIT/OpenCR-Binaries/raw/master/turtlebot3/ROS2/latest/opencr_update.tar.bz2
         tar -xvf ./opencr_update.tar.bz2
         rm opencr_update.tar.bz2
@@ -185,8 +223,8 @@ elif [ ! -f $HOME/checkpoint3 ]; then
 
         echo "Installing Realsense ROS Libraries"
 
-        sudo apt install -y ros-humble-librealsense2* \
-                            ros-humble-realsense2-*
+        sudo apt install -y ros-$ROS_VER-librealsense2* \
+                            ros-$ROS_VER-realsense2-*
 
         # to fix permission issues:
         sudo wget -O /etc/udev/rules.d/99-realsense-libusb.rules https://raw.githubusercontent.com/IntelRealSense/librealsense/refs/heads/master/config/99-realsense-libusb.rules
@@ -203,29 +241,37 @@ else
     if ask "Ok to continue?"; then
         ### Custom TUoS Scripts ###
 
-        echo -e "\n${YELLOW}[Setting up fastdds Service]${NC}"
-        sudo wget -O /etc/systemd/system/fastdds.service https://raw.githubusercontent.com/tom-howard/tuos_robotics/humble/turtlebot3/startup_service/fastdds.service
-        # sudo systemctl enable fastdds.service
+        SCRIPTS_DIR=$SHARE_DIR/repos/tuos_robotics/turtlebot3
+        cd $SCRIPTS_DIR && cd .. && git pull
+
+        echo -e "\n${YELLOW}[Setting up DDS Service]${NC}"
+        sudo cp $SCRIPTS_DIR/startup_service/zdds.service /etc/systemd/system/
+        sudo systemctl enable zdds.service
 
         echo -e "\n${YELLOW}[Setting up /usr/local/bin/ scripts]${NC}"
-        scripts="diamond_tools wsl_ros waffle"
-        sudo wget -O /usr/local/bin/diamond_tools https://raw.githubusercontent.com/tom-howard/tuos_robotics/humble/turtlebot3/diamond_tools/diamond_tools
-        sudo wget -O /usr/local/bin/waffle https://raw.githubusercontent.com/tom-howard/tuos_robotics/humble/turtlebot3/waffle
-        sudo wget -O /usr/local/bin/wsl_ros https://raw.githubusercontent.com/tom-howard/tuos_robotics/humble/turtlebot3/wsl_ros
-        pushd /usr/local/bin/ 
-        sudo chmod +x $scripts
-        popd
+        cd $SCRIPTS_DIR/
+        sudo install waffle /usr/local/bin/
+        sudo install wsl_ros /usr/local/bin/
+        
+        cd $SCRIPTS_DIR/diamond_tools/
+        sudo install diamond_tools /usr/local/bin/
+        
+        WAFFLE_NO=$(hostname | tr -d -c 0-9)
+        cd $SHARE_DIR
+        touch waffle_number
+        echo "$WAFFLE_NO" > waffle_number
+        chown $USER:rosgrp waffle_number
 
         echo -e "\n${YELLOW}Setting up user profiles${NC}"
 
         mkdir -p $HOME/.tuos/diamond_tools/
-        echo "[$(date +'%Y%m%d')_$(date +'%H%M%S')] 2024-09 ROS2 Humble ($(hostname))" > $HOME/.tuos/base_image
+        echo "[$(date +'%Y%m%d_%H%M%S')] $(date +'%Y-%m') ROS2 Humble ($(hostname))" > $HOME/.tuos/base_image
 
-        rm -f /tmp/profile_updates.sh
-        wget -O /tmp/profile_updates.sh https://raw.githubusercontent.com/tom-howard/tuos_robotics/humble/turtlebot3/diamond_tools/profile_updates.sh
+        cp $SCRIPTS_DIR/diamond_tools/profile_updates.sh /tmp/
         chmod +x /tmp/profile_updates.sh
         # run in current profile:
         /tmp/profile_updates.sh
+        source $HOME/.bashrc
         diamond_tools workspace
 
         # run as 'robot'
