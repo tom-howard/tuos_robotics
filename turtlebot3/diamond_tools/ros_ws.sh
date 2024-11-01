@@ -1,13 +1,15 @@
 #!/usr/bin/env bash
 
 ROS2_WS="/home/ros/tb3_ws"
+SHARE_DIR="/home/ros"
 
 rm -rf $ROS2_WS
-
 # Make a new workspace:
 mkdir -p $ROS2_WS/src
 
-# Clone the TB3 repo:
+# Copy the TB3 repos:
+
+## TODO: does the tb3 repo exist in repos??
 cd $ROS2_WS/src
 git clone -b humble-devel https://github.com/ROBOTIS-GIT/turtlebot3.git
 cd $ROS2_WS/src/turtlebot3

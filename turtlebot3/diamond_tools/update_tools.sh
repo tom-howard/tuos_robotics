@@ -5,62 +5,33 @@ sleep 4
 
 ROS2_WS="/home/ros/tb3_ws"
 ROS_VER="humble"
+SRC_DIR="/home/ros/repos/tuos_robotics/turtlebot3"
 
 # sudo apt update && sudo apt upgrade -y
 echo "$(hostname | tr -d -c 0-9)" > /home/ros/waffle_number
 
-sudo apt update && sudo apt upgrade -y
-
-echo "Installing Zenoh related components..."
-sleep 4
-
-sudo apt install -y ros-$ROS_VER-rmw-cyclonedds-cpp \
-                    llvm-dev \
-                    libclang-dev
-
-cd $ROS2_WS/src/
-rm -rf zenoh-plugin-ros2dds
-git clone https://github.com/eclipse-zenoh/zenoh-plugin-ros2dds.git
-cd $ROS2_WS
-
-sudo rm -f /etc/ros/rosdep/sources.list.d/20-default.list
-sudo rosdep init; rosdep update
-# use `rosdep` to install dependencies
-rosdep install --from-paths . --ignore-src -r -y
-
-cd $ROS2_WS/src/zenoh-plugin-ros2dds
-# this bit takes a while...
-cargo build --release
-sudo install $ROS2_WS/src/zenoh-plugin-ros2dds/target/release/zenoh-bridge-ros2dds /usr/local/bin/
-
-echo "Finished installing Zenoh and dependencies."
-sleep 4
-
-# sudo wget -qO /etc/systemd/system/fastdds.service https://raw.githubusercontent.com/tom-howard/tuos_robotics/humble/turtlebot3/startup_service/fastdds.service
-# sudo systemctl enable fastdds.service
-sudo systemctl stop fastdds.service
-sudo systemctl disable fastdds.service
+# sudo apt update && sudo apt upgrade -y
 
 echo "Updating TUoS Scripts..."
 sleep 4
 
-files="/usr/local/bin/diamond_tools /usr/local/bin/wsl_ros /usr/local/bin/waffle"
-sudo rm -f $files
+cd $SRC_DIR
+sudo install waffle /usr/local/bin/
+sudo install wsl_ros /usr/local/bin/
 
-sudo wget -qO /usr/local/bin/diamond_tools https://raw.githubusercontent.com/tom-howard/tuos_robotics/humble/turtlebot3/diamond_tools/diamond_tools
-sudo wget -qO /usr/local/bin/waffle https://raw.githubusercontent.com/tom-howard/tuos_robotics/humble/turtlebot3/waffle
-sudo wget -qO /usr/local/bin/wsl_ros https://raw.githubusercontent.com/tom-howard/tuos_robotics/humble/turtlebot3/wsl_ros
-sudo chmod +x $files
+cd $SRC_DIR/diamond_tools
+sudo install diamond_tools /usr/local/bin/
+cp profile_updates.sh /tmp/
+cp /tmp/profile_updates.sh $HOME/.tuos/diamond_tools/profile_updates-$(date +'%Y%m%d%H%M%S')
+chmod +x /tmp/profile_updates.sh
 
 echo "Updating user profiles..."
 sleep 2
 
-rm -f /tmp/profile_updates.sh
-wget -qO /tmp/profile_updates.sh https://raw.githubusercontent.com/tom-howard/tuos_robotics/humble/turtlebot3/diamond_tools/profile_updates.sh
-chmod +x /tmp/profile_updates.sh
-
+cd $HOME
 # run as admin
 /tmp/profile_updates.sh
+source $HOME/.bashrc
 diamond_tools workspace
 
 # run as 'robot'

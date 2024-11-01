@@ -1,10 +1,13 @@
 #!/usr/bin/env bash
 
+SRC_DIR="/home/ros/repos/tuos_robotics/turtlebot3"
+
 mkdir -p $HOME/.tuos/diamond_tools/
 
 rm -f $HOME/.bash_aliases $HOME/.bashrc $HOME/.tuos/tuos_robot_setup.sh
-wget -qO $HOME/.bash_aliases https://raw.githubusercontent.com/tom-howard/tuos_robotics/humble/turtlebot3/.bash_aliases
-wget -qO $HOME/.tuos/tuos_robot_setup.sh https://raw.githubusercontent.com/tom-howard/tuos_robotics/humble/turtlebot3/tuos_robot_setup.sh
+cd $SRC_DIR
+cp bash_aliases $HOME/.bash_aliases 
+cp tuos_robot_setup.sh $HOME/.tuos/
 cp /etc/skel/.bashrc $HOME/
 
 echo "" >> $HOME/.bashrc
