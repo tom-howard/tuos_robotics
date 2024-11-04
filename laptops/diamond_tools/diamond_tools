@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 
-# Diamond Tools for Robot Laptops:
-# locate in /usr/local/bin/
+# Diamond Tools for Robot Laptops
 
 sudo_check() {
   if [[ ! $(sudo echo 0) ]]; then
@@ -42,22 +41,18 @@ if [[ $(iwgetid -r) != "eduroam" ]]; then
 fi
 
 case $COMMAND in 
-  setup)
+  setup|s)
     sudo_check
     update_src
-    if [[ $# -eq 1 ]]; then
-      SCRIPT=laptop_setup
-    else
-      SCRIPT=$2
-    fi
+    SCRIPT=laptop_setup
     getx $SCRIPT
     ;;
-  update)
+  update|u)
     sudo_check
     update_src
     getx update_tools
     ;;
-  workspace)
+  workspace|w)
     getx ros_ws
     ;;
   *)
