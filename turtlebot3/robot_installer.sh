@@ -195,15 +195,7 @@ elif [ ! -f $HOME/checkpoint3 ]; then
         
         # Make a workspace:
         mkdir -p $SHARE_DIR/$ROS_WS/src 
-        
-        tb3_pkgs=("bringup" "description" "node" "teleop")
-        cd $SHARE_DIR/repos/turtlebot3/
-        for tb3_pkg in ${tb3_pkgs[@]}; do
-            echo "[cp -r turtlebot3_$tb3_pkg $SHARE_DIR/$ROS_WS/src/]"
-            cp -r turtlebot3_$tb3_pkg $SHARE_DIR/$ROS_WS/src/
-        done
-        cd $SHARE_DIR/$ROS_WS
-        colcon build
+        cd $SHARE_DIR/$ROS_WS && colcon build
         
         ### OpenCR & other TB3 Configs ###
 
