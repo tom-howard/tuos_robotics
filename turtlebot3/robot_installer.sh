@@ -189,9 +189,19 @@ elif [ ! -f $HOME/checkpoint3 ]; then
         echo -e "\n${YELLOW}[Setting up the ROS workspace ($ROS_WS)]${NC}"
         echo "source /opt/ros/$ROS_VER/setup.bash" >> $HOME/.bashrc
         source $HOME/.bashrc
+
+        cd $SHARE_DIR/repos/
+        git clone -b humble-devel https://github.com/ROBOTIS-GIT/turtlebot3.git
         
         # Make a workspace:
         mkdir -p $SHARE_DIR/$ROS_WS/src 
+        
+        tb3_pkgs=("bringup" "description" "node" "teleop")
+        cd $SHARE_DIR/repos/turtlebot3/
+        for tb3_pkg in ${tb3_pkgs[@]}; do
+            echo "[cp -r turtlebot3_$tb3_pkg $SHARE_DIR/$ROS_WS/src/]"
+            cp -r turtlebot3_$tb3_pkg $SHARE_DIR/$ROS_WS/src/
+        done
         cd $SHARE_DIR/$ROS_WS
         colcon build
         
@@ -241,6 +251,9 @@ else
     if ask "Ok to continue?"; then
         ### Custom TUoS Scripts ###
 
+        cd $SHARE_DIR/repos/
+        git clone -b humble https://github.com/tom-howard/tuos_ros.git
+
         SCRIPTS_DIR=$SHARE_DIR/repos/tuos_robotics/turtlebot3
         cd $SCRIPTS_DIR && cd .. && git pull
 
@@ -268,6 +281,7 @@ else
         echo "[$(date +'%Y%m%d_%H%M%S')] $(date +'%Y-%m') ROS2 Humble ($(hostname))" > $HOME/.tuos/base_image
 
         cp $SCRIPTS_DIR/diamond_tools/profile_updates.sh /tmp/
+        cp /tmp/profile_updates.sh $HOME/.tuos/diamond_tools/profile_updates-$(date +'%Y%m%d%H%M%S')
         chmod +x /tmp/profile_updates.sh
         # run in current profile:
         /tmp/profile_updates.sh

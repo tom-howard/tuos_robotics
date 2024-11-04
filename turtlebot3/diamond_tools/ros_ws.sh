@@ -1,24 +1,24 @@
 #!/usr/bin/env bash
 
-ROS2_WS="/home/ros/tb3_ws"
-SHARE_DIR="/home/ros"
+ROS_WS="/home/ros/tb3_ws"
+REPO_DIR="/home/ros/repos"
 
-rm -rf $ROS2_WS
+rm -rf $ROS_WS
 # Make a new workspace:
-mkdir -p $ROS2_WS/src
+mkdir -p $ROS_WS/src
 
-# Copy the TB3 repos:
+cd $REPO_DIR/turtlebot3/
+git pull --quiet
+tb3_pkgs=("bringup" "description" "node" "teleop")
+for tb3_pkg in ${tb3_pkgs[@]}; do
+  cp -r turtlebot3_$tb3_pkg $ROS_WS/src/
+done
 
-## TODO: does the tb3 repo exist in repos??
-cd $ROS2_WS/src
-git clone -b humble-devel https://github.com/ROBOTIS-GIT/turtlebot3.git
-cd $ROS2_WS/src/turtlebot3
-rm -rf turtlebot3_cartographer turtlebot3_navigation2 turtlebot3_example
+cd $REPO_DIR/tuos_ros/
+git pull --quiet
+tuos_pkgs=("tb3_tools")
+for tuos_pkg in ${tuos_pkgs[@]}; do
+  cp -r tuos_$tuos_pkg $ROS_WS/src/
+done
 
-# Clone the tuos_ros repo
-cd $ROS2_WS/src/
-git clone -b humble https://github.com/tom-howard/tuos_ros.git
-cd $ROS2_WS/src/tuos_ros/
-rm -rf tuos_examples/ com2009_simulations/ tuos_simulations/
-
-cd $ROS2_WS/ && colcon --log-level ERROR build --symlink-install
+cd $ROS_WS/ && colcon --log-level ERROR build --symlink-install
