@@ -1,6 +1,6 @@
 # utility
 alias src="echo 'Sourcing ~/.bashrc...' && source ~/.bashrc"
-alias ros_cd="cd ~/ros2_ws/src"
+alias roscd="cd ~/ros2_ws/src"
 
 # some useful TurtleBot3 commands:
 alias tb3_teleop="ros2 run turtlebot3_teleop teleop_keyboard"

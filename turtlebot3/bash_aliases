@@ -8,3 +8,5 @@ alias src="echo 'Sourcing .bashrc...' && source ~/.bashrc"
 alias off="echo 'Powering off the robot...' && sudo poweroff"
 
 alias rsd="ros2 daemon stop; ros2 daemon start;"
+
+alias roscd="cd /home/ros/tb3_ws/src/"
