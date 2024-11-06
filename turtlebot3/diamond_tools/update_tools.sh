@@ -1,8 +1,5 @@
 #!/usr/bin/env bash
 
-echo "Updating system..."
-sleep 4
-
 ROS2_WS="/home/ros/tb3_ws"
 ROS_VER="humble"
 SRC_DIR="/home/ros/repos/tuos_robotics/turtlebot3"
@@ -10,6 +7,8 @@ SRC_DIR="/home/ros/repos/tuos_robotics/turtlebot3"
 # sudo apt update && sudo apt upgrade -y
 echo "$(hostname | tr -d -c 0-9)" > /home/ros/waffle_number
 
+# echo "Updating system..."
+# sleep 4
 # sudo apt update && sudo apt upgrade -y
 
 echo "Updating TUoS Scripts..."
