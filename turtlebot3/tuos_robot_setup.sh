@@ -1,9 +1,7 @@
 #!/usr/bin/env bash
 
-ROS2_WS="/home/ros/tb3_ws"
-
 source /opt/ros/humble/setup.bash
-source $ROS2_WS/install/local_setup.bash
+source /home/ros/tb3_ws/install/local_setup.bash
 
 export TURTLEBOT3_MODEL=waffle
 export LDS_MODEL=LDS-01
@@ -19,3 +17,12 @@ source /usr/share/colcon_argcomplete/hook/colcon-argcomplete.bash
 # export ROS_DISCOVERY_SERVER=127.0.0.1:11811
 export ROS_LOCALHOST_ONLY=1
 export RMW_IMPLEMENTATION=rmw_cyclonedds_cpp
+
+bringup() {
+  if pgrep zenoh; then
+    echo "[Killing an existing Zenoh]"
+    pkill zenoh
+  fi
+  zenoh-bridge-ros2dds &
+  ros2 launch tuos_tb3_tools ros.launch.py
+}
