@@ -17,6 +17,8 @@ update_src() {
 }
 
 getx() {
+  update_src
+
   SCRIPT=$1
   COPY_SCRIPT="$SCRIPT-$(date +'%Y%m%d%H%M%S')"
   echo "[INFO]: Obtaining '$SCRIPT.sh' script..."
@@ -39,13 +41,11 @@ fi
 case $COMMAND in 
   setup|s)
     sudo_check
-    update_src
     SCRIPT=tb3_setup
     getx $SCRIPT
     ;;
   update|u)
     sudo_check
-    update_src
     getx update_tools
     ;;
   workspace|w)
