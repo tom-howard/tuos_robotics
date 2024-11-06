@@ -8,7 +8,7 @@ rm -rf $ROS_WS
 mkdir -p $ROS_WS/src
 
 cd $REPO_DIR/turtlebot3/
-git pull --quiet
+# git pull --quiet
 tb3_pkgs=("bringup" "description" "node" "teleop")
 for tb3_pkg in ${tb3_pkgs[@]}; do
   cp -r turtlebot3_$tb3_pkg $ROS_WS/src/
