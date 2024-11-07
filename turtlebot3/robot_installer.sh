@@ -249,9 +249,9 @@ else
         SCRIPTS_DIR=$SHARE_DIR/repos/tuos_robotics/turtlebot3
         cd $SCRIPTS_DIR && cd .. && git pull
 
-        echo -e "\n${YELLOW}[Setting up DDS Service]${NC}"
-        sudo cp $SCRIPTS_DIR/startup_service/zdds.service /etc/systemd/system/
-        sudo systemctl enable zdds.service
+        # echo -e "\n${YELLOW}[Setting up DDS Service]${NC}"
+        # sudo cp $SCRIPTS_DIR/startup_service/zdds.service /etc/systemd/system/
+        # sudo systemctl enable zdds.service
 
         echo -e "\n${YELLOW}[Setting up /usr/local/bin/ scripts]${NC}"
         cd $SCRIPTS_DIR/
