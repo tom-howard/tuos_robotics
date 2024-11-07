@@ -18,11 +18,24 @@ source /usr/share/colcon_argcomplete/hook/colcon-argcomplete.bash
 export ROS_LOCALHOST_ONLY=1
 export RMW_IMPLEMENTATION=rmw_cyclonedds_cpp
 
-bringup() {
-  if pgrep zenoh; then
-    echo "[Killing an existing Zenoh]"
-    pkill zenoh
+tb3_bringup() {
+  ZENOH_ID=$(pgrep zenoh)
+  if [[ $ZENOH_ID ]]; then
+    if [[ "$1" == "restart" || "$1" == "r" ]]; then
+      echo "Killing an existing Zenoh bridge (PID: $ZENOH_ID)."
+      pkill zenoh
+      echo "Launching a Zenoh Bridge..."
+      sleep 3
+      zenoh-bridge-ros2dds &
+    else
+      echo "A Zenoh bridge is already running (PID: $ZENOH_ID)."
+    fi
+  else
+    echo "Launching a Zenoh Bridge..."
+    sleep 3
+    zenoh-bridge-ros2dds &
   fi
-  zenoh-bridge-ros2dds &
+  echo "Launching ROS [ros2 launch tuos_tb3_tools ros.launch.py]"
+  sleep 3
   ros2 launch tuos_tb3_tools ros.launch.py
 }
