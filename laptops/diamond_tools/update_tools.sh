@@ -9,7 +9,7 @@ SRC_DIR="/home/laptop/repos/tuos_robotics/laptops"
 echo "$(hostname | tr -d -c 0-9)" > /home/laptop/laptop_number
 cp /home/laptop/laptop_number /home/laptop/waffle_number
 
-# sudo apt update && sudo apt upgrade -y
+sudo apt update && sudo apt upgrade -y
 
 echo "Updating TUoS Scripts..."
 sleep 4
