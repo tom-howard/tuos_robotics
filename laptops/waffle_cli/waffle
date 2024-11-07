@@ -24,7 +24,6 @@ Usage: waffle [NUM] [COMMAND]
 
 [COMMAND] options:
   pair    ${IT}Pair${NC} this laptop to the specified robot (dia-waffle[NUM]).
-  link    Same as 'pair' but without synchronising system clocks (quicker).
   sync    Manually ${IT}synchronise${NC} both system clocks to a common NTP Server.
   term    Launch a (tmux) ${IT}terminal instance${NC} on the specified robot
           (dia-waffle[NUM]).
@@ -107,7 +106,7 @@ pair() {
         SSH_OPTS='-o IdentitiesOnly=yes' ssh-copy-id -i ~/.ssh/waffle_rsa robot@dia-waffle$WAFFLE_NO > /dev/null 2>&1
         ssh -o IdentitiesOnly=yes -i ~/.ssh/waffle_rsa robot@dia-waffle$WAFFLE_NO 'bash -s' < /usr/local/bin/robot_pairing.sh $LAPTOP_NO
 
-        if [[ "$1" != "quick" ]]; then
+        if [[ "$1" != "quick" && "$1" != "q" ]]; then
             sync
         fi
         check-pairing loud
@@ -146,7 +145,7 @@ term() {
 
 off() {
     check-pairing
-    if [[ "$1" == "no_ask" ]]; then
+    if [[ "$1" == "quick" || "$1" == "q" ]]; then
         echo "Shutting down the robot now..."
         ssh -o IdentitiesOnly=yes -i ~/.ssh/waffle_rsa robot@dia-waffle$WAFFLE_NO -t "sudo poweroff"
     else
@@ -168,9 +167,10 @@ waffle_ping() {
 laptop_id=$(hostname)
 LAPTOP_NO=$(hostname | grep -o -E '[0-9]+')
 
-if [[ $# -eq 2 ]]; then
+if [[ $# -eq 2 || $# -eq 3 ]]; then
     WAFFLE_NO=$1
     COMMAND=$2
+    OPTION=$3
 else
     echo -e "$USAGE"
     if [ ! -f ~/.tuos/waffle_number ]; then
@@ -202,16 +202,10 @@ echo "robot" > ~/.tuos/robot_mode # set the laptop to 'real-robot mode' (as oppo
 case $COMMAND in 
     pair|sync|term|off)
         echo -e "${BLUE}Running '$COMMAND' command${NC}..." 
-        eval $COMMAND
+        eval $COMMAND $OPTION
         ;;
     ping)
         waffle_ping
-        ;;
-    link)
-        pair quick
-        ;;
-    foff)
-        off no_ask
         ;;
     *) 
         echo -e "${RED}[INVALID INPUT]...${NC}"
