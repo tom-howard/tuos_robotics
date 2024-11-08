@@ -105,7 +105,7 @@ pair() {
         echo -e "${CYAN}[$laptop_id]${NC} Pairing in progress (this will take a minute)..."
         echo "$WAFFLE_NO" > ~/.tuos/waffle_number # set the waffle number
 
-        check-for-dialab loud
+        # check-for-dialab loud
 
         # configuring ssh connection:
         mkdir -p ~/.ssh/
@@ -145,7 +145,7 @@ sync() {
 }
 
 term() {
-    check-for-dialab
+    # check-for-dialab
     check-pairing loud
     echo -e "${CYAN}[$laptop_id]${NC} Logging in to dia-waffle$WAFFLE_NO..."
     ssh -o IdentitiesOnly=yes -i ~/.ssh/waffle_rsa robot@dia-waffle$WAFFLE_NO -t "tmux new-session -s robot || tmux attach-session -t robot"
