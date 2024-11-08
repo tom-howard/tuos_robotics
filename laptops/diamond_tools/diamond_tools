@@ -5,7 +5,7 @@
 sudo_check() {
   if [[ ! $(sudo echo 0) ]]; then
     echo "Did not pass sudo check. Exiting."
-    exit
+    exit 1
   fi
 }
 
@@ -17,6 +17,9 @@ update_src() {
 }
 
 getx() {
+  sudo_check
+  update_src
+
   SCRIPT=$1
   COPY_SCRIPT="$SCRIPT-$(date +'%Y%m%d%H%M%S')"
   echo "[INFO]: Obtaining '$SCRIPT.sh' script..."
@@ -42,18 +45,12 @@ fi
 
 case $COMMAND in 
   setup|s)
-    sudo_check
-    update_src
-    SCRIPT=laptop_setup
-    getx $SCRIPT
+    getx laptop_setup
     ;;
   update|u)
-    sudo_check
-    update_src
     getx update_tools
     ;;
   workspace|w)
-    update_src
     getx ros_ws
     ;;
   *)
