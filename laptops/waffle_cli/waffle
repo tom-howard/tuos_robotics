@@ -152,6 +152,7 @@ term() {
 }
 
 bridge() {
+    check-pairing
     ZENOH_ID=$(pgrep zenoh)
     if [[ -z $ZENOH_ID ]]; then
         launch-zenoh
