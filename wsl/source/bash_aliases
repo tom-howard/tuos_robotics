@@ -1,0 +1,13 @@
+# General
+alias wxp="echo 'Opening the current directory in Windows Explorer...' && explorer.exe ."
+alias off="echo 'Shutting down WSL...' && wsl.exe --shutdown"
+alias src="echo 'Sourcing bashrc...' && source ~/.bashrc"
+
+# ROS
+alias roscd="cd ~/ros2_ws/src"
+
+alias tb3_teleop="ros2 run turtlebot3_teleop teleop_keyboard"
+alias tb3_world="ros2 launch turtlebot3_gazebo turtlebot3_world.launch.py"
+alias tb3_sim="ros2 launch turtlebot3_gazebo empty_world.launch.py"
+alias tb3_slam="ros2 launch turtlebot3_cartographer cartographer.launch.py"
+alias tb3_rviz="ros2 launch tuos_simulations rviz.launch"
