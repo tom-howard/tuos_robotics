@@ -2,6 +2,8 @@ FROM osrf/ros:humble-desktop-full
 
 ENV ROS_VER=humble
 
+RUN yes | unminimize
+
 RUN echo "[INFO] Update Ubuntu" && \
     apt-get update && \
     DEBIAN_FRONTEND=noninteractive apt-get install -o Dpkg::Options::="--force-confnew" -fuy \
