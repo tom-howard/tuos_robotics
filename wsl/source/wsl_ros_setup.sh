@@ -1,15 +1,15 @@
 # Custom bashrc settings for wsl_ros
 
-echo -e "Ahem... Hello world."
-
 source /opt/ros/humble/setup.bash
-source $HOME/ros2_ws/install/local_setup.bash
+WS_INSTALL_DIR=$HOME/ros2_ws/install/local_setup.bash
+if [ -f "${WS_INSTALL_DIR}" ]; then
+  source ${WS_INSTALL_DIR}
+fi
 source /usr/share/gazebo/setup.bash
 
 export ROS_LOCALHOST_ONLY=1
-
+export ROS_DOMAIN_ID=1
 export TURTLEBOT3_MODEL=waffle
-export ROS_DOMAIN_ID=$WAFFLE_NO
 
 source /usr/share/colcon_cd/function/colcon_cd.sh
 export _colcon_cd_root=/opt/ros/humble/
@@ -23,20 +23,30 @@ PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@WSL-ROS2($WSL_ROS_VER)\
 # # GUI/graphics:
 source $HOME/.tuos/xserver.sh
 
-if [ "$XSERVER" = true ]; then
+if [ "${XSERVER}" = true ]; then
   ## Configuring DISPLAY for X-Server GUI apps
-  ipconfig.exe | grep 'IPv4' | awk {'print $NF'} > $HOME/.ipv4s && dos2unix -q $HOME/.ipv4s
-  read -r line < $HOME/.ipv4s 
-  export DISPLAY=$line:0.0 && rm $HOME/.ipv4s
+  ipconfig.exe | grep 'IPv4' | awk {'print $NF'} > $HOME/.tuos/ipv4s && dos2unix -q $HOME/.tuos/ipv4s
+  read -r line < $HOME/.tuos/ipv4s 
+  export DISPLAY=$line:0.0 && rm $HOME/.tuos/ipv4s
   
   export LIBGL_ALWAYS_INDIRECT=
   export GAZEBO_IP=127.0.0.1
 fi
 export LIBGL_ALWAYS_SOFTWARE=true
 
-# # display a rosrestore prompt to the user
-# # if this is the first launch of WSL-ROS:
-# if [ ! -f ~/.wsl-ros/no_welcome ]; then
-#   touch ~/.wsl-ros/no_welcome
-#   wsl_ros first-launch
-# fi
+# display a wsl_ros restore prompt to the user
+# if this is the first launch of WSL-ROS:
+if [[ ! -f ~/.tuos/no_welcome ]]; then
+  wsl_ros first-launch
+fi
+
+# WSL Ops:
+export WINUSER=$(wslvar USERNAME)
+export WINHOMEDRIVE=$(wslvar HOMEDRIVE)
+if [ "${WINHOMEDRIVE}" == "U:" ]; then
+  export MANWIN=true
+  sudo mkdir -p /mnt/u
+  sudo mount -t drvfs U: /mnt/u
+else
+  export MANWIN=false
+fi

@@ -1,0 +1,237 @@
+#!/usr/bin/env bash
+
+IT='\033[3m'
+NC='\033[0m'
+
+ask() {
+  # adapted from https://gist.github.com/davejamesmiller/1965569
+  local prompt default reply
+  prompt='y/n'
+  default=''
+  while true; do
+    # Ask the question (not using "read -p" as it uses stderr not stdout)
+    echo -n "$1 [$prompt] "
+    # Read the answer (use /dev/tty in case stdin is redirected from somewhere else)
+    read -r reply </dev/tty
+    # Default?
+    if [[ -z $reply ]]; then
+      reply=$default
+    fi
+    # Check if the reply is valid
+    case "$reply" in
+      Y*|y*) return 0 ;;
+      N*|n*) return 1 ;;
+    esac
+  done
+}
+
+if [[ ${MANWIN} == true ]]; then
+  BACKUP_ROOT=/mnt/u
+else
+  BACKUP_ROOT=$(wslupath $(wslvar USERPROFILE))
+fi
+
+COMMAND=$1
+
+BACKUP_FNAME=ros2-backup-$(echo ${WSL_ROS_VER%%.*})
+BACKUP_PNAME=${BACKUP_ROOT}/wsl-ros/${BACKUP_FNAME}
+BACKUP_PATH=${BACKUP_PNAME}.tar.gz
+
+BACKUP_DIR=${BACKUP_PATH%/*}
+BACKUP_PATH_WIN=$(sed "s/\/mnt\/u/U\:/;s/\//\\\/g" <<< "${BACKUP_PATH}")
+BACKUP_LOGFILE=${BACKUP_PNAME}-log.txt
+
+if [[ ! -d ${BACKUP_ROOT} ]]; then
+  echo "Error: can't access ${BACKUP_ROOT}"
+  exit 1
+fi
+
+usage() {
+  echo -e "${IT}wsl_ros${NC} backup/restore tool (primarily) for your ROS2 Data.
+
+  Usage:
+  $ wsl_ros [VERB]
+
+  [VERB] options:
+    backup    ${IT}Backup${NC} files in your WSL home directory.
+    restore   ${IT}Restore${NC} an existing backup file.
+    
+    Coming soon...
+    update    ${IT}Update${NC} all custom TUoS scripts in this WSL environment 
+              (where applicable).
+
+  Backup file: "
+  echo "    ${BACKUP_PATH_WIN}"
+}
+
+backup_exists() {
+  if [[ -f ${BACKUP_PATH} ]]; then
+    return 0
+  else
+    return 1
+  fi
+}
+
+touch_backup() {
+  if ! touch ${BACKUP_LOGFILE}; then
+    echo "Error: unable to access a backup file at:"
+    echo "  ${BACKUP_PATH_WIN}"
+    exit 1
+  fi
+}
+
+archive_backup() {
+  ARCHIVE_DIR=${BACKUP_DIR}/archive
+  mkdir -p ${ARCHIVE_DIR}
+  cp ${BACKUP_PATH} ${ARCHIVE_DIR}/${BACKUP_FNAME}-$(date "+%Y%m%d%H%M%S").tar.gz
+  check_dir=true
+  while [[ ${check_dir} = true ]]; do
+    archive_num=$(find ${ARCHIVE_DIR} -type f | wc -l)
+    if [[ ${archive_num} -gt 5 ]]; then
+      # check for oldest file according to last modified:
+      oldest=$(find ${ARCHIVE_DIR} -type f -printf '%p\n' | sort | head -n 1)
+      # remove oldest:
+      rm ${oldest}
+    else
+      check_dir=false
+    fi
+  done
+}
+
+default_backup_exclusions="# A list of items to ignore during 'wsl_ros backup'
+# List files and folders here to be excluded from the backup
+# Items must be quoted relative to the home directory
+#   e.g.: /home/student/... (as below)
+# We recommend you leave most of these items here alone and 
+#   only ADD to the bottom of the list, if necessary.
+
+.cache
+.config
+.dbus
+.gazebo
+.ignition
+.landscape
+.local
+.ros
+.rviz
+.sdformat
+.vscode-server"
+
+backup() {
+  if [[ ! -f $HOME/.backup_exclusions ]]; then
+    # no exclusions file exists in ~, so create a default:
+    echo "${default_backup_exclusions}" > $HOME/.backup_exclusions
+  fi
+
+  echo "Backing up your WSL-ROS2 environment to '${BACKUP_PATH_WIN}', please wait..."
+
+  mkdir -p ${BACKUP_DIR}
+
+  touch_backup
+
+  if tar -X $HOME/.backup_exclusions --exclude='.tuos' --checkpoint=.200 -cjf ${BACKUP_PATH} -C $HOME .; then
+    echo "$(date): Backup from $(hostname) [wsl-ros version: ${WSL_ROS_VER}]" >> ${BACKUP_LOGFILE}
+    echo -e ".\nBackup complete."
+  else
+    echo -e "An error occurred during the backup process...\nYOUR DATA MAY NOT HAVE BEEN BACKED UP CORRECTLY."
+  fi
+}
+
+restore() {
+  echo "Restoring your files from '${BACKUP_PATH_WIN}', please wait..."
+  
+  touch_backup
+
+  if tar --checkpoint=.200 -xjf ${BACKUP_PATH} -C $HOME ; then
+    echo "$(date): Restore to $(hostname) [wsl-ros version: ${WSL_ROS_VER}]" >> ${BACKUP_LOGFILE}
+    echo -e ".\nRestore complete."
+  else
+    echo -e "An error occurred during the restore process...\nYOUR DATA MAY NOT HAVE BEEN RECOVERED CORRECTLY."
+  fi
+}
+
+check_for_updates() {
+  # NEEDS UPDATING
+  wget -qO ~/.wsl-ros/remote_ver https://raw.githubusercontent.com/tom-howard/tuos_robotics/humble/wsl/update_triggers/remote_ver_$WSL_ROS_VER 
+
+  LOCAL_VER=$(cat ~/.wsl-ros/local_ver)
+  REMOTE_VER=$(cat ~/.wsl-ros/remote_ver)
+
+  if [ $REMOTE_VER -gt $LOCAL_VER ]; then
+    echo "Updating WSL-ROS scripts..."
+    diamond_tools update
+    echo "$REMOTE_VER" > ~/.wsl-ros/local_ver
+    echo "Update complete."
+  fi
+}
+
+welcome_msg() {
+  echo -e "${IT}Welcome to WSL-ROS2!${NC}
+Version ${WSL_ROS_VER} (2024/25 Academic year)
+  
+ROS Version: ${ROS_VERSION} (${ROS_DISTRO})
+"
+touch $HOME/.tuos/no_welcome
+}
+
+if [[ "${COMMAND}" == "" ]]; then
+  echo -e "No input command provided...\n"
+  usage
+  exit 1
+fi
+
+case $COMMAND in
+  backup)
+    if backup_exists; then
+      echo -e "Preparing to backup your WSL-ROS2 environment to:"
+      echo "  ${BACKUP_PATH_WIN}"
+      echo "***This will overwrite your existing backup!***" 
+      if ask "Are you sure you want to continue?"; then
+        archive_backup
+        backup
+      else
+        echo "Backup cancelled."
+        exit 1
+      fi
+    else
+      backup
+    fi
+    ;;
+  restore)
+    if backup_exists; then
+      echo -e "Preparing to restore from a previous WSL-ROS2 backup:"
+      echo "  ${BACKUP_PATH_WIN}"
+      if ask "Do you want to continue?"; then
+        restore
+      else
+        echo "Restore cancelled."
+        exit 1
+      fi
+    else
+      echo "Unable to restore! The file '${BACKUP_PATH_WIN}' does not exist."
+      exit 1
+    fi
+    ;;
+  first-launch)
+    welcome_msg
+    # check_for_updates
+    if backup_exists; then
+      echo -e "It looks like you already have a backup from a previous session:"
+      echo "  ${BACKUP_PATH_WIN}"
+      if ask "Do you want to restore this now?"; then
+        restore
+      else
+        echo "Nothing was restored. Starting from fresh."
+        exit 1
+      fi
+    fi
+    ;;
+  # update)
+  #   check_for_updates
+  #   ;;  
+  *)
+    echo -e "'$COMMAND' is not a vaild input, see below for options...\n"
+    usage
+    exit 1
+    ;;
+esac

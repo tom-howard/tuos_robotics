@@ -2,7 +2,7 @@ FROM osrf/ros:humble-desktop-full
 
 ENV ROS_VER=humble
 
-RUN yes | unminimize
+# RUN yes | unminimize # for manpages
 
 RUN echo "[INFO] Update Ubuntu" && \
     apt-get update && \
@@ -29,6 +29,7 @@ RUN echo "[INFO] Install Various System Tools" && \
     apt-get update && \
     apt-get install -y \
     curl \
+    less \
     eog \
     dos2unix \
     vim \
@@ -69,8 +70,10 @@ RUN echo "[INFO] Add a Default User Profile" && \
 
 COPY source/wsl_ros_setup.sh /tmp
 COPY source/waffle /tmp
+COPY source/wsl_ros /tmp
 COPY source/bash_aliases /tmp
-RUN install /tmp/waffle /usr/local/bin/
+RUN install /tmp/waffle /usr/local/bin/ && \
+    install /tmp/wsl_ros /usr/local/bin/
 
 USER ${WSL_DEFAULT_USER}
 
@@ -94,13 +97,17 @@ RUN echo "[INFO] Creating a ROS2 Workspace" && \
 # RUN source /opt/ros/humble/setup.bash && \
 #     colcon build
 
-ENV COLCON_PREFIX_PATH=/home/student/ros2_ws/src
+RUN echo "[INFO] Creating a Path for a U drive (if available)" && \
+    sudo mkdir -p /mnt/u
+
+ENV COLCON_PREFIX_PATH=/home/${WSL_DEFAULT_USER}/ros2_ws/src
 
 ARG VERSION
 ARG XSERVER
 
-RUN echo "# Store version string" && \
-    echo ${VERSION} > ${SCRIPTS_PATH}/wsl_ros_ver && \
+# this bit not working...
+RUN echo "[INFO] Store ARGs to file" && \
+    echo "${VERSION}" > ${SCRIPTS_PATH}/wsl_ros_ver && \
     echo "export XSERVER=${XSERVER}" > ${SCRIPTS_PATH}/xserver.sh
 
 CMD ["bash", "-l"]

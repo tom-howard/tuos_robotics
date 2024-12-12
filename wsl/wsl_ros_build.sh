@@ -26,7 +26,7 @@ export OUTPUT_NAME=$(echo ${CONTAINER_NAME} | tr _ -)
 
 echo "# Building image v${VERSION}..."
 echo
-docker build --rm --build-arg VERSION --build-arg XSERVER . -t ${CONTAINER_NAME}:latest
+docker build --rm --no-cache --build-arg VERSION=${VERSION} --build-arg XSERVER=${XSERVER} . -t ${CONTAINER_NAME}:latest
 
 mkdir -p builds
 
