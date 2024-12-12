@@ -34,12 +34,6 @@ if [ "${XSERVER}" = true ]; then
 fi
 export LIBGL_ALWAYS_SOFTWARE=true
 
-# display a wsl_ros restore prompt to the user
-# if this is the first launch of WSL-ROS:
-if [[ ! -f ~/.tuos/no_welcome ]]; then
-  wsl_ros first-launch
-fi
-
 # WSL Ops:
 export WINUSER=$(wslvar USERNAME)
 export WINHOMEDRIVE=$(wslvar HOMEDRIVE)
@@ -49,4 +43,10 @@ if [ "${WINHOMEDRIVE}" == "U:" ]; then
   sudo mount -t drvfs U: /mnt/u
 else
   export MANWIN=false
+fi
+
+# display a wsl_ros restore prompt to the user
+# if this is the first launch of WSL-ROS:
+if [[ ! -f ~/.tuos/no_welcome ]]; then
+  wsl_ros first-launch
 fi
