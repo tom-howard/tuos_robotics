@@ -38,7 +38,7 @@ BACKUP_PNAME=${BACKUP_ROOT}/wsl-ros/${BACKUP_FNAME}
 BACKUP_PATH=${BACKUP_PNAME}.tar.gz
 
 BACKUP_DIR=${BACKUP_PATH%/*}
-BACKUP_PATH_WIN=$(sed "s/\/mnt\/u/U\:/;s/\//\\\/g" <<< "${BACKUP_PATH}")
+BACKUP_PATH_WIN=$(echo "${BACKUP_PATH}" | sed -e 's/\/mnt//' -e 's/^\///' -e 's/\//\\/g' -e 's/^./\0:/')
 BACKUP_LOGFILE=${BACKUP_PNAME}-log.txt
 
 if [[ ! -d ${BACKUP_ROOT} ]]; then
