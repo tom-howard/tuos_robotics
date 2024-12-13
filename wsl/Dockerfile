@@ -72,19 +72,19 @@ RUN echo "[INFO] Add a Default User Profile" && \
     chown -R ${WSL_DEFAULT_USER}:${WSL_DEFAULT_USER} ${TUOS_DIR} && \ 
     bash -c 'echo -e "[user]\ndefault=${WSL_DEFAULT_USER}"' | tee /etc/wsl.conf
 
+COPY source/waffle /tmp
+COPY source/wsl_ros /tmp
+COPY source/diamond_tools /tmp
+RUN install /tmp/waffle /usr/local/bin/ && \
+    install /tmp/wsl_ros /usr/local/bin/ && \
+    install /tmp/diamond_tools /usr/local/bin/
+
+USER ${WSL_DEFAULT_USER}
+
 WORKDIR ${TUOS_DIR}
 
 RUN git clone https://github.com/tom-howard/tuos_robotics.git && \
-    chown -R ${WSL_DEFAULT_USER}:${WSL_DEFAULT_USER} tuos_robotics && \
-    cd tuos_robotics && \
-    git checkout humble
-
-WORKDIR ${TUOS_DIR}/tuos_robotics/wsl/source
-RUN install waffle /usr/local/bin/ && \
-    install wsl_ros /usr/local/bin/ && \
-    install diamond_tools /usr/local/bin/
-
-USER ${WSL_DEFAULT_USER}
+    cd tuos_robotics && git checkout humble
 
 ENV WSL_HOME_DIR=/home/${WSL_DEFAULT_USER}
 ENV SCRIPTS_PATH=${WSL_HOME_DIR}/.tuos
