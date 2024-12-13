@@ -29,6 +29,7 @@ echo
 docker build --rm --no-cache --build-arg VERSION=${VERSION} --build-arg XSERVER=${XSERVER} . -t ${CONTAINER_NAME}:latest
 
 mkdir -p builds
+mkdir -p diamond_tools/update_triggers
 
 OUTPUT_FILE=builds/${OUTPUT_NAME}-${VERSION_STRING}.tar
 
