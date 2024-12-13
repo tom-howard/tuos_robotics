@@ -83,13 +83,14 @@ touch_backup() {
 archive_backup() {
   ARCHIVE_DIR=${BACKUP_DIR}/archive
   mkdir -p ${ARCHIVE_DIR}
-  cp ${BACKUP_PATH} ${ARCHIVE_DIR}/${BACKUP_FNAME}-$(date "+%Y%m%d%H%M%S").tar.gz
+  ARCHIVE_FNAME=${ARCHIVE_DIR}/${BACKUP_FNAME}-$(date "+%Y%m%d%H%M%S").tar.gz
+  cp ${BACKUP_PATH} ${ARCHIVE_FNAME}
   check_dir=true
   while [[ ${check_dir} = true ]]; do
-    archive_num=$(find ${ARCHIVE_DIR} -type f | wc -l)
+    archive_num=$(find ${ARCHIVE_DIR} -type f -iname "${BACKUP_FNAME}*" | wc -l)
     if [[ ${archive_num} -gt 5 ]]; then
       # check for oldest file according to last modified:
-      oldest=$(find ${ARCHIVE_DIR} -type f -printf '%p\n' | sort | head -n 1)
+      oldest=$(find ${ARCHIVE_DIR} -type f -iname "${BACKUP_FNAME}*" -printf '%p\n' | sort | head -n 1)
       # remove oldest:
       rm ${oldest}
     else
