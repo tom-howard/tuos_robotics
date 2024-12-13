@@ -55,10 +55,8 @@ usage() {
   [VERB] options:
     backup    ${IT}Backup${NC} files in your WSL home directory.
     restore   ${IT}Restore${NC} an existing backup file.
-    
-    Coming soon...
     update    ${IT}Update${NC} all custom TUoS scripts in this WSL environment 
-              (where applicable).
+              (if applicable).
 
   Backup file: "
   echo "    ${BACKUP_PATH_WIN}"
@@ -152,16 +150,15 @@ restore() {
 }
 
 check_for_updates() {
-  # NEEDS UPDATING
-  wget -qO ~/.wsl-ros/remote_ver https://raw.githubusercontent.com/tom-howard/tuos_robotics/humble/wsl/update_triggers/remote_ver_$WSL_ROS_VER 
+  wget -qO /home/tuos/remote_ver https://raw.githubusercontent.com/tom-howard/tuos_robotics/humble/wsl/diamond_tools/update_triggers/remote_ver_$WSL_ROS_VER 
 
-  LOCAL_VER=$(cat ~/.wsl-ros/local_ver)
-  REMOTE_VER=$(cat ~/.wsl-ros/remote_ver)
+  LOCAL_VER=$(cat /home/tuos/local_ver)
+  REMOTE_VER=$(cat /home/tuos/remote_ver)
 
   if [ $REMOTE_VER -gt $LOCAL_VER ]; then
     echo "Updating WSL-ROS scripts..."
     diamond_tools update
-    echo "$REMOTE_VER" > ~/.wsl-ros/local_ver
+    echo "$REMOTE_VER" > /home/tuos/local_ver
     echo "Update complete."
   fi
 }

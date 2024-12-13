@@ -38,6 +38,8 @@ echo
 docker run -d --name ${CONTAINER_NAME} ${CONTAINER_NAME}:latest > /dev/null
 docker export ${CONTAINER_NAME} -o ${OUTPUT_FILE}
 
+echo "0" > diamond_tools/update_triggers/remote_ver_${VERSION}
+
 # Stop and remove the container
 clear_container
 

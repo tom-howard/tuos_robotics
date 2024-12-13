@@ -1,44 +1,23 @@
 #!/usr/bin/env bash
 
-if [[ ! $(sudo echo 0) ]]; then
-    echo "Invalid credentials. Exiting."
-    exit
-fi
+cd ${HOME} && rm -rf tuos_robotics
+git clone -qb humble https://github.com/tom-howard/tuos_robotics.git tuos_robotics
 
-cd ~
+SRC_DIR=${HOME}/tuos_robotics/wsl/source
 
-rm -rf ~/tuos_robotics
+cd ${SRC_DIR}
 
-if ! git clone -q https://github.com/tom-howard/tuos_robotics.git; then
-    echo "Error."
-else
-    # /usr/local/bin
-    cd /usr/local/bin
-    files="robot_switch wsl_ros waffle"
-    sudo rm -f $files
-    cd ~/tuos_robotics/wsl/
-    sudo cp $files /usr/local/bin/
-    cd /usr/local/bin
-    sudo chmod +x $files
-    sudo rm -f diamond_tools
-    cd ~/tuos_robotics/wsl/diamond_tools/
-    sudo cp diamond_tools /usr/local/bin/
-    sudo chmod +x /usr/local/bin/diamond_tools
+sudo install waffle /usr/local/bin/
+sudo install wsl_ros /usr/local/bin/
+sudo install diamond_tools /usr/local/bin/
 
-    # ~/.wsl-ros/
-    files="bashrc_miro bashrc_turtlebot3 bashrc_wsl_ros default_backup_exclusions get_win_user.sh set_display.sh"
-    cd ~/.wsl-ros/
-    rm -f $files
-    cd ~/tuos_robotics/wsl/
-    cp $files ~/.wsl-ros/
-    
-    # ~
-    rm -f ~/.bash_aliases
-    cd ~/tuos_robotics/wsl/
-    cp .bash_aliases ~/
-    
-    rm -rf ~/tuos_robotics
-    
-    cd ~
-    echo "[INFO]: Update complete."
-fi
+SCRIPTS_PATH=${HOME}/.tuos
+cd ${SCRIPTS_PATH}
+rm -f bash_aliases wsl_ros_setup.sh
+cp ${SRC_DIR}/bash_aliases ./
+cp ${SRC_DIR}/wsl_ros_setup.sh ./
+
+cd ${HOME} && rm -rf tuos_robotics
+
+echo "[INFO] Update complete."
+

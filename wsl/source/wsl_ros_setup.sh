@@ -1,5 +1,7 @@
 # Custom bashrc settings for wsl_ros
 
+source ${HOME}/.tuos/bash_aliases
+
 source /opt/ros/humble/setup.bash
 WS_INSTALL_DIR=$HOME/ros2_ws/install/local_setup.bash
 if [ -f "${WS_INSTALL_DIR}" ]; then

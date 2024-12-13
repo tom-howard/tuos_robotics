@@ -1,0 +1,32 @@
+#!/usr/bin/env bash
+
+# Diamond Tools for WSL
+
+getx() {
+  SCRIPT=$1
+  COPY_SCRIPT="$SCRIPT-$(date +'%Y%m%d%H%M%S')"
+  echo "[INFO] Obtaining '${SCRIPT}.sh' script..."
+  DT_DIR=/home/tuos/diamond_tools
+  mkdir -p ${DT_DIR}
+  cd ${DT_DIR}
+  wget -qO ${COPY_SCRIPT}.sh https://raw.githubusercontent.com/tom-howard/tuos_robotics/humble/wsl/diamond_tools/${SCRIPT}.sh
+  echo "[INFO] Executing..."
+  chmod +x ${COPY_SCRIPT}.sh && ./${COPY_SCRIPT}.sh
+}
+
+if [[ $# -eq 0 ]]; then
+  echo "No input command provided. Exiting."
+  exit 1
+else
+  COMMAND=$1
+fi
+
+case $COMMAND in 
+  update)
+    getx ${COMMAND}
+    ;;
+  *)
+    echo "Not a valid input."
+    exit 1
+    ;;
+esac

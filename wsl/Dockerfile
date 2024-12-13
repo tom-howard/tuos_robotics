@@ -81,7 +81,8 @@ RUN git clone https://github.com/tom-howard/tuos_robotics.git && \
 
 WORKDIR ${TUOS_DIR}/tuos_robotics/wsl/source
 RUN install waffle /usr/local/bin/ && \
-    install wsl_ros /usr/local/bin/
+    install wsl_ros /usr/local/bin/ && \
+    install diamond_tools /usr/local/bin/
 
 USER ${WSL_DEFAULT_USER}
 
@@ -91,10 +92,9 @@ ENV SRC_PATH=${TUOS_DIR}/tuos_robotics/wsl/source
 
 WORKDIR ${WSL_HOME_DIR}
 RUN echo "[INFO] Configuring User Profile" && \
-    mkdir ${SCRIPTS_PATH} && \
+    mkdir -p ${SCRIPTS_PATH} && \
     cp ${SRC_PATH}/wsl_ros_setup.sh ${SCRIPTS_PATH} && \
-    rm -f ${WSL_HOME_DIR}/.bash_aliases && \
-    cp ${SRC_PATH}/bash_aliases ${WSL_HOME_DIR}/.bash_aliases && \
+    cp ${SRC_PATH}/bash_aliases ${SCRIPTS_PATH} && \
     bash -c 'echo -e "\nsource '${SCRIPTS_PATH}'/wsl_ros_setup.sh\n"' | tee -a ${WSL_HOME_DIR}/.bashrc && \
     sudo -u ${WSL_DEFAULT_USER} -H git config --global init.defaultBranch main && \
     sudo -u ${WSL_DEFAULT_USER} -H git config --global push.default simple
@@ -118,6 +118,7 @@ ARG XSERVER
 
 # this bit not working...
 RUN echo "[INFO] Store ARGs to file" && \
+    echo "0" > ${TUOS_DIR}/local_ver && \
     echo "${VERSION}" > ${TUOS_DIR}/wsl_ros_ver && \
     echo "export XSERVER=${XSERVER}" > ${SCRIPTS_PATH}/xserver.sh
 
