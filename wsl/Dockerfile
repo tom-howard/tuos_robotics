@@ -74,9 +74,11 @@ RUN echo "[INFO] Add a Default User Profile" && \
 
 WORKDIR ${TUOS_DIR}
 
-RUN git clone https://github.com/tom-howard/tuos_robotics.git
-WORKDIR ${TUOS_DIR}/tuos_robotics
-RUN git checkout humble
+RUN git clone https://github.com/tom-howard/tuos_robotics.git && \
+    chown -R ${WSL_DEFAULT_USER}:${WSL_DEFAULT_USER} tuos_robotics && \
+    cd tuos_robotics && \
+    git checkout humble
+
 WORKDIR ${TUOS_DIR}/tuos_robotics/wsl/source
 RUN install waffle /usr/local/bin/ && \
     install wsl_ros /usr/local/bin/
