@@ -16,7 +16,7 @@ export _colcon_cd_root=/opt/ros/humble/
 source /usr/share/colcon_cd/function/colcon_cd-argcomplete.bash
 source /usr/share/colcon_argcomplete/hook/colcon-argcomplete.bash
 
-export WSL_ROS_VER=$(cat $HOME/.tuos/wsl_ros_ver)
+export WSL_ROS_VER=$(cat /home/tuos/wsl_ros_ver)
 # Change terminal prompt:
 PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@WSL-ROS2($WSL_ROS_VER)\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ '
 

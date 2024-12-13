@@ -61,31 +61,38 @@ RUN echo "[INFO] Install Additional ROS tools" &&\
     rm -rf /var/lib/apt/lists/*
 
 ENV WSL_DEFAULT_USER=student
+ENV TUOS_DIR=/home/tuos
+
+RUN mkdir -p ${TUOS_DIR}
 
 RUN echo "[INFO] Add a Default User Profile" && \
     adduser --disabled-password --gecos '' ${WSL_DEFAULT_USER} && \
     addgroup ${WSL_DEFAULT_USER} sudo && \
     echo '%sudo ALL=(ALL) NOPASSWD:ALL' | tee -a /etc/sudoers && \
+    chown -R ${WSL_DEFAULT_USER}:${WSL_DEFAULT_USER} ${TUOS_DIR} && \ 
     bash -c 'echo -e "[user]\ndefault=${WSL_DEFAULT_USER}"' | tee /etc/wsl.conf
 
-COPY source/wsl_ros_setup.sh /tmp
-COPY source/waffle /tmp
-COPY source/wsl_ros /tmp
-COPY source/bash_aliases /tmp
-RUN install /tmp/waffle /usr/local/bin/ && \
-    install /tmp/wsl_ros /usr/local/bin/
+WORKDIR ${TUOS_DIR}
+
+RUN git clone https://github.com/tom-howard/tuos_robotics.git
+WORKDIR ${TUOS_DIR}/tuos_robotics
+RUN git checkout humble
+WORKDIR ${TUOS_DIR}/tuos_robotics/wsl/source
+RUN install waffle /usr/local/bin/ && \
+    install wsl_ros /usr/local/bin/
 
 USER ${WSL_DEFAULT_USER}
 
 ENV WSL_HOME_DIR=/home/${WSL_DEFAULT_USER}
 ENV SCRIPTS_PATH=${WSL_HOME_DIR}/.tuos
+ENV SRC_PATH=${TUOS_DIR}/tuos_robotics/wsl/source
 
+WORKDIR ${WSL_HOME_DIR}
 RUN echo "[INFO] Configuring User Profile" && \
     mkdir ${SCRIPTS_PATH} && \
-    cp /tmp/wsl_ros_setup.sh ${SCRIPTS_PATH} && \
-    # chown -R ${WSL_DEFAULT_USER}:${WSL_DEFAULT_USER} ${SCRIPTS_PATH} && \ 
+    cp ${SRC_PATH}/wsl_ros_setup.sh ${SCRIPTS_PATH} && \
     rm -f ${WSL_HOME_DIR}/.bash_aliases && \
-    cp /tmp/bash_aliases ${WSL_HOME_DIR}/.bash_aliases && \
+    cp ${SRC_PATH}/bash_aliases ${WSL_HOME_DIR}/.bash_aliases && \
     bash -c 'echo -e "\nsource '${SCRIPTS_PATH}'/wsl_ros_setup.sh\n"' | tee -a ${WSL_HOME_DIR}/.bashrc && \
     sudo -u ${WSL_DEFAULT_USER} -H git config --global init.defaultBranch main && \
     sudo -u ${WSL_DEFAULT_USER} -H git config --global push.default simple
@@ -93,9 +100,11 @@ RUN echo "[INFO] Configuring User Profile" && \
 RUN echo "[INFO] Creating a ROS2 Workspace" && \
     mkdir -p ${WSL_HOME_DIR}/ros2_ws/src/
 
-# WORKDIR ${WSL_HOME_DIR}/ros2_ws/
-# RUN source /opt/ros/humble/setup.bash && \
-#     colcon build
+WORKDIR ${WSL_HOME_DIR}/ros2_ws/
+RUN cd src && \
+    git clone https://github.com/tom-howard/tuos_ros.git && \
+    cd tuos_ros && \
+    git checkout humble
 
 RUN echo "[INFO] Creating a Path for a U drive (if available)" && \
     sudo mkdir -p /mnt/u
@@ -107,7 +116,7 @@ ARG XSERVER
 
 # this bit not working...
 RUN echo "[INFO] Store ARGs to file" && \
-    echo "${VERSION}" > ${SCRIPTS_PATH}/wsl_ros_ver && \
+    echo "${VERSION}" > ${TUOS_DIR}/wsl_ros_ver && \
     echo "export XSERVER=${XSERVER}" > ${SCRIPTS_PATH}/xserver.sh
 
 CMD ["bash", "-l"]
