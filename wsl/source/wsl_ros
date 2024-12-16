@@ -170,8 +170,9 @@ check_for_updates() {
 welcome_msg() {
   echo -e "${IT}Welcome to WSL-ROS2!${NC}
 Version ${WSL_ROS_VER} (2024/25 Academic year)
-  
-ROS Version: ${ROS_VERSION} (${ROS_DISTRO})
+
+OS: $(lsb_release -sd) ($(lsb_release -sc))  
+ROS Version: ${ROS_DISTRO} (ROS${ROS_VERSION})
 "
 touch $HOME/.tuos/no_welcome
 }
@@ -216,7 +217,7 @@ case $COMMAND in
     ;;
   first-launch)
     welcome_msg
-    # check_for_updates
+    check_for_updates
     if backup_exists; then
       echo -e "It looks like you already have a backup from a previous session:"
       echo "  ${BACKUP_PATH_WIN}"
@@ -228,9 +229,9 @@ case $COMMAND in
       fi
     fi
     ;;
-  # update)
-  #   check_for_updates
-  #   ;;  
+  update)
+    check_for_updates
+    ;;  
   *)
     echo -e "'$COMMAND' is not a vaild input, see below for options...\n"
     usage
