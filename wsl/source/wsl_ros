@@ -26,10 +26,14 @@ ask() {
 }
 
 if [[ ${MANWIN} == true ]]; then
-  BACKUP_ROOT=/mnt/u
+  BACKUP_ROOT_DEFAULT=/mnt/u
 else
-  BACKUP_ROOT=$(wslupath $(wslvar USERPROFILE))
+  BACKUP_ROOT_DEFAULT=$(wslupath $(wslvar USERPROFILE))
 fi
+# set the root location for backups:
+# BACKUP_ROOT_DEFAULT is used unless WSL_ROS_BACKUP_TO is set externally
+#   i.e. `export WSL_ROS_BACKUP_TO=/mnt/u/some_other_dir`
+BACKUP_ROOT=${WSL_ROS_BACKUP_TO:-${BACKUP_ROOT_DEFAULT}}
 
 COMMAND=$1
 
