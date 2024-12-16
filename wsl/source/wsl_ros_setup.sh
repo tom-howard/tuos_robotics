@@ -42,7 +42,7 @@ export WINHOMEDRIVE=$(wslvar HOMEDRIVE)
 if [ "${WINHOMEDRIVE}" == "U:" ]; then
   export MANWIN=true
   sudo mkdir -p /mnt/u
-  sudo mount -t drvfs U: /mnt/u
+  sudo mount -t drvfs U: /mnt/u 2>/dev/null
 else
   export MANWIN=false
 fi
