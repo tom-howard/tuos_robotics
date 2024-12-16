@@ -103,10 +103,6 @@ RUN echo "[INFO] Creating a ROS2 Workspace" && \
     mkdir -p ${WSL_HOME_DIR}/ros2_ws/src/
 
 WORKDIR ${WSL_HOME_DIR}/ros2_ws/
-RUN cd src && \
-    git clone https://github.com/tom-howard/tuos_ros.git && \
-    cd tuos_ros && \
-    git checkout humble
 
 RUN echo "[INFO] Creating a Path for a U drive (if available)" && \
     sudo mkdir -p /mnt/u
