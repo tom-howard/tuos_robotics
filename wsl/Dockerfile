@@ -2,8 +2,6 @@ FROM osrf/ros:humble-desktop-full
 
 ENV ROS_VER=humble
 
-# RUN yes | unminimize # for manpages
-
 RUN echo "[INFO] Update Ubuntu" && \
     apt-get update && \
     DEBIAN_FRONTEND=noninteractive apt-get install -o Dpkg::Options::="--force-confnew" -fuy \
@@ -112,7 +110,6 @@ ENV COLCON_PREFIX_PATH=/home/${WSL_DEFAULT_USER}/ros2_ws/src
 ARG VERSION
 ARG XSERVER
 
-# this bit not working...
 RUN echo "[INFO] Store ARGs to file" && \
     echo "0" > ${TUOS_DIR}/local_ver && \
     echo "${VERSION}" > ${TUOS_DIR}/wsl_ros_ver && \
