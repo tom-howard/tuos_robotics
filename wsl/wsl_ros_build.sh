@@ -32,6 +32,8 @@ mkdir -p builds
 mkdir -p diamond_tools/update_triggers
 
 OUTPUT_FILE=builds/${OUTPUT_NAME}-${VERSION_STRING}.tar
+RELEASE_FILE_NAME=${OUTPUT_NAME}-v${VERSION}.tar
+RELEASE_FILE=builds/${RELEASE_FILE_NAME}
 
 echo
 echo "# Exporting image v${VERSION}..."
@@ -40,6 +42,11 @@ docker run -d --name ${CONTAINER_NAME} ${CONTAINER_NAME}:latest > /dev/null
 docker export ${CONTAINER_NAME} -o ${OUTPUT_FILE}
 
 echo "0" > diamond_tools/update_triggers/remote_ver_${VERSION}
+
+sed -i '2s/.*/[string]$TarBallName = \"'${RELEASE_FILE_NAME}'\"/' man_win/WSL-ROS2-Start.ps1
+
+echo "Copying to release version"
+cp ${OUTPUT_FILE} ${RELEASE_FILE}
 
 # Stop and remove the container
 clear_container
