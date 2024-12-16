@@ -54,10 +54,10 @@
                 "colorScheme": "Ubuntu",
                 "guid": "{d5ee5e88-2948-548c-b569-114cbf22eaa1}",
                 "hidden": false,
-                "name": "WSL-ROS",
+                "name": "WSL-ROS2",
                 "opacity": 75,
                 "source": "Windows.Terminal.Wsl",
-                "startingDirectory": "\\\\wsl$\\WSL-ROS\\home\\student",
+                "startingDirectory": "\\\\wsl$\\WSL-ROS2\\home\\student",
                 "useAcrylic": true
             },
             {

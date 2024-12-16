@@ -1,7 +1,8 @@
-[string]$DistroName = "WSL-ROS"
-[string]$TarBallPath = "$env:SystemDrive\WSL-ROS\wsl-ros-2309b.tar"
-[string]$DistroTargetPath = "$env:LOCALAPPDATA\$distroname"
-[string]$WinTermSettings = "$env:SystemDrive\WSL-ROS\settings.json"
+[string]$DistroName = "WSL-ROS2"
+[string]$TarBallName = "wsl-ros2-v2425.00.tar"
+[string]$TarBallPath = "$env:SystemDrive\WSL-ROS2\$TarBallName"
+[string]$DistroTargetPath = "$env:LOCALAPPDATA\$DistroName"
+[string]$WinTermSettings = "$env:SystemDrive\WSL-ROS2\settings.json"
 [string]$WinTermSettingsTargetPath = "$env:LOCALAPPDATA\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState"
 [string]$WinTermSettingsTargetFilePath = "$env:LOCALAPPDATA\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState\settings.json"
 [string]$WinTermSettingsBackup = "$env:LOCALAPPDATA\prevterminalsettings.json"
@@ -27,7 +28,7 @@ If (-not (Test-Path -Path $WinTermSettingsTargetFilePath))
 Write-Host
 If ($Distros | Where-Object {$_ -eq $DistroName -or $_ -eq ($DistroName + " (Default)")})
 {
-    Write-Host "You already have an $DistroName distribution installed."
+    Write-Host "You already have a $DistroName distribution installed."
     Write-Host
     $Reply = Read-Host -Prompt "Would you like to carry on using it? (Y/N)"
     Write-Host
@@ -46,7 +47,7 @@ If ($Distros | Where-Object {$_ -eq $DistroName -or $_ -eq ($DistroName + " (Def
     }
     Else
     {
-        Write-Host "Exiting ROS..."
+        Write-Host "Exiting..."
         Start-Sleep -Seconds 3
         Exit
     }
