@@ -37,6 +37,8 @@ Usage: waffle [VERB] [ARGS]
           robot (dia-waffle[NUM])
   ping    Look for the paired robot (dia-waffle[NUM]) on the network by
           ${EM}ping${NDF}ing it.
+  who|?   Check which robot ${EM}this laptop${NDF} is currently paired with.
+          (But does not guarantee the same pairing is still applied on the robot.)
   off     Shutdown the robot.
 "
 
@@ -87,6 +89,30 @@ get-waffle-id() {
     check-waffle-num-valid
     echo -e "This laptop (${CYN}dia-laptop$LAPTOP_NO${NDF}) is currently paired with ${GRN}dia-waffle$WAFFLE_NO${NDF}."
   fi
+}
+
+check-pairing() {
+    wn=~/.tuos/waffle_number
+    touch $wn
+    if grep -qi "$WAFFLE_NO" $wn; then
+        # local pairing looks OK.
+        # now check the pairing on the waffle side too...
+        robot_response=$(ssh -o IdentitiesOnly=yes -i ~/.ssh/waffle_rsa robot@dia-waffle$WAFFLE_NO 'bash -s' < /usr/local/bin/robot_pair_check.sh $LAPTOP_NO) 
+        if [[ $robot_response == "1" ]]; then
+            if [[ $1 == "loud" ]]; then
+                echo -e "${GREEN}[dia-waffle$WAFFLE_NO]${NC} Robot-Laptop pairing verified."
+            fi
+        elif [[ $robot_response == "0" ]]; then
+            echo -e "${GREEN}[dia-waffle$WAFFLE_NO]${NC} ${RED}Invalid pairing.${NC}"
+            exit 2
+        else
+            echo -e "${GREEN}[dia-waffle$WAFFLE_NO]${NC} ${RED}Unexpected error.${NC}"
+            exit 2
+        fi
+    else
+        echo -e "${CYAN}[$laptop_id] ${RED}DENIED: This laptop isn't paired with dia-waffle$WAFFLE_NO.${NC}" 
+        exit 2
+    fi
 }
 
 # CLI entry points:
