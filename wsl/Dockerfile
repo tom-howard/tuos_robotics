@@ -35,6 +35,7 @@ RUN echo "[INFO] Install Various System Tools" && \
     tree \
     wget \
     python3-pip \
+    python3-venv \
     python3-scipy \
     python3-pandas \
     python3-pydantic && \
