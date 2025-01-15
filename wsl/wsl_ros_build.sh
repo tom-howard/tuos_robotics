@@ -1,7 +1,7 @@
 #! /usr/bin/env bash
 
 CONTAINER_NAME=wsl-ros2
-VERSION=2425.00
+VERSION=2425.01
 XSERVER=true
 
 error () {

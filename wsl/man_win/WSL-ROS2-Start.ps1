@@ -1,5 +1,5 @@
 [string]$DistroName = "WSL-ROS2"
-[string]$TarBallName = "wsl-ros2-v2425.00.tar"
+[string]$TarBallName = "wsl-ros2-v2425.01.tar"
 [string]$TarBallPath = "$env:SystemDrive\WSL-ROS2\$TarBallName"
 [string]$DistroTargetPath = "$env:LOCALAPPDATA\$DistroName"
 [string]$WinTermSettings = "$env:SystemDrive\WSL-ROS2\settings.json"
