@@ -37,8 +37,8 @@ fi
 export LIBGL_ALWAYS_SOFTWARE=true
 
 # WSL Ops:
-export WINUSER=$(wslvar USERNAME)
-export WINHOMEDRIVE=$(wslvar HOMEDRIVE)
+export WINUSER=$(wslvar USERNAME 2>/dev/null)
+export WINHOMEDRIVE=$(wslvar HOMEDRIVE 2>/dev/null)
 if [ "${WINHOMEDRIVE}" == "U:" ]; then
   export MANWIN=true
   sudo mkdir -p /mnt/u
