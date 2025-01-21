@@ -17,7 +17,7 @@ update_src() {
 }
 
 getx() {
-  sudo_check
+  
   update_src
 
   SCRIPT=$1
@@ -45,9 +45,11 @@ fi
 
 case $COMMAND in 
   setup|s)
+    sudo_check
     getx laptop_setup
     ;;
   update|u)
+    sudo_check
     getx update_tools
     ;;
   workspace|w)
