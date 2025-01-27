@@ -12,12 +12,15 @@ sudo_check() {
 SRC_DIR="/home/laptop/repos/tuos_robotics"
 
 update_src() {
-  echo "Checking for updates..."
-  cd $SRC_DIR && git pull --quiet
+  if [[ "${USER}" == "diamond" ]]; then
+    echo "Checking for updates..."
+    cd $SRC_DIR && git pull --quiet
+  else
+    echo "Non-admin user, skipping updates..."
+  fi
 }
 
 getx() {
-  
   update_src
 
   SCRIPT=$1
