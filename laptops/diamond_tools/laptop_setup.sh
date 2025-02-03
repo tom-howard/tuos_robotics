@@ -44,14 +44,17 @@ if ask "[INPUT] IS THIS CORRECT??"; then
 
     echo "[INFO] Removing '~/.tuos/waffle_number' from both user profiles..."
 
-    tmp_file=/tmp/remove_waffle_no.sh
+    diamond_tools update
+    tmp_file=/tmp/per_user_setup.sh
     rm -f $tmp_file
     touch $tmp_file
     echo -e "#!/usr/bin/env bash\n" >> $tmp_file
     echo -e "rm -f ~/.tuos/waffle_number" >> $tmp_file
+    echo -e "diamond_tools workspace" >> $tmp_file
     chmod +x $tmp_file
     # run as current user:
     $tmp_file
+    chown $USER:laptopgrp $tmp_file
     # run as 'student':
     sudo -i -u student "$tmp_file"
     rm -f $tmp_file
