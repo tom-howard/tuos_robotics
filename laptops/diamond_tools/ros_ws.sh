@@ -4,7 +4,7 @@ ROS2_WS="$HOME/ros2_ws"
 SHARE_DIR="/home/laptop"
 
 # remove tuos_ros (if it exists)
-rm -rf $ROS2_WS/src/tuos_ros
+rm -rf $ROS2_WS
 
 # Make a new workspace (if necessary):
 mkdir -p $ROS2_WS/src
