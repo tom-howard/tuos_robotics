@@ -35,7 +35,11 @@ tb3_bringup() {
     sleep 3
     zenoh-bridge-ros2dds &
   fi
-  echo "Launching ROS [ros2 launch tuos_tb3_tools ros.launch.py]"
+
+  ROS_ARGS=$2
+
+  echo "Launching ROS [ ros2 launch tuos_tb3_tools ros.launch.py ${ROS_ARGS} ]"
   sleep 3
-  ros2 launch tuos_tb3_tools ros.launch.py
+  ros2 launch tuos_tb3_tools ros.launch.py ${ROS_ARGS}
+  
 }
