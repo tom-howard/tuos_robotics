@@ -41,6 +41,38 @@ export ROS_LOCALHOST_ONLY=1
 export RMW_IMPLEMENTATION=rmw_cyclonedds_cpp
 export ROS_DOMAIN_ID=$WAFFLE_NO
 
+read -r -d '' CYCLONEDDS_URI << EOF
+<?xml version="1.0" encoding="UTF-8" ?>
+<CycloneDDS xmlns="https://cdds.io/config" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="https://cdds.io/config https://raw.githubusercontent.com/eclipse-cyclonedds/cyclonedds/master/etc/cyclonedds.xsd">
+  <Domain id="0">
+    <General>
+      <AllowMulticast>false</AllowMulticast>
+      <MaxMessageSize>65500B</MaxMessageSize>
+      <FragmentSize>4000B</FragmentSize>
+      <Transport>udp</Transport>
+    </General>
+    <Discovery>
+      <Peers>
+        <Peer address="localhost"/>
+        <Peer address="`hostname`"/>
+      </Peers>
+      <MaxAutoParticipantIndex>1000</MaxAutoParticipantIndex>
+      <ParticipantIndex>auto</ParticipantIndex>
+    </Discovery>
+    <Internal>
+      <Watermarks>
+        <WhcHigh>500kB</WhcHigh>
+      </Watermarks>
+    </Internal>
+    <Tracing>
+      <Verbosity>info</Verbosity>
+      <OutputFile>stdout</OutputFile>
+    </Tracing>
+  </Domain>
+</CycloneDDS>
+EOF
+export CYCLONEDDS_URI
+
 source /usr/share/colcon_cd/function/colcon_cd.sh
 export _colcon_cd_root=/opt/ros/humble/
 source /usr/share/colcon_cd/function/colcon_cd-argcomplete.bash
