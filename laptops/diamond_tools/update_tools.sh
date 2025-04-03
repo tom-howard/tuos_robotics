@@ -11,7 +11,7 @@ sleep 4
 
 sudo apt update # && sudo apt upgrade -y
 sudo apt install -y python3-pandas
-sudo apt autoremove
+sudo apt autoremove -y
 
 echo "Enabling multicast on loopback..."
 sleep 2
