@@ -15,7 +15,9 @@ sudo apt autoremove -y
 
 echo "Enabling multicast on loopback..."
 sleep 2
-sudo ip link set lo multicast on
+cd $SRC_DIR/startup_service
+sudo cp multicast-lo.service /etc/systemd/system/
+sudo systemctl enable multicast-lo.service
 
 echo "Updating TUoS Scripts..."
 sleep 4
