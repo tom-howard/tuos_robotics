@@ -10,7 +10,8 @@ echo "Updating system..."
 sleep 4
 
 sudo apt update # && sudo apt upgrade -y
-sudo apt install python3-pandas
+sudo apt install -y python3-pandas
+sudo apt autoremove
 
 echo "Enabling multicast on loopback..."
 sleep 2
