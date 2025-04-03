@@ -42,6 +42,7 @@ sleep 2
 cd $HOME
 # run as admin
 /tmp/profile_updates.sh
+
 # run as user
 sudo -i -u student "/tmp/profile_updates.sh"
 
