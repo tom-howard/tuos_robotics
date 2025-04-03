@@ -163,7 +163,8 @@ elif [ ! -f $HOME/checkpoint2 ]; then
                             ros-$ROS_VER-rqt* \
                             ffmpeg \
                             python3-pip \
-                            python3-numpy \
+                            python3-venv \
+                            python3-pandas \
                             python3-scipy \
                             ros-$ROS_VER-rmw-cyclonedds-cpp
 

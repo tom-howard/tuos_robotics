@@ -6,6 +6,10 @@ SRC_DIR="/home/ros/repos/tuos_robotics/turtlebot3"
 
 echo "$(hostname | tr -d -c 0-9)" > /home/ros/waffle_number
 
+echo "Enabling multicast on loopback..."
+sleep 2
+sudo ip link set lo multicast on
+
 echo "Updating TUoS Scripts..."
 sleep 4
 
