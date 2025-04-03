@@ -13,3 +13,7 @@ cp /etc/skel/.bashrc $HOME/
 echo "" >> $HOME/.bashrc
 echo "source $HOME/.tuos/tuos_laptop_setup.sh" >> $HOME/.bashrc
 echo "" >> $HOME/.bashrc
+
+source $HOME/.bashrc
+
+diamond_tools workspace
