@@ -31,26 +31,19 @@ export CYCLONEDDS_URI
 
 tb3_bringup() {
   ZENOH_ID=$(pgrep zenoh)
+  
   if [[ $ZENOH_ID ]]; then
-    if [[ "$1" == "restart" || "$1" == "r" ]]; then
-      echo "Killing an existing Zenoh bridge (PID: $ZENOH_ID)."
-      pkill zenoh
-      echo "Launching a Zenoh Bridge..."
-      sleep 3
-      zenoh-bridge-ros2dds &
-    else
-      echo "A Zenoh bridge is already running (PID: $ZENOH_ID)."
-    fi
-  else
-    echo "Launching a Zenoh Bridge..."
-    sleep 3
-    zenoh-bridge-ros2dds &
+    pkill zenoh
   fi
 
+  echo "Launching a Zenoh Bridge..."
+  sleep 1
+  zenoh-bridge-ros2dds &
+  
   ROS_ARGS=$2
 
   echo "Launching ROS [ ros2 launch tuos_tb3_tools ros.launch.py ${ROS_ARGS} ]"
-  sleep 3
+  sleep 1
   ros2 launch tuos_tb3_tools ros.launch.py ${ROS_ARGS}
   
 }
