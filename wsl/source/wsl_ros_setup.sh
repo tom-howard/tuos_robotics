@@ -52,3 +52,16 @@ fi
 if [[ ! -f ~/.tuos/no_welcome ]]; then
   wsl_ros first-launch
 fi
+
+colcon() {
+    # If the first argument is "build", check the current directory
+    if [[ "$1" == "build" ]]; then
+        if [ "$PWD" != "$HOME/ros2_ws" ]; then
+            echo "Error: 'colcon build' must be run from $HOME/ros2_ws."
+            return 1
+        fi
+    fi
+
+    # Execute the actual colcon command with all provided arguments
+    command colcon "$@"
+}
