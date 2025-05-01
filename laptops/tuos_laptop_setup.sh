@@ -56,3 +56,16 @@ source /usr/share/colcon_cd/function/colcon_cd.sh
 export _colcon_cd_root=/opt/ros/humble/
 source /usr/share/colcon_cd/function/colcon_cd-argcomplete.bash
 source /usr/share/colcon_argcomplete/hook/colcon-argcomplete.bash
+
+colcon() {
+    # If the first argument is "build", check the current directory
+    if [[ "$1" == "build" ]]; then
+        if [ "$PWD" != "$HOME/ros2_ws" ]; then
+            echo "Error: 'colcon build' must be run from $HOME/ros2_ws."
+            return 1
+        fi
+    fi
+
+    # Execute the actual colcon command with all provided arguments
+    command colcon "$@"
+}
