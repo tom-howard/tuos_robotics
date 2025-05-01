@@ -9,7 +9,7 @@ cp /home/laptop/laptop_number /home/laptop/waffle_number
 echo "Updating system..."
 sleep 4
 
-sudo apt update # && sudo apt upgrade -y
+sudo apt update && sudo apt upgrade -y
 sudo apt install -y python3-pandas
 sudo apt autoremove -y
 
