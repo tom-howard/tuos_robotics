@@ -114,6 +114,10 @@ elif [ ! -f $HOME/checkpoint1 ]; then
         # Make poweroff and ntpdate NO PASSWORD-able
         sudo cp $SHARE_DIR/repos/tuos_robotics/turtlebot3/nopwds /etc/sudoers.d/
 
+        # Enable multicast on loopback (via a startup service)...
+        sudo cp $SHARE_DIR/repos/tuos_robotics/turtlebot3/startup_servce/multicast-lo.service /etc/systemd/system/
+        sudo systemctl enable multicast-lo.service
+
         touch $HOME/checkpoint1
         cleanup
 

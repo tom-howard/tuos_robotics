@@ -6,18 +6,9 @@ SRC_DIR="/home/laptop/repos/tuos_robotics/laptops"
 echo "$(hostname | tr -d -c 0-9)" > /home/laptop/laptop_number
 cp /home/laptop/laptop_number /home/laptop/waffle_number
 
-echo "Updating system..."
-sleep 4
-
-sudo apt update && sudo apt upgrade -y
-sudo apt install -y python3-pandas
-sudo apt autoremove -y
-
-echo "Enabling multicast on loopback..."
-sleep 2
-cd $SRC_DIR/startup_service
-sudo cp multicast-lo.service /etc/systemd/system/
-sudo systemctl enable multicast-lo.service
+# echo "Updating system..."
+# sleep 4
+# sudo apt update && sudo apt upgrade -y
 
 echo "Updating TUoS Scripts..."
 sleep 4

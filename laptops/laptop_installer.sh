@@ -116,6 +116,10 @@ if [ ! -f $HOME/checkpoint1 ]; then
         # set selected sudo commands to require no password input
         sudo cp $SHARE_DIR/repos/tuos_robotics/laptops/nopwds /etc/sudoers.d/
 
+        # Enable multicast on loopback (via a startup service)
+        sudo cp ${SHARE_DIR}/repos/tuos_robotics/laptops/startup_service/multicast-lo.service /etc/systemd/system/
+        sudo systemctl enable multicast-lo.service
+
         echo -e "\n${YELLOW}[Connecting to DIA-LAB]${NC}"
         SSID_CURRENT=$(iwgetid -r)
         sudo nmcli --ask dev wifi connect DIA-LAB
