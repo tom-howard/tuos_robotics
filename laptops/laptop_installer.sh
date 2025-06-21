@@ -166,6 +166,7 @@ elif [ ! -f $HOME/checkpoint2 ]; then
                             python3-venv \
                             python3-pandas \
                             python3-scipy \
+                            python3-venv \
                             ros-$ROS_VER-rmw-cyclonedds-cpp
 
         pip install setuptools==58.2.0

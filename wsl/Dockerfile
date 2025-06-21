@@ -38,6 +38,7 @@ RUN echo "[INFO] Install Various System Tools" && \
     python3-venv \
     python3-scipy \
     python3-pandas \
+    python3-venv \
     python3-pydantic && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
