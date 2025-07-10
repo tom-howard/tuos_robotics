@@ -5,20 +5,6 @@ YELLOW='\033[1;33m'
 GREEN='\033[0;32m'
 NC='\033[0m'
 
-ask() {
-    local reply prompt
-    prompt='y/n'
-    echo -e -n "$1 ${YELLOW} [$prompt] ${NC}>> "
-    read -r reply </dev/tty
-    if [[ -z $reply ]]; then
-        return 1;
-    elif [ "$reply" == "y" ] || [ "$reply" == "Y" ]; then
-        return 0;
-    else
-        return 1;
-    fi
-}
-
 cleanup() {
     echo -e "\n${YELLOW}[Clean-up]${NC}"
     sudo apt update -y
@@ -29,14 +15,15 @@ cleanup() {
     echo "Cleanup Done."
 }
 
-OS_VER=${OS_VER:="jammy"}
-ROS_VER=${ROS_VER:="humble"}
+OS_VER=${OS_VER:="noble"}
+ROS_VER=${ROS_VER:="jazzy"}
 ROS_WS=${ROS_WS:="tb3_ws"}
 echo -e "${YELLOW}Target OS version >>> '$OS_VER'${NC}"
 echo -e "\n${YELLOW}Target ROS version >>> ROS2 '$ROS_VER'${NC}"
 echo -e "\n${YELLOW}Workspace Name >>> '$ROS_WS'${NC}"
 
 SHARE_DIR="/home/ros"
+STANDARD_USER="robot"
 
 if ! ask "[OK to continue with installation?]"; then
   echo -e "${YELLOW}Exiting.${NC}"
@@ -48,7 +35,7 @@ if [ ! -f $HOME/checkpoint0 ]; then
     if ask "Ok to continue?"; then
         # Disable wait for network during bootup:
         systemctl mask systemd-networkd-wait-online.service
-        touch $HOME/checkpoint0
+        touch ${HOME}/checkpoint0
         echo "### CHECKPOINT 0 (Fresh install) COMPLETE ###"
     fi
 elif [ ! -f $HOME/checkpoint1 ]; then
@@ -56,18 +43,15 @@ elif [ ! -f $HOME/checkpoint1 ]; then
     if ask "Ok to continue?"; then
 
         # Setup additional users
-        echo -e "\n${YELLOW}Creating user 'robot'${NC}"
-        sudo useradd -s /bin/bash -m -p panQJvEl/BD/g robot
-        echo -e "\n${YELLOW}Creating user 'xdds'${NC}"
-        sudo useradd -M xdds
-        sudo passwd xdds
+        echo -e "\n${YELLOW}Creating user '${STANDARD_USER}'${NC}"
+        sudo useradd -s /bin/bash -m ${STANDARD_USER}
 
         # Create a new dir in /home/
         sudo mkdir -p $SHARE_DIR/
         # Create a new group called rosgrp and add users to it:
         sudo addgroup rosgrp
         sudo adduser "$USER" rosgrp
-        sudo adduser robot rosgrp
+        sudo adduser ${STANDARD_USER} rosgrp
         # Change ownership of SHARE_DIR and change its group to rosgrp:
         sudo chown $USER:rosgrp $SHARE_DIR
 
@@ -108,7 +92,7 @@ elif [ ! -f $HOME/checkpoint1 ]; then
 
         mkdir -p $SHARE_DIR/repos/
         cd $SHARE_DIR/repos/
-        git clone -b humble https://github.com/tom-howard/tuos_robotics.git
+        git clone -b ${ROS_VER} https://github.com/tom-howard/tuos_robotics.git
         cd $HOME
 
         # Make poweroff and ntpdate NO PASSWORD-able
@@ -132,13 +116,12 @@ elif [ ! -f $HOME/checkpoint2 ]; then
         sudo add-apt-repository main universe multiverse restricted
 
         # Adding the ROS 2 GPG key
-        sudo apt update && sudo apt install curl -y
-        sudo curl -sSL https://raw.githubusercontent.com/ros/rosdistro/master/ros.key -o /usr/share/keyrings/ros-archive-keyring.gpg
+        sudo apt update
+        export ROS_APT_SOURCE_VERSION=$(curl -s https://api.github.com/repos/ros-infrastructure/ros-apt-source/releases/latest | grep -F "tag_name" | awk -F\" '{print $4}')
+        curl -L -o /tmp/ros2-apt-source.deb "https://github.com/ros-infrastructure/ros-apt-source/releases/download/${ROS_APT_SOURCE_VERSION}/ros2-apt-source_${ROS_APT_SOURCE_VERSION}.$(. /etc/os-release && echo $VERSION_CODENAME)_all.deb" # If using Ubuntu derivates use $UBUNTU_CODENAME
+        sudo dpkg -i /tmp/ros2-apt-source.deb
 
-        # Adding repo to sources list
-        echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/ros-archive-keyring.gpg] http://packages.ros.org/ros2/ubuntu $(. /etc/os-release && echo $UBUNTU_CODENAME) main" | sudo tee /etc/apt/sources.list.d/ros2.list > /dev/null
-
-        sudo apt update && sudo apt upgrade -y
+        sudo apt update
 
         echo -e "\n${YELLOW}[Source .bashrc]${NC}"
         source $HOME/.bashrc
@@ -155,31 +138,10 @@ elif [ ! -f $HOME/checkpoint2 ]; then
                             ros-$ROS_VER-dynamixel-sdk \
                             libudev-dev \
                             python3-pip \
-                            ros-$ROS_VER-rmw-cyclonedds-cpp
-
-        pip install setuptools==58.2.0
+                            ros-$ROS_VER-rmw-cyclonedds-cpp \
+                            ros-$ROS_VER-rmw-zenoh-cpp
 
         source /opt/ros/$ROS_VER/setup.bash
-
-        echo "Installing Zenoh..."
-        sleep 4
-
-        DDS_WS="$SHARE_DIR/dds_ws"
-        mkdir -p $DDS_WS/src/
-        cd $DDS_WS/src/
-        git clone https://github.com/eclipse-zenoh/zenoh-plugin-ros2dds.git
-        cd $DDS_WS
-
-        sudo rosdep init; rosdep update
-        echo "using 'rosdep' to install dependencies..."
-        sleep 4
-        rosdep install --from-paths . --ignore-src -r -y
-
-        cd $DDS_WS/src/zenoh-plugin-ros2dds
-        echo "Building zenoh plugin with cargo..."
-        sleep 4
-        cargo build --release
-        sudo install $DDS_WS/src/zenoh-plugin-ros2dds/target/release/zenoh-bridge-ros2dds /usr/local/bin/
 
         touch $HOME/checkpoint2
         cleanup
@@ -195,7 +157,7 @@ elif [ ! -f $HOME/checkpoint3 ]; then
         source $HOME/.bashrc
 
         cd $SHARE_DIR/repos/
-        git clone -b humble-devel https://github.com/ROBOTIS-GIT/turtlebot3.git
+        git clone -b ${ROS_VER} https://github.com/ROBOTIS-GIT/turtlebot3.git
         
         # Make a workspace:
         mkdir -p $SHARE_DIR/$ROS_WS/src 
@@ -203,7 +165,8 @@ elif [ ! -f $HOME/checkpoint3 ]; then
         
         ### OpenCR & other TB3 Configs ###
 
-        sudo wget -O /etc/udev/rules.d/98-turtlebot3-cdc.rules https://raw.githubusercontent.com/ROBOTIS-GIT/turtlebot3/refs/heads/humble-devel/turtlebot3_bringup/script/99-turtlebot3-cdc.rules
+        sudo wget -O /etc/udev/rules.d/98-turtlebot3-cdc.rules \
+            https://raw.githubusercontent.com/ROBOTIS-GIT/turtlebot3/refs/heads/${ROS_VER}/turtlebot3_bringup/script/99-turtlebot3-cdc.rules
         sudo udevadm control --reload-rules
         sudo udevadm trigger
 
@@ -248,14 +211,10 @@ else
         ### Custom TUoS Scripts ###
 
         cd $SHARE_DIR/repos/
-        git clone -b humble https://github.com/tom-howard/tuos_ros.git
+        git clone -b ${ROS_VER} https://github.com/tom-howard/tuos_ros.git
 
         SCRIPTS_DIR=$SHARE_DIR/repos/tuos_robotics/turtlebot3
         cd $SCRIPTS_DIR && cd .. && git pull
-
-        # echo -e "\n${YELLOW}[Setting up DDS Service]${NC}"
-        # sudo cp $SCRIPTS_DIR/startup_service/zdds.service /etc/systemd/system/
-        # sudo systemctl enable zdds.service
 
         echo -e "\n${YELLOW}[Setting up /usr/local/bin/ scripts]${NC}"
         cd $SCRIPTS_DIR/
@@ -274,7 +233,7 @@ else
         echo -e "\n${YELLOW}Setting up user profiles${NC}"
 
         mkdir -p $HOME/.tuos/diamond_tools/
-        echo "[$(date +'%Y%m%d_%H%M%S')] $(date +'%Y-%m') ROS2 Humble ($(hostname))" > $HOME/.tuos/base_image
+        echo "[$(date +'%Y%m%d_%H%M%S')] $(date +'%Y-%m') ROS 2 ${ROS_VER} ($(hostname))" > $HOME/.tuos/base_image
 
         cp $SCRIPTS_DIR/diamond_tools/profile_updates.sh /tmp/
         cp /tmp/profile_updates.sh $HOME/.tuos/diamond_tools/profile_updates-$(date +'%Y%m%d%H%M%S')
@@ -284,8 +243,8 @@ else
         source $HOME/.bashrc
         diamond_tools workspace
 
-        # run as 'robot'
-        sudo -i -u robot "/tmp/profile_updates.sh"
+        # run as STANDARD_USER
+        sudo -i -u ${STANDARD_USER} "/tmp/profile_updates.sh"
 
         rm -f $HOME/checkpoint*
 
