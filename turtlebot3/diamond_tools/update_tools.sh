@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 ROS2_WS="/home/ros/tb3_ws"
-ROS_VER="humble"
+ROS_VER="jazzy"
 SRC_DIR="/home/ros/repos/tuos_robotics/turtlebot3"
 
 echo "$(hostname | tr -d -c 0-9)" > /home/ros/waffle_number
