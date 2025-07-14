@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 
 ROS_VER="humble"
-SRC_DIR="/home/laptop/repos/tuos_robotics/laptops"
+SRC_DIR="/home/ros/repos/tuos_robotics/laptops"
 
-echo "$(hostname | tr -d -c 0-9)" > /home/laptop/laptop_number
-cp /home/laptop/laptop_number /home/laptop/waffle_number
+echo "$(hostname | tr -d -c 0-9)" > /home/ros/laptop_number
+cp /home/ros/laptop_number /home/ros/waffle_number
 
 # echo "Updating system..."
 # sleep 4

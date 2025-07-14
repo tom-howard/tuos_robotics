@@ -39,8 +39,8 @@ if ask "[INPUT] IS THIS CORRECT??"; then
 
     echo "[INFO] Setting default device numbers..."
     
-    echo "$LAPTOP_NO" > /home/laptop/laptop_number
-    echo "$LAPTOP_NO" > /home/laptop/waffle_number
+    echo "$LAPTOP_NO" > /home/ros/laptop_number
+    echo "$LAPTOP_NO" > /home/ros/waffle_number
 
     echo "[INFO] Removing '~/.tuos/waffle_number' from both user profiles..."
 

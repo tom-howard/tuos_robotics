@@ -9,7 +9,7 @@ sudo_check() {
   fi
 }
 
-SRC_DIR="/home/laptop/repos/tuos_robotics"
+SRC_DIR="/home/ros/repos/tuos_robotics"
 
 update_src() {
   if [[ "${USER}" == "diamond" ]]; then

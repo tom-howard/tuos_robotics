@@ -5,14 +5,16 @@ ERR_MSG="Not a valid input, enter 'robot' or 'sim'."
 
 if [ $1 == '' ]; then
   echo "$ERR_MSG"
+  exit 1
 elif [ $1 == 'sim' ]; then
   echo "Switching into 'Simulation Mode' (run 'robot_mode robot' to work with a real robot)."
   echo "sim" > ~/.tuos/robot_mode
-  exec bash
 elif [ $1 == 'robot' ]; then
   echo "Switching into 'Real Robot Mode' (run 'robot_mode sim' to work in simulation instead)."
   echo "robot" > ~/.tuos/robot_mode
-  exec bash
 else
   echo "$ERR_MSG"
+  exit 1
 fi
+
+echo "Re-source your shell to apply changes."

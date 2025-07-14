@@ -39,7 +39,7 @@ elif [ ! -f $HOME/checkpoint1 ]; then
     # Setup additional users
     echo -e "\n${YELLOW}Creating user '${STANDARD_USER}'${NC}"
     sudo useradd -s /bin/bash -m ${STANDARD_USER}
-
+    
     # Create a new dir in /home/
     sudo mkdir -p $SHARE_DIR/
     # Create a new group called rosgrp and add users to it:

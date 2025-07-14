@@ -29,14 +29,14 @@ cleanup() {
     echo "Cleanup Done."
 }
 
-OS_VER=${OS_VER:="jammy"}
-ROS_VER=${ROS_VER:="humble"}
+OS_VER=${OS_VER:="noble"}
+ROS_VER=${ROS_VER:="jazzy"}
 ROS_WS=${ROS_WS:="ros2_ws"}
 echo -e "${YELLOW}Target OS version >>> '$OS_VER'${NC}"
 echo -e "\n${YELLOW}Target ROS version >>> ROS2 '$ROS_VER'${NC}"
 echo -e "\n${YELLOW}Workspace Name >>> '$ROS_WS'${NC}"
 
-SHARE_DIR="/home/laptop"
+SHARE_DIR="/home/ros"
 
 if ! ask "[OK to continue with installation?]"; then
   echo -e "${YELLOW}Exiting.${NC}"
@@ -110,7 +110,7 @@ if [ ! -f $HOME/checkpoint1 ]; then
 
         mkdir -p $SHARE_DIR/repos/
         cd $SHARE_DIR/repos/
-        git clone -b humble https://github.com/tom-howard/tuos_robotics.git
+        git clone -b ${ROS_VER} https://github.com/tom-howard/tuos_robotics.git
         cd ~
 
         # set selected sudo commands to require no password input
@@ -139,11 +139,9 @@ elif [ ! -f $HOME/checkpoint2 ]; then
         # Add universe repo
         sudo add-apt-repository universe
 
-        # Adding the ROS 2 GPG key
-        sudo curl -sSL https://raw.githubusercontent.com/ros/rosdistro/master/ros.key -o /usr/share/keyrings/ros-archive-keyring.gpg
-
-        # Adding repo to sources list
-        echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/ros-archive-keyring.gpg] http://packages.ros.org/ros2/ubuntu $(. /etc/os-release && echo $UBUNTU_CODENAME) main" | sudo tee /etc/apt/sources.list.d/ros2.list > /dev/null
+        export ROS_APT_SOURCE_VERSION=$(curl -s https://api.github.com/repos/ros-infrastructure/ros-apt-source/releases/latest | grep -F "tag_name" | awk -F\" '{print $4}')
+        curl -L -o /tmp/ros2-apt-source.deb "https://github.com/ros-infrastructure/ros-apt-source/releases/download/${ROS_APT_SOURCE_VERSION}/ros2-apt-source_${ROS_APT_SOURCE_VERSION}.$(. /etc/os-release && echo $VERSION_CODENAME)_all.deb" # If using Ubuntu derivates use $UBUNTU_CODENAME
+        sudo dpkg -i /tmp/ros2-apt-source.deb
 
         sudo apt update && sudo apt upgrade -y
 
@@ -171,31 +169,10 @@ elif [ ! -f $HOME/checkpoint2 ]; then
                             python3-pandas \
                             python3-scipy \
                             python3-venv \
-                            ros-$ROS_VER-rmw-cyclonedds-cpp
-
-        pip install setuptools==58.2.0
+                            ros-$ROS_VER-rmw-cyclonedds-cpp \
+                            ros-$ROS_VER-rmw-zenoh-cpp 
 
         source /opt/ros/$ROS_VER/setup.bash
-
-        echo "Installing Zenoh..."
-        sleep 4
-
-        DDS_WS="$SHARE_DIR/dds_ws"
-        mkdir -p $DDS_WS/src/
-        cd $DDS_WS/src/
-        git clone https://github.com/eclipse-zenoh/zenoh-plugin-ros2dds.git
-        cd $DDS_WS
-
-        sudo rosdep init; rosdep update
-        echo "using 'rosdep' to install dependencies..."
-        sleep 4
-        rosdep install --from-paths . --ignore-src -r -y
-
-        cd $DDS_WS/src/zenoh-plugin-ros2dds
-        echo "Building zenoh plugin with cargo..."
-        sleep 4
-        cargo build --release
-        sudo install $DDS_WS/src/zenoh-plugin-ros2dds/target/release/zenoh-bridge-ros2dds /usr/local/bin/
 
         touch $HOME/checkpoint2
         cleanup
@@ -207,14 +184,14 @@ else
     if ask "Ok to continue?"; then
 
         echo -e "\n${YELLOW}[Setting up the environment]"
-        echo "source /opt/ros/$ROS_VER/setup.bash" >> $HOME/.bashrc
+        echo "source /opt/ros/${ROS_VER}/setup.bash" >> $HOME/.bashrc
 
         source $HOME/.bashrc
 
         echo -e "\n${YELLOW}[Installing TUoS Scripts]${NC}"
         
         cd $SHARE_DIR/repos
-        git clone -b humble https://github.com/tom-howard/tuos_ros.git
+        git clone -b ${ROS_VER} https://github.com/tom-howard/tuos_ros.git
 
         LAPTOP_NO=$(hostname | tr -d -c 0-9)
         echo "configuring for dia-laptop$LAPTOP_NO..."
@@ -243,7 +220,7 @@ else
         echo -e "\n${YELLOW}Setting up user profiles${NC}"
 
         mkdir -p $HOME/.tuos/diamond_tools/
-        echo "[$(date +'%Y%m%d_%H%M%S')] $(date +'%Y-%m') ROS2 Humble ($(hostname))" > $HOME/.tuos/base_image
+        echo "[$(date +'%Y%m%d_%H%M%S')] $(date +'%Y-%m') ROS 2 ${ROS_VER} ($(hostname))" > $HOME/.tuos/base_image
 
         cd $SHARE_DIR/repos/tuos_robotics/laptops/diamond_tools/
         cp profile_updates.sh /tmp/ 
@@ -261,8 +238,6 @@ else
         chmod +x /tmp/setup_student.sh
         chown $USER:laptopgrp /tmp/setup_student.sh
         sudo -i -u student "/tmp/setup_student.sh"
-
-        rm -f $HOME/checkpoint*
 
         echo "### CHECKPOINT 3 (Setting up TUoS Scripts) COMPLETE ###"
         

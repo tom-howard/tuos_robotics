@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-SRC_DIR="/home/laptop/repos/tuos_robotics/laptops"
+SRC_DIR="/home/ros/repos/tuos_robotics/laptops"
 
 mkdir -p $HOME/.tuos/diamond_tools/
 

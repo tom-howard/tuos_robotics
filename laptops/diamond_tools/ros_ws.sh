@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 ROS2_WS="$HOME/ros2_ws"
-SHARE_DIR="/home/laptop"
+SHARE_DIR="/home/ros"
 
 # remove tuos_ros (if it exists)
 rm -rf $ROS2_WS
