@@ -37,6 +37,7 @@ echo -e "\n${YELLOW}Target ROS version >>> ROS2 '$ROS_VER'${NC}"
 echo -e "\n${YELLOW}Workspace Name >>> '$ROS_WS'${NC}"
 
 SHARE_DIR="/home/ros"
+STUDENT_USER="student"
 
 if ! ask "[OK to continue with installation?]"; then
   echo -e "${YELLOW}Exiting.${NC}"
@@ -46,8 +47,8 @@ fi
 if [ ! -f $HOME/checkpoint1 ]; then
     echo -e "### CHECKPOINT 1 (Basic Setup) ###"
     if ask "Ok to continue?"; then
-        echo -e "\n${YELLOW}Creating user 'student'${NC}"
-        username="student"
+        echo -e "\n${YELLOW}Creating user '${STUDENT_USER}'${NC}"
+        username="${STUDENT_USER}"
         pass="panQJvEl/BD/g"
         sudo useradd -s /bin/bash -m -p "$pass" "$username"
         
@@ -55,7 +56,7 @@ if [ ! -f $HOME/checkpoint1 ]; then
         sudo mkdir -p $SHARE_DIR/
         sudo addgroup laptopgrp
         sudo adduser "$USER" laptopgrp
-        sudo adduser student laptopgrp
+        sudo adduser ${STUDENT_USER} laptopgrp
         sudo chown $USER:laptopgrp $SHARE_DIR
 
         echo -e "\n${YELLOW}[Update & Upgrade]${NC}"
@@ -115,7 +116,7 @@ if [ ! -f $HOME/checkpoint1 ]; then
                             docker-compose-plugin
         sudo groupadd docker
         sudo usermod -aG docker ${USER}
-        sudo usermod -aG docker ${student_user}
+        sudo usermod -aG docker ${STUDENT_USER}
 
         echo -e "\n### Installing NVIDIA Drivers and Container Toolkit ###\n"
         sudo apt install -y nvidia-driver-570
@@ -268,11 +269,11 @@ else
         diamond_tools workspace
 
         # setting up 'student' profile
-        echo -e "\n${YELLOW}[Setting up the same environment for 'student' account]${NC}"
+        echo -e "\n${YELLOW}[Setting up the same environment for '${STUDENT_USER}' account]${NC}"
         cp $SHARE_DIR/repos/tuos_robotics/laptops/setup_student.sh /tmp/
         chmod +x /tmp/setup_student.sh
         chown $USER:laptopgrp /tmp/setup_student.sh
-        sudo -i -u student "/tmp/setup_student.sh"
+        sudo -i -u ${STUDENT_USER} "/tmp/setup_student.sh"
 
         echo "### CHECKPOINT 3 (Setting up TUoS Scripts) COMPLETE ###"
         
