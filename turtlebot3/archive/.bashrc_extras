@@ -1,4 +1,4 @@
-export PATH=$PATH:/home/robot/.tuos/
+export PATH=$PATH:/home/robot/.diamond/
 
 source /opt/ros/noetic/setup.bash
 source ~/catkin_ws/devel/setup.bash

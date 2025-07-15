@@ -11,7 +11,7 @@ sudo install waffle /usr/local/bin/
 sudo install wsl_ros /usr/local/bin/
 sudo install diamond_tools /usr/local/bin/
 
-SCRIPTS_PATH=${HOME}/.tuos
+SCRIPTS_PATH=${HOME}/.diamond
 cd ${SCRIPTS_PATH}
 rm -f bash_aliases wsl_ros_setup.sh
 cp ${SRC_DIR}/bash_aliases ./

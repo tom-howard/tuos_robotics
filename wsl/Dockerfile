@@ -87,7 +87,7 @@ RUN git clone https://github.com/tom-howard/tuos_robotics.git && \
     cd tuos_robotics && git checkout humble
 
 ENV WSL_HOME_DIR=/home/${WSL_DEFAULT_USER}
-ENV SCRIPTS_PATH=${WSL_HOME_DIR}/.tuos
+ENV SCRIPTS_PATH=${WSL_HOME_DIR}/.diamond
 ENV SRC_PATH=${TUOS_DIR}/tuos_robotics/wsl/source
 
 WORKDIR ${WSL_HOME_DIR}

@@ -27,7 +27,7 @@ getx() {
   COPY_SCRIPT="$SCRIPT-$(date +'%Y%m%d%H%M%S')"
   echo "[INFO]: Obtaining '$SCRIPT.sh' script..."
   
-  cd $HOME/.tuos/diamond_tools/
+  cd $HOME/.diamond/diamond_tools/
   cp $SRC_DIR/laptops/diamond_tools/$SCRIPT.sh ./$COPY_SCRIPT.sh
   
   echo "[INFO]: Executing..."

@@ -42,14 +42,14 @@ if ask "[INPUT] IS THIS CORRECT??"; then
     echo "$LAPTOP_NO" > /home/ros/laptop_number
     echo "$LAPTOP_NO" > /home/ros/waffle_number
 
-    echo "[INFO] Removing '~/.tuos/waffle_number' from both user profiles..."
+    echo "[INFO] Removing '~/.diamond/waffle_number' from both user profiles..."
 
     diamond_tools update
     tmp_file=/tmp/per_user_setup.sh
     rm -f $tmp_file
     touch $tmp_file
     echo -e "#!/usr/bin/env bash\n" >> $tmp_file
-    echo -e "rm -f ~/.tuos/waffle_number" >> $tmp_file
+    echo -e "rm -f ~/.diamond/waffle_number" >> $tmp_file
     echo -e "diamond_tools workspace" >> $tmp_file
     chmod +x $tmp_file
     # run as current user:

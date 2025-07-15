@@ -1,6 +1,6 @@
 # Custom bashrc settings for wsl_ros
 
-source ${HOME}/.tuos/bash_aliases
+source ${HOME}/.diamond/bash_aliases
 
 source /opt/ros/humble/setup.bash
 WS_INSTALL_DIR=$HOME/ros2_ws/install/local_setup.bash
@@ -23,13 +23,13 @@ export WSL_ROS_VER=$(cat /home/tuos/wsl_ros_ver)
 PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@WSL-ROS2($WSL_ROS_VER)\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ '
 
 # # GUI/graphics:
-source $HOME/.tuos/xserver.sh
+source $HOME/.diamond/xserver.sh
 
 if [ "${XSERVER}" = true ]; then
   ## Configuring DISPLAY for X-Server GUI apps
-  ipconfig.exe | grep 'IPv4' | awk {'print $NF'} > $HOME/.tuos/ipv4s && dos2unix -q $HOME/.tuos/ipv4s
-  read -r line < $HOME/.tuos/ipv4s 
-  export DISPLAY=$line:0.0 && rm $HOME/.tuos/ipv4s
+  ipconfig.exe | grep 'IPv4' | awk {'print $NF'} > $HOME/.diamond/ipv4s && dos2unix -q $HOME/.diamond/ipv4s
+  read -r line < $HOME/.diamond/ipv4s 
+  export DISPLAY=$line:0.0 && rm $HOME/.diamond/ipv4s
   
   export LIBGL_ALWAYS_INDIRECT=
   export GAZEBO_IP=127.0.0.1
@@ -49,7 +49,7 @@ fi
 
 # display a wsl_ros restore prompt to the user
 # if this is the first launch of WSL-ROS:
-if [[ ! -f ~/.tuos/no_welcome ]]; then
+if [[ ! -f ~/.diamond/no_welcome ]]; then
   wsl_ros first-launch
 fi
 

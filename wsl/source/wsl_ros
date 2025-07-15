@@ -132,7 +132,7 @@ backup() {
 
   touch_backup
 
-  if tar -X $HOME/.backup_exclusions --exclude='.tuos' --checkpoint=.200 -cjf ${BACKUP_PATH} -C $HOME .; then
+  if tar -X $HOME/.backup_exclusions --exclude='.diamond' --checkpoint=.200 -cjf ${BACKUP_PATH} -C $HOME .; then
     echo "$(date): Backup from $(hostname) [wsl-ros version: ${WSL_ROS_VER}]" >> ${BACKUP_LOGFILE}
     echo -e ".\nBackup complete."
   else
@@ -174,7 +174,7 @@ Version ${WSL_ROS_VER} (2024/25 Academic year)
 OS: $(lsb_release -sd) ($(lsb_release -sc))  
 ROS Version: ${ROS_DISTRO} (ROS${ROS_VERSION})
 "
-touch $HOME/.tuos/no_welcome
+touch $HOME/.diamond/no_welcome
 }
 
 if [[ "${COMMAND}" == "" ]]; then

@@ -16,7 +16,7 @@ sudo install wsl_ros /usr/local/bin/
 cd $SRC_DIR/diamond_tools
 sudo install diamond_tools /usr/local/bin/
 cp profile_updates.sh /tmp/
-cp /tmp/profile_updates.sh $HOME/.tuos/diamond_tools/profile_updates-$(date +'%Y%m%d%H%M%S')
+cp /tmp/profile_updates.sh $HOME/.diamond/diamond_tools/profile_updates-$(date +'%Y%m%d%H%M%S')
 chmod +x /tmp/profile_updates.sh
 
 echo "Updating user profiles..."

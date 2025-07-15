@@ -255,8 +255,8 @@ else
 
         echo -e "\n${YELLOW}Setting up user profiles${NC}"
 
-        mkdir -p $HOME/.tuos/diamond_tools/
-        echo "[$(date +'%Y%m%d_%H%M%S')] $(date +'%Y-%m') ROS 2 ${ROS_VER} ($(hostname))" > $HOME/.tuos/base_image
+        mkdir -p $HOME/.diamond/diamond_tools/
+        echo "[$(date +'%Y%m%d_%H%M%S')] $(date +'%Y-%m') ROS 2 ${ROS_VER} ($(hostname))" > $HOME/.diamond/base_image
 
         cd $SHARE_DIR/repos/tuos_robotics/laptops/diamond_tools/
         cp profile_updates.sh /tmp/ 

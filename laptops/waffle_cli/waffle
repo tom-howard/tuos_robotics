@@ -68,7 +68,7 @@ check-for-dialab() {
 }
 
 check-pairing() {
-    wn=~/.tuos/waffle_number
+    wn=~/.diamond/waffle_number
     touch $wn
     if grep -qi "$WAFFLE_NO" $wn; then
         # local pairing looks OK.
@@ -103,7 +103,7 @@ pair() {
     echo -e "You are about to pair ${CYAN}dia-laptop$LAPTOP_NO${NC} with ${GREEN}dia-waffle$WAFFLE_NO${NC}."
     if ask "OK to continue?"; then
         echo -e "${CYAN}[$laptop_id]${NC} Pairing in progress (this will take a minute)..."
-        echo "$WAFFLE_NO" > ~/.tuos/waffle_number # set the waffle number
+        echo "$WAFFLE_NO" > ~/.diamond/waffle_number # set the waffle number
 
         # check-for-dialab loud
 
@@ -195,10 +195,10 @@ if [[ $# -eq 2 || $# -eq 3 ]]; then
     OPTION=$3
 else
     echo -e "$USAGE"
-    if [ ! -f ~/.tuos/waffle_number ]; then
+    if [ ! -f ~/.diamond/waffle_number ]; then
         paired_waffle=""
     else
-        paired_waffle=$(cat ~/.tuos/waffle_number)
+        paired_waffle=$(cat ~/.diamond/waffle_number)
     fi
     if [[ "$paired_waffle" == "" ]]; then
         echo -e "This laptop (${CYAN}dia-laptop$LAPTOP_NO${NC}) is not currently paired with a robot."
@@ -219,7 +219,7 @@ else
     exit 2
 fi
 
-echo "robot" > ~/.tuos/robot_mode # set the laptop to 'real-robot mode' (as opposed to 'simulation mode')
+echo "robot" > ~/.diamond/robot_mode # set the laptop to 'real-robot mode' (as opposed to 'simulation mode')
 
 case $COMMAND in 
     pair|sync|term|bridge|off)

@@ -6,20 +6,20 @@ source $HOME/ros2_ws/install/setup.bash
 export TURTLEBOT3_MODEL=waffle
 
 # Check if waffle_number file exists, if not copy laptop_number to waffle_number
-if [ ! -f $HOME/.tuos/waffle_number ]; then
-    cp /home/ros/laptop_number $HOME/.tuos/waffle_number
+if [ ! -f $HOME/.diamond/waffle_number ]; then
+    cp /home/ros/laptop_number $HOME/.diamond/waffle_number
 fi
 
-export WAFFLE_NO=$(cat $HOME/.tuos/waffle_number 2>/dev/null)
+export WAFFLE_NO=$(cat $HOME/.diamond/waffle_number 2>/dev/null)
 
 # Check the content of robot_mode file and set RDS and LHOST_ONLY variables accordingly
-if [ ! -f $HOME/.tuos/robot_mode ]; then
-    echo "robot" > $HOME/.tuos/robot_mode
-elif grep -qi "robot" $HOME/.tuos/robot_mode; then
+if [ ! -f $HOME/.diamond/robot_mode ]; then
+    echo "robot" > $HOME/.diamond/robot_mode
+elif grep -qi "robot" $HOME/.diamond/robot_mode; then
     RDS="dia-waffle$WAFFLE_NO:11811;dia-waffle$WAFFLE_NO:11888"
     LHOST_ONLY=0
     SUPER_CLIENT=TRUE
-elif grep -qi "sim" $HOME/.tuos/robot_mode; then
+elif grep -qi "sim" $HOME/.diamond/robot_mode; then
     RDS=""
     LHOST_ONLY=1
     SUPER_CLIENT=FALSE
