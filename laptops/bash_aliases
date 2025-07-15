@@ -13,4 +13,5 @@ alias tb3_rviz="ros2 launch tuos_tb3_tools rviz.launch.py"
 alias tb3_world="ros2 launch turtlebot3_gazebo turtlebot3_world.launch.py"
 alias tb3_sim="ros2 launch turtlebot3_gazebo empty_world.launch.py"
 
-alias rsd="ros2 daemon stop; ros2 daemon start;"
+alias rtl="ros2 topic list"
+alias rnl="ros2 node list"
