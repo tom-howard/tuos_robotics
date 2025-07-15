@@ -11,39 +11,25 @@ if [ ! -f $HOME/.diamond/waffle_number ]; then
 fi
 
 export WAFFLE_NO=$(cat $HOME/.diamond/waffle_number 2>/dev/null)
+export WAFFLE_IP="192.168.139.1$(printf "%02d" "${WAFFLE_NO}")"
 
 # Check the content of robot_mode file and set RDS and LHOST_ONLY variables accordingly
 if [ ! -f $HOME/.diamond/robot_mode ]; then
     echo "robot" > $HOME/.diamond/robot_mode
-elif grep -qi "robot" $HOME/.diamond/robot_mode; then
-    RDS="dia-waffle$WAFFLE_NO:11811;dia-waffle$WAFFLE_NO:11888"
-    LHOST_ONLY=0
-    SUPER_CLIENT=TRUE
+fi 
+
+if grep -qi "robot" $HOME/.diamond/robot_mode; then
+    export RMW_IMPLEMENTATION=rmw_zenoh_cpp
+    export ROS_DOMAIN_ID=$WAFFLE_NO    
 elif grep -qi "sim" $HOME/.diamond/robot_mode; then
-    RDS=""
-    LHOST_ONLY=1
-    SUPER_CLIENT=FALSE
-    export ROS_DOMAIN_ID=$(cat /home/ros/laptop_number)
+    export RMW_IMPLEMENTATION=rmw_cyclonedds_cpp
+    export ROS_DOMAIN_ID=1
 else
-    RDS="dia-waffle$WAFFLE_NO:11811;dia-waffle$WAFFLE_NO:11888"
-    LHOST_ONLY=0
-    SUPER_CLIENT=TRUE
+    echo "Unsupported robot mode set in file '${HOME}/.diamond/robot_mode'."
+    echo "Please set it to 'robot' or 'sim'."
 fi
 
-# export ROS_LOCALHOST_ONLY=1
-export RMW_IMPLEMENTATION=rmw_zenoh_cpp
-export ROS_DOMAIN_ID=$WAFFLE_NO
-
-# read -r -d '' CYCLONEDDS_URI << EOF
-# <CycloneDDS>
-#   <Domain>
-#     <Discovery>
-#       <ParticipantIndex>none</ParticipantIndex>
-#     </Discovery>
-#   </Domain>
-# </CycloneDDS>
-# EOF
-# export CYCLONEDDS_URI
+export ZENOH_CONFIG_OVERRIDE="mode='client';connect/endpoints=['tcp/${WAFFLE_IP}:7447']" 
 
 source /usr/share/colcon_cd/function/colcon_cd.sh
 export _colcon_cd_root=/opt/ros/humble/
