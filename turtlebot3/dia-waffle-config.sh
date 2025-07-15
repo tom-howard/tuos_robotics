@@ -15,21 +15,7 @@ export _colcon_cd_root=/opt/ros/${ROS_VER}/
 source /usr/share/colcon_cd/function/colcon_cd-argcomplete.bash
 source /usr/share/colcon_argcomplete/hook/colcon-argcomplete.bash
 
-# Zenoh related mods:
-# export ROS_DISCOVERY_SERVER=127.0.0.1:11811
-# export ROS_LOCALHOST_ONLY=1
 export RMW_IMPLEMENTATION=rmw_zenoh_cpp
-
-# read -r -d '' CYCLONEDDS_URI << EOF
-# <CycloneDDS>
-#   <Domain>
-#     <Discovery>
-#       <ParticipantIndex>none</ParticipantIndex>
-#     </Discovery>
-#   </Domain>
-# </CycloneDDS>
-# EOF
-# export CYCLONEDDS_URI
 
 # tb3_bringup() {
 #   ZENOH_ID=$(pgrep zenoh)

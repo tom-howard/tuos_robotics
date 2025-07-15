@@ -24,19 +24,12 @@ elif grep -qi "sim" $HOME/.diamond/robot_mode; then
     LHOST_ONLY=1
     SUPER_CLIENT=FALSE
     export ROS_DOMAIN_ID=$(cat /home/ros/laptop_number)
-    source /usr/share/gazebo/setup.bash
 else
     RDS="dia-waffle$WAFFLE_NO:11811;dia-waffle$WAFFLE_NO:11888"
     LHOST_ONLY=0
     SUPER_CLIENT=TRUE
 fi
 
-# Export the updated variables for ROS settings
-# export ROS_DISCOVERY_SERVER=$RDS
-export ROS_HOSTNAME=$(hostname)
-# export ROS_SUPER_CLIENT=$SUPER_CLIENT
-
-# Mods for Zenoh
 # export ROS_LOCALHOST_ONLY=1
 export RMW_IMPLEMENTATION=rmw_zenoh_cpp
 export ROS_DOMAIN_ID=$WAFFLE_NO
