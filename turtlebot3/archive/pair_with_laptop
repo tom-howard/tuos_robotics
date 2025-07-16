@@ -1,9 +1,0 @@
-#! /bin/bash
-
-LAPTOP_NO=$1
-
-echo "Pairing with laptop: dia-laptop$1 (the rosmaster)..."
-
-echo "dia-laptop$1" > ~/.diamond/dia_laptop
-
-echo "Done. Re-source the .bashrc for the changes to take effect."
