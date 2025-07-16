@@ -5,7 +5,7 @@ sudo rm -r /home/student/.diamond/
 sudo cp -r ~/.diamond/ /home/student/
 sudo chown -hR student:student /home/student/.diamond
 cd /home/student/.diamond/
-sudo rm current_robot miro_number robot_mode waffle_number
+sudo rm current_robot miro_number ros_mode waffle_number
 
 ls -lF
 

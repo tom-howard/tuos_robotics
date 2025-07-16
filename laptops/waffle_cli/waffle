@@ -219,7 +219,7 @@ else
     exit 2
 fi
 
-echo "robot" > ~/.diamond/robot_mode # set the laptop to 'real-robot mode' (as opposed to 'simulation mode')
+echo "robot" > ~/.diamond/ros_mode # set the laptop to 'real-robot mode' (as opposed to 'simulation mode')
 
 case $COMMAND in 
     pair|sync|term|bridge|off)

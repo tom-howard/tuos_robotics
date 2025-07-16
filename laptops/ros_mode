@@ -1,0 +1,18 @@
+#!/bin/bash
+# /usr/local/bin/ros_mode
+
+if [[ $# -eq 0 ]]; then
+  echo "Current mode is: '$(cat ${HOME}/.diamond/ros_mode 2>/dev/null)'"
+  exit 1
+elif [[ "$1" == "sim" ]]; then
+  echo "Switching into 'Simulation Mode' (run 'ros_mode robot' to work with a real robot)."
+  echo "sim" > ~/.diamond/ros_mode
+elif [[ "$1" == "robot" ]]; then
+  echo "Switching into 'Real Robot Mode' (run 'ros_mode sim' to work in simulation instead)."
+  echo "robot" > ~/.diamond/ros_mode
+else
+  echo "Not a valid input, enter 'robot' or 'sim'."
+  exit 1
+fi
+
+echo "Re-source your shell to apply changes."

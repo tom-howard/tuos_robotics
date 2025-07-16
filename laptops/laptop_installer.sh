@@ -235,7 +235,7 @@ else
 
         echo -e "\n${YELLOW}[Setting up /usr/local/bin/ scripts]${NC}"
         cd $SHARE_DIR/repos/tuos_robotics/laptops/
-        sudo install robot_mode /usr/local/bin/
+        sudo install ros_mode /usr/local/bin/
         
         cd $SHARE_DIR/repos/tuos_robotics/laptops/diamond_tools/
         sudo install diamond_tools /usr/local/bin/

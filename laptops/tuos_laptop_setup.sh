@@ -13,22 +13,22 @@ fi
 export WAFFLE_NO=$(cat $HOME/.diamond/waffle_number 2>/dev/null)
 export WAFFLE_IP="192.168.139.1$(printf "%02d" "${WAFFLE_NO}")"
 
-# Check the content of robot_mode file and set ENV VARS accordingly
-if [ ! -f $HOME/.diamond/robot_mode ]; then
-    echo "robot" > $HOME/.diamond/robot_mode
+# Check the content of ros_mode file and set ENV VARS accordingly
+if [ ! -f $HOME/.diamond/ros_mode ]; then
+    echo "robot" > $HOME/.diamond/ros_mode
 fi 
 
-if grep -qi "robot" $HOME/.diamond/robot_mode; then
+if grep -qi "robot" $HOME/.diamond/ros_mode; then
     export RMW_IMPLEMENTATION=rmw_zenoh_cpp
     export ROS_DOMAIN_ID=$WAFFLE_NO
     MODE="robot"    
-elif grep -qi "sim" $HOME/.diamond/robot_mode; then
+elif grep -qi "sim" $HOME/.diamond/ros_mode; then
     unset RMW_IMPLEMENTATION
     export ROS_DOMAIN_ID=1
     MODE="sim"
 else
-    echo "Unsupported robot mode set in file '${HOME}/.diamond/robot_mode'."
-    echo "Please set it to 'robot' or 'sim' using the robot_mode command."
+    echo "Unsupported robot mode set in file '${HOME}/.diamond/ros_mode'."
+    echo "Please set it to 'robot' or 'sim' using the ros_mode command."
     MODE="unknown"
 fi
 

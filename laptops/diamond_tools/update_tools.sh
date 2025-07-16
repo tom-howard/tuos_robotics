@@ -14,7 +14,7 @@ echo "Updating TUoS Scripts..."
 sleep 4
 
 cd $SRC_DIR
-sudo install robot_mode /usr/local/bin/
+sudo install ros_mode /usr/local/bin/
 sudo install wsl_ros /usr/local/bin/
 
 cd $SRC_DIR/diamond_tools
