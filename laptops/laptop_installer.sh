@@ -279,7 +279,7 @@ else
         
         echo -e "\n${GREEN}[LAPTOP INSTALL COMPLETE] Next Steps:"
         echo -e "   * Install VS Code Extensions (Python, Remote - SSH)"
-        echo -e "   * Set up the Student account (VS Code, auto login etc)"
+        echo -e "   * Set up the Student account (Favourites, VS Code + extensions etc)"
         echo -e "   * Power settings (don't sleep etc.)"
         echo -e "   * Reboot ASAP.${NC}"
 
