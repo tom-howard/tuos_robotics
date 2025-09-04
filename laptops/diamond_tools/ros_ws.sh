@@ -9,7 +9,7 @@ rm -rf $ROS2_WS
 # Make a new workspace (if necessary):
 mkdir -p $ROS2_WS/src
 
-if [[ "${USER}" == "diamond" ]]; then
+if id -nG "${USER}" | grep -qw "sudo"; then
   echo "Updating 'tuos_ros'..."
   cd $SHARE_DIR/repos/tuos_ros && git pull --quiet
 else
