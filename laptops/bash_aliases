@@ -15,3 +15,4 @@ alias tb3_sim="ros2 launch turtlebot3_gazebo empty_world.launch.py"
 
 alias rtl="ros2 topic list"
 alias rnl="ros2 node list"
+alias rmwz="ros2 run rmw_zenoh_cpp rmw_zenohd"
