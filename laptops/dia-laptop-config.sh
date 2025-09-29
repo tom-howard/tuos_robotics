@@ -1,7 +1,9 @@
 # Bash profile with ROS settings for the Turtlebot3 robot
 
+ROS_VERSION=${ROS_VERSION}
+
 # ROS settings for TurtleBot3 (localhost)
-source /opt/ros/jazzy/setup.bash
+source /opt/ros/${ROS_VERSION}/setup.bash
 source $HOME/ros2_ws/install/setup.bash
 export TURTLEBOT3_MODEL=waffle
 
@@ -35,7 +37,7 @@ fi
 export ZENOH_CONFIG_OVERRIDE="mode='client';connect/endpoints=['tcp/${WAFFLE_IP}:7447']" 
 
 source /usr/share/colcon_cd/function/colcon_cd.sh
-export _colcon_cd_root=/opt/ros/humble/
+export _colcon_cd_root=/opt/ros/${ROS_VERSION}/
 source /usr/share/colcon_cd/function/colcon_cd-argcomplete.bash
 source /usr/share/colcon_argcomplete/hook/colcon-argcomplete.bash
 
