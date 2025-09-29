@@ -1,6 +1,6 @@
 # Bash profile with ROS settings for the Turtlebot3 robot
 
-ROS_VERSION=${ROS_VERSION}
+ROS_VERSION=jazzy
 
 # ROS settings for TurtleBot3 (localhost)
 source /opt/ros/${ROS_VERSION}/setup.bash
