@@ -53,19 +53,3 @@ colcon() {
     # Execute the actual colcon command with all provided arguments
     command colcon "$@"
 }
-
-# ros2() {
-#     # check to see if zenoh is running before running ros2 commands
-#     # (and then do what exactly...?)
-#     if [[ "$MODE" == "robot" ]]; then
-#         if ! pgrep -x "rmw_zenohd" > /dev/null; then
-#             echo "Zenoh Middleware doesn't appear to be running."
-#             echo "This must be running in order to establish/maintain a connection with your robot."
-#             echo "Run the following command to launch it:"
-#             echo " > ros2 run rmw_zenoh_cpp rmw_zenohd"
-#             return 1
-#         fi
-#     fi
-    
-#     command ros2 "$@"
-# }
