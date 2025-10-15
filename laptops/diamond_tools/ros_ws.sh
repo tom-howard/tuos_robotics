@@ -22,4 +22,6 @@ cp -r $SHARE_DIR/repos/tuos_ros $ROS2_WS/src/
 unset AMENT_PREFIX_PATH
 unset COLCON_PREFIX_PATH
 
+source ${HOME}/.bashrc
+
 cd $ROS2_WS/ && colcon --log-level ERROR build --packages-up-to tuos_ros
