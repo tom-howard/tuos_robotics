@@ -9,7 +9,8 @@ echo "$(hostname | tr -d -c 0-9)" > /home/ros/waffle_number
 echo "Updating system..."
 sleep 4
 sudo apt update && sudo apt install -y \
-    wavemon
+    wavemon \
+    avahi-daemon
 
 echo "Updating TUoS Scripts..."
 sleep 4
@@ -17,6 +18,12 @@ sleep 4
 cd $SRC_DIR
 sudo install waffle /usr/local/bin/
 sudo install wsl_ros /usr/local/bin/
+sudo cp eth-cfg.yaml /etc/netplan/99-eth-cfg.yaml
+
+echo "Applying network configuration updates..."
+sleep 4
+sudo netplan apply
+sudo systemctl enable --now avahi-daemon
 
 cd $SRC_DIR/diamond_tools
 sudo install diamond_tools /usr/local/bin/
