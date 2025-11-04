@@ -4,7 +4,12 @@ ROS_VERSION=jazzy
 
 # ROS settings for TurtleBot3 (localhost)
 source /opt/ros/${ROS_VERSION}/setup.bash
-source $HOME/ros2_ws/install/setup.bash
+
+LOCAL_WS_SETUP=${HOME}/ros2_ws/install/local_setup.bash
+if [ -f "${LOCAL_WS_SETUP}" ]; then
+  source ${LOCAL_WS_SETUP}
+fi
+
 export TURTLEBOT3_MODEL=waffle
 
 # Check if waffle_number file exists, if not copy laptop_number to waffle_number
