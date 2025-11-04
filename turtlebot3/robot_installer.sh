@@ -64,7 +64,8 @@ elif [ ! -f $HOME/checkpoint1 ]; then
                         unzip \
                         tree \
                         llvm-dev \
-                        libclang-dev
+                        libclang-dev \
+                        wavemon
 
     # update git:
     echo -e "\n${YELLOW}[Updating Git]${NC}"

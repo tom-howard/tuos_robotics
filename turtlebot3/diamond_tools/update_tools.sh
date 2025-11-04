@@ -6,6 +6,11 @@ SRC_DIR="/home/ros/repos/tuos_robotics/turtlebot3"
 
 echo "$(hostname | tr -d -c 0-9)" > /home/ros/waffle_number
 
+echo "Updating system..."
+sleep 4
+sudo apt update && sudo apt install -y \
+    wavemon
+
 echo "Updating TUoS Scripts..."
 sleep 4
 
