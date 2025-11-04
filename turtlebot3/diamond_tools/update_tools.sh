@@ -19,6 +19,7 @@ cd $SRC_DIR
 sudo install waffle /usr/local/bin/
 sudo install wsl_ros /usr/local/bin/
 sudo cp eth-cfg.yaml /etc/netplan/99-eth-cfg.yaml
+sudo chmod 600 /etc/netplan/99-eth-cfg.yaml
 
 echo "Applying network configuration updates..."
 sleep 4
