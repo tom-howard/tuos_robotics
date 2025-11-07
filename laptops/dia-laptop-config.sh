@@ -5,6 +5,11 @@ ROS_VERSION=jazzy
 # ROS settings for TurtleBot3 (localhost)
 source /opt/ros/${ROS_VERSION}/setup.bash
 
+SHARE_WS_SETUP=/home/ros/ros2_ws/install/local_setup.bash
+if [ -f "${SHARE_WS_SETUP}" ]; then
+  source ${SHARE_WS_SETUP}
+fi
+
 LOCAL_WS_SETUP=${HOME}/ros2_ws/install/local_setup.bash
 if [ -f "${LOCAL_WS_SETUP}" ]; then
   source ${LOCAL_WS_SETUP}
