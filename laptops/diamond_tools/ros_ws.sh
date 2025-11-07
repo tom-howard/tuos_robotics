@@ -18,6 +18,5 @@ else
   echo "Skipped 'tuos_ros' updates."
 fi
 
-# temporary
-rm -rf ${HOME}/ros2_ws
-mkdir -p ${HOME}/ros2_ws/src
+rm -rf ${HOME}/ros2_ws/src/tuos_ros
+rm -rf ${HOME}/ros2_ws/build ${HOME}/ros2_ws/install ${HOME}/ros2_ws/log
