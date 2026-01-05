@@ -15,6 +15,10 @@ if [ -f "${LOCAL_WS_SETUP}" ]; then
   source ${LOCAL_WS_SETUP}
 fi
 
+if [[ -d ${HOME}/ros2_ws/src/tuos_ros/ ]]; then
+    echo "Warning: 'tuos_ros' is installed GLOBALLY and should be removed from the local workspace (~/ros2_ws/src)"
+fi
+
 export TURTLEBOT3_MODEL=waffle
 
 # Check if waffle_number file exists, if not copy laptop_number to waffle_number
@@ -51,7 +55,7 @@ export _colcon_cd_root=/opt/ros/${ROS_VERSION}/
 source /usr/share/colcon_cd/function/colcon_cd-argcomplete.bash
 source /usr/share/colcon_argcomplete/hook/colcon-argcomplete.bash
 
-colcon() {
+colcon() {  
     # If the first argument is "build", check the current directory
     if [[ "$1" == "build" ]]; then
         if [ "$PWD" != "$HOME/ros2_ws" ]; then
