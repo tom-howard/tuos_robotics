@@ -16,7 +16,7 @@ if id -nG "${USER}" | grep -qw "sudo"; then
   cd ${ROS2_WS}/ && colcon --log-level ERROR build --packages-up-to tuos_ros
 else
   echo "Skipped 'tuos_ros' updates."
+  mkdir -p ${HOME}/ros2_ws/src/
+  rm -rf ${HOME}/ros2_ws/src/tuos_ros
+  rm -rf ${HOME}/ros2_ws/build ${HOME}/ros2_ws/install ${HOME}/ros2_ws/log
 fi
-
-rm -rf ${HOME}/ros2_ws/src/tuos_ros
-rm -rf ${HOME}/ros2_ws/build ${HOME}/ros2_ws/install ${HOME}/ros2_ws/log
