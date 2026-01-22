@@ -32,8 +32,9 @@ if id -nG "${USER}" | grep -qw "sudo"; then
   # Build the workspace
   cd ${ROS2_WS}/ && colcon --log-level ERROR build 
 else
-  echo "Skipped 'tuos_ros' updates."
+  echo "Skipped updates, cleaning up instead."
   mkdir -p ${HOME}/ros2_ws/src/
   rm -rf ${HOME}/ros2_ws/src/tuos_ros
+  rm -rf ${HOME}/ros2_ws/src/com_offer_holder_days
   rm -rf ${HOME}/ros2_ws/build ${HOME}/ros2_ws/install ${HOME}/ros2_ws/log
 fi
