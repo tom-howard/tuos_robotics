@@ -241,7 +241,7 @@ else
     # run in current profile:
     /tmp/profile_updates.sh
     source $HOME/.bashrc
-    diamond_tools workspace
+    diamond_tools workspace full
 
     # run as STANDARD_USER
     sudo -i -u ${STANDARD_USER} "/tmp/profile_updates.sh"
