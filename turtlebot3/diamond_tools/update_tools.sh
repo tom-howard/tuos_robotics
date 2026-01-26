@@ -40,7 +40,7 @@ cd $HOME
 # run as admin
 /tmp/profile_updates.sh
 source $HOME/.bashrc
-diamond_tools workspace
+diamond_tools workspace full
 
 # run as 'robot'
 sudo -i -u robot "/tmp/profile_updates.sh"
