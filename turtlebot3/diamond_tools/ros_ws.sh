@@ -5,6 +5,9 @@ REPO_DIR="/home/ros/repos"
 SCOPE=$1
 
 if [[ "$SCOPE" == "full" || "$SCOPE" == "f" ]]; then
+
+  echo "Performing full workspace update..."
+  
   rm -rf $ROS_WS
   # Make a new workspace:
   mkdir -p $ROS_WS/src
