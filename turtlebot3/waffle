@@ -34,32 +34,25 @@ ask() {
 }
 
 off() {
-    if [[ "$1" == "quick" || "$1" == "q" ]]; then
-        echo "Shutting down the robot now..."
+    if ask "Are you sure you want to shutdown ${GREEN}dia-waffle$WAFFLE_NO?${NC}"; then
         sudo poweroff
     else
-        if ask "Are you sure you want to shutdown ${GREEN}dia-waffle$WAFFLE_NO?${NC}"; then
-            sudo poweroff
-        else
-            echo -e "${RED}Shutdown cancelled.${NC}"
-        fi
+        echo -e "${RED}Shutdown cancelled.${NC}"
     fi
 }
 
 if [[ $# -eq 2 ]]; then
     COMMAND=$2
-    OPTION=$3
+    WAFFLE_NO=$(hostname | grep -o -E '[0-9]+')
 else
-    COMMAND=$1
-    OPTION=$2
+    echo -e "$USAGE"
+    exit 1
 fi
-
-WAFFLE_NO=$(hostname | grep -o -E '[0-9]+')
 
 case $COMMAND in
     off)
         echo -e "${BLUE}Running '$COMMAND' command${NC}..." 
-        eval $COMMAND $OPTION
+        eval $COMMAND
         ;;
     *) 
         echo -e "${RED}[INVALID INPUT]...${NC}"
