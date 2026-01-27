@@ -1,7 +1,69 @@
 #!/usr/bin/env bash
 
 RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[0;93m'
+BLUE='\033[1;34m'
 IT='\033[3m'
 NC='\033[0m'
 
-echo -e "${RED}Not available on the Robot!${NC} \n    The ${IT}waffle Command Line Tool${NC} needs to be run from the laptop!"
+USAGE="${IT}waffle${NC} command line interface for The University of Sheffield TurtleBot3
+Waffles.
+
+Usage: waffle [NUM] [COMMAND]
+
+[NUM]     Numeric ID of the robot you are working with (a number between
+          1 and 50) e.g. ${IT}dia-waffle[NUM]${NC}.
+
+[COMMAND] options:
+  off     Shutdown the robot.
+"
+
+ask() {
+    local reply prompt
+    prompt='y/n'
+    echo -e -n "${YELLOW}[INPUT]${NC} $1 [$prompt] >> "
+    read -r reply </dev/tty
+    if [[ -z $reply ]]; then
+        return 1;
+    elif [ "$reply" == "y" ] || [ "$reply" == "Y" ]; then
+        return 0;
+    else
+        return 1;
+    fi
+}
+
+off() {
+    if [[ "$1" == "quick" || "$1" == "q" ]]; then
+        echo "Shutting down the robot now..."
+        sudo poweroff
+    else
+        if ask "Are you sure you want to shutdown ${GREEN}dia-waffle$WAFFLE_NO?${NC}"; then
+            sudo poweroff
+        else
+            echo -e "${RED}Shutdown cancelled.${NC}"
+        fi
+    fi
+}
+
+if [[ $# -eq 2 ]]; then
+    COMMAND=$2
+    OPTION=$3
+else
+    COMMAND=$1
+    OPTION=$2
+fi
+
+WAFFLE_NO=$(hostname | grep -o -E '[0-9]+')
+
+case $COMMAND in
+    off)
+        echo -e "${BLUE}Running '$COMMAND' command${NC}..." 
+        eval $COMMAND $OPTION
+        ;;
+    *) 
+        echo -e "${RED}[INVALID INPUT]...${NC}"
+        echo -e "$USAGE"
+        exit 1
+        ;;
+esac
