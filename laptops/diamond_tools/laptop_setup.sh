@@ -50,14 +50,18 @@ if ask "[INPUT] IS THIS CORRECT??"; then
     touch $tmp_file
     echo -e "#!/usr/bin/env bash\n" >> $tmp_file
     echo -e "rm -f ~/.diamond/waffle_number" >> $tmp_file
-    # echo -e "diamond_tools workspace" >> $tmp_file
+    
     chmod +x $tmp_file
-    # run as current user:
+    chown $USER:laptopgrp $tmp_file
+    
+    # run as current (admin) user:
     $tmp_file
     diamond_tools workspace
-    chown $USER:laptopgrp $tmp_file
-    # run as 'student':
-    sudo -i -u student "$tmp_file"
+    
+    # run as standard users:
+    for user in "student" "offer_holders"; do
+        sudo -i -u "$user" "$tmp_file"
+    done
     rm -f $tmp_file
 
     echo "[INFO] Laptop setup is now complete."

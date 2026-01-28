@@ -36,7 +36,9 @@ cd $HOME
 # run as admin
 /tmp/profile_updates.sh
 
-# run as user
-sudo -i -u student "/tmp/profile_updates.sh"
+# run as users
+for user in "student" "offer_holders"; do
+    sudo -i -u "$user" "/tmp/profile_updates.sh"
+done
 
 echo "Updates are complete."
