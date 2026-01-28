@@ -51,6 +51,11 @@ if ask "[INPUT] Preparing to configure for robot: dia-waffle$WAFFLE_NO. IS THIS 
         echo "[INFO] Skipped RealSense Firmware updates."
     fi
     sleep 5
+    
+    echo "[INFO] Updating the ROS 2 Workspace."
+    sleep 1
+    diamond_tools workspace
+
     echo "[COMPLETE] Robot configuration is now complete."
     echo "IT IS NOW SAFE TO TURN OFF YOUR ROBOT!!!"
     if ask "[INPUT] Do you want to shutdown the robot now?"; then
