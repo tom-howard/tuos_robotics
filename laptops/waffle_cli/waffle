@@ -27,8 +27,6 @@ Usage: waffle [NUM] [COMMAND]
   sync    Manually ${IT}sync${NC}hronise both system clocks to a common NTP Server.
   term    Launch a (tmux) ${IT}term${NC}inal instance on the specified robot
           (dia-waffle[NUM]).
-  bridge  Launch a Zenoh ${IT}bridge${NC} to connect the laptop with the specified robot 
-          (dia-waffle[NUM])
   ping    Look for the specified robot (dia-waffle[NUM]) on the network by
           ${IT}ping${NC}ing it.
   off     Shutdown the robot.
@@ -91,12 +89,6 @@ check-pairing() {
     fi
 }
 
-launch-zenoh() {
-    echo "Establishing a Zenoh bridge with dia-waffle$WAFFLE_NO"
-    sleep 3
-    zenoh-bridge-ros2dds -e tcp/dia-waffle$WAFFLE_NO:7447
-}
-
 # CLI entry points:
 
 pair() {
@@ -149,20 +141,6 @@ term() {
     check-pairing loud
     echo -e "${CYAN}[$laptop_id]${NC} Logging in to dia-waffle$WAFFLE_NO..."
     ssh -o IdentitiesOnly=yes -i ~/.ssh/waffle_rsa robot@dia-waffle$WAFFLE_NO -t "tmux new-session -s robot || tmux attach-session -t robot"
-}
-
-bridge() {
-    check-pairing
-    ZENOH_ID=$(pgrep zenoh)
-    if [[ -z $ZENOH_ID ]]; then
-        launch-zenoh
-    elif [[ "$1" == "restart" || "$1" == "r" ]]; then
-        echo "Killing an existing Zenoh bridge (PID: $ZENOH_ID)."
-        pkill zenoh
-        launch-zenoh
-    else
-        echo "A Zenoh bridge is already running (PID: $ZENOH_ID)."
-    fi
 }
 
 off() {
@@ -222,7 +200,7 @@ fi
 echo "robot" > ~/.diamond/ros_mode # set the laptop to 'real-robot mode' (as opposed to 'simulation mode')
 
 case $COMMAND in 
-    pair|sync|term|bridge|off)
+    pair|sync|term|off)
         echo -e "${BLUE}Running '$COMMAND' command${NC}..." 
         eval $COMMAND $OPTION
         ;;
