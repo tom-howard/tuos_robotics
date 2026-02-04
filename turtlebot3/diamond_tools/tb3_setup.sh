@@ -54,7 +54,7 @@ if ask "[INPUT] Preparing to configure for robot: dia-waffle$WAFFLE_NO. IS THIS 
     
     echo "[INFO] Updating the ROS 2 Workspace."
     sleep 1
-    diamond_tools workspace
+    diamond_tools update
 
     echo "[COMPLETE] Robot configuration is now complete."
     echo "IT IS NOW SAFE TO TURN OFF YOUR ROBOT!!!"
