@@ -71,7 +71,7 @@ check-pairing() {
     if grep -qi "$WAFFLE_NO" $wn; then
         # local pairing looks OK.
         # now check the pairing on the waffle side too...
-        robot_response=$(ssh -o IdentitiesOnly=yes -i ~/.ssh/waffle_rsa robot@dia-waffle$WAFFLE_NO 'bash -s' < /usr/local/bin/robot_pair_check.sh $LAPTOP_NO) 
+        robot_response=$(ssh -o IdentitiesOnly=yes -i ~/.ssh/waffle_rsa robot@$WAFFLE_IP 'bash -s' < /usr/local/bin/robot_pair_check.sh $LAPTOP_NO) 
         if [[ $robot_response == "1" ]]; then
             if [[ $1 == "loud" ]]; then
                 echo -e "${GREEN}[dia-waffle$WAFFLE_NO]${NC} Robot-Laptop pairing verified."
@@ -103,8 +103,8 @@ pair() {
         mkdir -p ~/.ssh/
         rm -f ~/.ssh/waffle_rsa*
         ssh-keygen -t rsa -b 2048 -f ~/.ssh/waffle_rsa -q -N ""
-        SSH_OPTS='-o IdentitiesOnly=yes' ssh-copy-id -i ~/.ssh/waffle_rsa robot@dia-waffle$WAFFLE_NO > /dev/null 2>&1
-        ssh -o IdentitiesOnly=yes -i ~/.ssh/waffle_rsa robot@dia-waffle$WAFFLE_NO 'bash -s' < /usr/local/bin/robot_pairing.sh $LAPTOP_NO
+        SSH_OPTS='-o IdentitiesOnly=yes' ssh-copy-id -i ~/.ssh/waffle_rsa robot@$WAFFLE_IP > /dev/null 2>&1
+        ssh -o IdentitiesOnly=yes -i ~/.ssh/waffle_rsa robot@$WAFFLE_IP 'bash -s' < /usr/local/bin/robot_pairing.sh $LAPTOP_NO
 
         if [[ "$1" != "quick" && "$1" != "q" ]]; then
             sync
@@ -133,24 +133,24 @@ sync() {
         sudo ntpdate ntp.ubuntu.com > /dev/null
         echo -e "${CYAN}[$laptop_id]${NC} Laptop time synchronisation complete."
     fi
-    ssh -o IdentitiesOnly=yes -i ~/.ssh/waffle_rsa robot@dia-waffle$WAFFLE_NO 'bash -s' < /usr/local/bin/robot_sync.sh $LAPTOP_NO
+    ssh -o IdentitiesOnly=yes -i ~/.ssh/waffle_rsa robot@$WAFFLE_IP 'bash -s' < /usr/local/bin/robot_sync.sh $LAPTOP_NO
 }
 
 term() {
     # check-for-dialab
     check-pairing loud
     echo -e "${CYAN}[$laptop_id]${NC} Logging in to dia-waffle$WAFFLE_NO..."
-    ssh -o IdentitiesOnly=yes -i ~/.ssh/waffle_rsa robot@dia-waffle$WAFFLE_NO -t "tmux new-session -s robot || tmux attach-session -t robot"
+    ssh -o IdentitiesOnly=yes -i ~/.ssh/waffle_rsa robot@$WAFFLE_IP -t "tmux new-session -s robot || tmux attach-session -t robot"
 }
 
 off() {
     check-pairing
     if [[ "$1" == "quick" || "$1" == "q" ]]; then
         echo "Shutting down the robot now..."
-        ssh -o IdentitiesOnly=yes -i ~/.ssh/waffle_rsa robot@dia-waffle$WAFFLE_NO -t "sudo poweroff"
+        ssh -o IdentitiesOnly=yes -i ~/.ssh/waffle_rsa robot@$WAFFLE_IP -t "sudo poweroff"
     else
         if ask "Are you sure you want to shutdown ${GREEN}dia-waffle$WAFFLE_NO?${NC}"; then
-            ssh -o IdentitiesOnly=yes -i ~/.ssh/waffle_rsa robot@dia-waffle$WAFFLE_NO -t "sudo poweroff"
+            ssh -o IdentitiesOnly=yes -i ~/.ssh/waffle_rsa robot@$WAFFLE_IP -t "sudo poweroff"
         else
             echo -e "${RED}Shutdown cancelled.${NC}"
         fi
@@ -159,7 +159,7 @@ off() {
 
 waffle_ping() {
     echo -e "${CYAN}[$laptop_id]${NC} Pinging ${GREEN}dia-waffle$WAFFLE_NO${NC}..."
-    ping dia-waffle$WAFFLE_NO
+    ping $WAFFLE_IP
 }
 
 # Main:
@@ -191,6 +191,7 @@ if [[ "$WAFFLE_NO" == "" ]]; then
     echo "$NUM_MSG"
     exit 2
 elif (( $WAFFLE_NO >= 1 && $WAFFLE_NO <= 50 )); then
+    WAFFLE_IP="192.168.139.$((100 + $WAFFLE_NO))"
     true
 else
     echo "$NUM_MSG"
