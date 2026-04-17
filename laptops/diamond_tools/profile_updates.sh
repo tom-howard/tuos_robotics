@@ -19,4 +19,4 @@ echo "" >> $HOME/.bashrc
 echo "source $HOME/.diamond/dia-laptop-config.sh" >> $HOME/.bashrc
 echo "" >> $HOME/.bashrc
 
-echo "Profile updates applied for ${USER}. Please restart the terminal or run 'source ~/.bashrc' to apply the changes."
+echo "Profile updates applied to '${USER}'. Please restart the terminal or run 'source ~/.bashrc' to apply the changes."
