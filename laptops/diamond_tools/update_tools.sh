@@ -35,6 +35,10 @@ sudo cp robot_pair_check.sh /usr/local/bin/
 sudo cp robot_pairing.sh /usr/local/bin/
 sudo cp robot_sync.sh /usr/local/bin/ 
 
+echo "Updating global ROS 2 workspace..."
+sleep 2
+diamond_tools workspace
+
 echo "Updating user profiles..."
 sleep 2
 
