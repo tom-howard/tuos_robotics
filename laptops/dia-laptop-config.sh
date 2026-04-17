@@ -19,6 +19,9 @@ if [[ -d ${HOME}/ros2_ws/src/tuos_ros/ ]]; then
     echo "Warning: 'tuos_ros' is installed GLOBALLY and should be removed from the local workspace (~/ros2_ws/src)"
 fi
 
+# Remove .gitconfig (if it exists) to prevent git ID issues
+rm -f ${HOME}/.gitconfig
+
 export TURTLEBOT3_MODEL=waffle
 
 # Check if waffle_number file exists, if not copy laptop_number to waffle_number
