@@ -6,9 +6,9 @@ SRC_DIR="/home/ros/repos/tuos_robotics/laptops"
 echo "$(hostname | tr -d -c 0-9)" > /home/ros/laptop_number
 cp /home/ros/laptop_number /home/ros/waffle_number
 
-# echo "Updating system..."
-# sleep 4
-# sudo apt update && sudo apt upgrade -y
+echo "Updating system..."
+sleep 4
+sudo apt update && sudo apt upgrade -y
 
 echo "Installing Duo Desktop..."
 sleep 4
