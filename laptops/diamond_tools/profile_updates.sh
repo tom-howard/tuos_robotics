@@ -10,6 +10,9 @@ cp bash_aliases $HOME/.bash_aliases
 cp dia-laptop-config.sh $HOME/.diamond/
 cp /etc/skel/.bashrc $HOME/
 
+rm -f $HOME/.ssh/waffle_rsa*
+rm -f $HOME/.ssh/known_hosts*
+
 OD_REPO=${HOME}/opendaycybersecurity
 if [ -d "${OD_REPO}" ]; then
   cd ${OD_REPO} && git pull --quiet
