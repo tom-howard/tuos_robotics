@@ -18,6 +18,11 @@ echo "$laptop_id" > ~/.diamond/dia_laptop
 
 # remove all ssh keys other than the one that has just been created:
 ssh_key_file=~/.ssh/authorized_keys
-new_key=$(grep "." $ssh_key_file | tail -1)
-rm $ssh_key_file
-echo "$new_key" > $ssh_key_file
+touch "$ssh_key_file"
+new_key=$(grep "." "$ssh_key_file" | tail -1)
+
+if [[ -n "$new_key" ]]; then
+    printf '%s\n' "$new_key" > "$ssh_key_file"
+else
+    echo -e "${GREEN}[$waffle_id]${NC} No SSH key found in $ssh_key_file; leaving existing keys unchanged."
+fi

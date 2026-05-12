@@ -103,7 +103,10 @@ pair() {
         mkdir -p ~/.ssh/
         rm -f ~/.ssh/waffle_rsa*
         ssh-keygen -t rsa -b 2048 -f ~/.ssh/waffle_rsa -q -N ""
-        SSH_OPTS='-o IdentitiesOnly=yes' ssh-copy-id -i ~/.ssh/waffle_rsa robot@$WAFFLE_IP > /dev/null 2>&1
+        if ! ssh-copy-id -o IdentitiesOnly=yes -i ~/.ssh/waffle_rsa robot@$WAFFLE_IP > /dev/null 2>&1; then
+            echo -e "${RED}[ERROR]${NC} SSH key copy failed. Please verify the robot password and host key, then retry pairing."
+            exit 1
+        fi
         ssh -o IdentitiesOnly=yes -i ~/.ssh/waffle_rsa robot@$WAFFLE_IP 'bash -s' < /usr/local/bin/robot_pairing.sh $LAPTOP_NO
 
         if [[ "$1" != "quick" && "$1" != "q" ]]; then
