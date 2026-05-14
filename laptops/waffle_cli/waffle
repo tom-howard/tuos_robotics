@@ -95,7 +95,6 @@ pair() {
     echo -e "You are about to pair ${CYAN}dia-laptop$LAPTOP_NO${NC} with ${GREEN}dia-waffle$WAFFLE_NO${NC}."
     if ask "OK to continue?"; then
         echo -e "${CYAN}[$laptop_id]${NC} Pairing in progress (this will take a minute)..."
-        echo "$WAFFLE_NO" > ~/.diamond/waffle_number # set the waffle number
 
         # check-for-dialab loud
 
@@ -107,6 +106,12 @@ pair() {
             echo -e "${RED}[ERROR]${NC} SSH key copy failed. Please verify the robot password and host key, then retry pairing."
             exit 1
         fi
+        # verify the SSH key works
+        if ! ssh -o IdentitiesOnly=yes -i ~/.ssh/waffle_rsa robot@$WAFFLE_IP echo "SSH key verified" > /dev/null 2>&1; then
+            echo -e "${RED}[ERROR]${NC} SSH key verification failed. The key may not have been installed correctly."
+            exit 1
+        fi
+        echo "$WAFFLE_NO" > ~/.diamond/waffle_number 
         ssh -o IdentitiesOnly=yes -i ~/.ssh/waffle_rsa robot@$WAFFLE_IP 'bash -s' < /usr/local/bin/robot_pairing.sh $LAPTOP_NO
 
         if [[ "$1" != "quick" && "$1" != "q" ]]; then
@@ -169,9 +174,10 @@ waffle_ping() {
 
 laptop_id=$(hostname)
 LAPTOP_NO=$(hostname | grep -o -E '[0-9]+')
+LAPTOP_NO=$((10#$LAPTOP_NO)) # remove any leading zeros
 
 if [[ $# -eq 2 || $# -eq 3 ]]; then
-    WAFFLE_NO=$1
+    WAFFLE_NO=$((10#$1)) # remove any leading zeros
     COMMAND=$2
     OPTION=$3
 else
