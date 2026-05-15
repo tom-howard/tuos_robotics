@@ -72,11 +72,11 @@ check-pairing() {
         # local pairing looks OK.
         # now check the pairing on the waffle side too...
         robot_response=$(ssh -o IdentitiesOnly=yes -i ~/.ssh/waffle_rsa robot@$WAFFLE_IP 'bash -s' < /usr/local/bin/robot_pair_check.sh $LAPTOP_NO) 
-        if [[ $robot_response == "1" ]]; then
+        if [[ $robot_response == "confirm" ]]; then
             if [[ $1 == "loud" ]]; then
                 echo -e "${GREEN}[dia-waffle$WAFFLE_NO]${NC} Robot-Laptop pairing verified."
             fi
-        elif [[ $robot_response == "0" ]]; then
+        elif [[ $robot_response == "deny" ]]; then
             echo -e "${GREEN}[dia-waffle$WAFFLE_NO]${NC} ${RED}Invalid pairing.${NC}"
             exit 2
         else
@@ -96,7 +96,18 @@ pair() {
     if ask "OK to continue?"; then
         echo -e "${CYAN}[$laptop_id]${NC} Pairing in progress (this will take a minute)..."
 
-        # check-for-dialab loud
+        if ! waffle_ping; then
+            # failed to ping the robot.
+            exit 1
+        fi
+
+        if [[ -f ${HOME}/.ssh/waffle_rsa && $(cat ${HOME}/.diamond/waffle_number) == $WAFFLE_NO ]]; then
+            robot_response=$(ssh -o IdentitiesOnly=yes -i ~/.ssh/waffle_rsa robot@$WAFFLE_IP 'bash -s' < /usr/local/bin/robot_pair_check.sh $LAPTOP_NO 2>/dev/null)
+            if [[ $robot_response == "confirm" ]]; then
+                echo -e "${GREEN}dia-waffle$WAFFLE_NO${NC} is already paired with this laptop."
+                exit 0
+            fi
+        fi
 
         # configuring ssh connection:
         mkdir -p ~/.ssh/
@@ -166,8 +177,22 @@ off() {
 }
 
 waffle_ping() {
-    echo -e "${CYAN}[$laptop_id]${NC} Pinging ${GREEN}dia-waffle$WAFFLE_NO${NC}..."
-    ping $WAFFLE_IP
+    DEADLINE=30 # seconds
+    COUNT=1 # number of answered pings to dictate success
+    echo -e "${CYAN}[$laptop_id]${NC} Looking for ${GREEN}dia-waffle$WAFFLE_NO${NC} on the network."
+    echo -e "    This may take up to ${DEADLINE} seconds..."
+    # Courtesy of: https://unix.stackexchange.com/questions/184266/bash-ping-script-file-for-checking-host-availability
+    # Attempt to ping for a total of DEADLINE seconds, with one ping per second (default interval, could be changed by adding `-i INTERVAL`).
+    # As per the man page, ping will wait until the deadline has expired, OR until COUNT ping(s) are answered by the robot (dictated by `-c COUNT`), whichever comes first.
+    if [[ ! $(ping -w ${DEADLINE} -c ${COUNT} ${WAFFLE_IP} &>/dev/null) ]]; then
+        echo -e "${RED}[ERROR]${NC} Unable to detect ${GREEN}dia-waffle$WAFFLE_NO${NC} on the network. Is it definitely turned on?!"
+        return 1
+    else
+        echo -e "${GREEN}dia-waffle$WAFFLE_NO${NC} was detected."
+        return 0
+    fi
+    
+    
 }
 
 # Main:
