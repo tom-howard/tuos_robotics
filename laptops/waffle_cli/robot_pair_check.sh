@@ -11,7 +11,7 @@ ln=~/.diamond/dia_laptop
 touch $ln
 if grep -qi "$laptop_id" $ln; then
     # robot-side pairing looks OK...
-    echo "1"
+    echo "confirm"
 else 
-    echo "0"
+    echo "deny"
 fi
