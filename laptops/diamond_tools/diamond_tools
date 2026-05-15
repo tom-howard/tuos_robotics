@@ -10,11 +10,28 @@ sudo_check() {
 }
 
 SRC_DIR="/home/ros/repos/tuos_robotics"
+UPDATES_AVAILABLE=false
 
 update_src() {
   if id -nG "${USER}" | grep -qw "sudo"; then
     echo "Checking for updates..."
-    cd $SRC_DIR && git pull --quiet
+    cd $SRC_DIR
+    
+    # Get current commit before pulling
+    local before=$(git rev-parse HEAD 2>/dev/null)
+    
+    git pull --quiet
+    
+    # Get commit after pulling
+    local after=$(git rev-parse HEAD 2>/dev/null)
+    
+    if [[ "$before" != "$after" ]]; then
+      echo "Updates available - new commits pulled"
+      UPDATES_AVAILABLE=true
+    else
+      echo "No updates available"
+      UPDATES_AVAILABLE=false
+    fi
   else
     echo "Non-admin user, skipping updates..."
   fi
@@ -22,6 +39,11 @@ update_src() {
 
 getx() {
   update_src
+
+  if [[ "$UPDATES_AVAILABLE" != "true" ]]; then
+    echo "No updates available - skipping script execution"
+    return 0
+  fi
 
   SCRIPT=$1
   COPY_SCRIPT="$SCRIPT-$(date +'%Y%m%d%H%M%S')"
@@ -57,6 +79,10 @@ case $COMMAND in
     ;;
   workspace|w)
     getx ros_ws
+    ;;
+  log|l)
+    sudo_check # would be good to make this non sudo, but currenlty the logs aren't accessible to other users
+    getx log_tools
     ;;
   *)
     echo "Not a valid input."
