@@ -16,6 +16,12 @@ cp /home/ros/laptop_number /home/ros/waffle_number
 # sudo dpkg -i ${HOME}/duo-desktop-latest.amd64.deb
 # rm ${HOME}/duo-desktop-latest.amd64.deb
 
+echo "Installing OBS Studio..."
+sleep 4
+sudo add-apt-repository ppa:obsproject/obs-studio
+sudo apt update
+sudo apt install obs-studio -y
+
 echo "Updating TUoS Scripts..."
 sleep 4
 
